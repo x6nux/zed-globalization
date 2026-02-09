@@ -1,0 +1,3 @@
+files:
+  - source: string.json
+    translation: 'i18n/%locale%.json'

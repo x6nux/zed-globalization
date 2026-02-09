@@ -1,0 +1,119 @@
+name: 04 更新 Scoop Manifest
+
+on:
+  workflow_run:
+    workflows: ["03 构建发行"]
+    types: [completed]
+
+  release:
+    types: [published]
+
+  workflow_dispatch:
+    inputs:
+      version_tag:
+        description: "Release 版本号 (空则取最新)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update-bucket:
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'release' ||
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: 确定目标版本号
+        run: |
+          if [ -n "${{ inputs.version_tag }}" ]; then
+            echo "手动指定版本: ${{ inputs.version_tag }}"
+            echo "TARGET_TAG=${{ inputs.version_tag }}" >> $GITHUB_ENV
+          elif [ -n "${{ github.event.release.tag_name }}" ]; then
+            echo "Release 事件: ${{ github.event.release.tag_name }}"
+            echo "TARGET_TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          else
+            TAG=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+            echo "自动获取最新: $TAG"
+            echo "TARGET_TAG=$TAG" >> $GITHUB_ENV
+          fi
+
+      - name: 等待并获取 Windows 产物信息
+        run: |
+          TAG="$TARGET_TAG"
+          for i in $(seq 1 20); do
+            URL=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG" \
+              | jq -r '.assets[] | select(.name | test("windows.*\\.zip")) | .browser_download_url' \
+              | head -1)
+            if [ -n "$URL" ] && [ "$URL" != "null" ]; then
+              echo "找到产物: $URL"
+              echo "ASSET_URL=$URL" >> $GITHUB_ENV
+              break
+            fi
+            echo "[$i/20] 产物未就绪，等待 15s..."
+            sleep 15
+          done
+          if [ -z "$URL" ] || [ "$URL" = "null" ]; then
+            echo "::error::未找到 Windows 产物"
+            exit 1
+          fi
+
+      - name: 下载并计算 Hash
+        run: |
+          curl -L -o zed-windows.zip "$ASSET_URL"
+          HASH=$(sha256sum zed-windows.zip | awk '{print $1}')
+          echo "SHA256=$HASH" >> $GITHUB_ENV
+          rm zed-windows.zip
+
+      - name: 生成并推送 Manifest 到 scoop 分支
+        run: |
+          VERSION="$TARGET_TAG"
+          CLEAN_VERSION="${VERSION#v}"
+
+          cat > zed-globalization.json << MANIFEST
+          {
+              "version": "$CLEAN_VERSION",
+              "description": "Zed Editor (Localized / 汉化版)",
+              "homepage": "https://github.com/${{ github.repository }}",
+              "license": "GPL-3.0-only",
+              "architecture": {
+                  "64bit": {
+                      "url": "$ASSET_URL",
+                      "hash": "$SHA256"
+                  }
+              },
+              "bin": "zed.exe",
+              "shortcuts": [["zed.exe", "Zed"]],
+              "checkver": {
+                  "github": "https://github.com/${{ github.repository }}"
+              },
+              "autoupdate": {
+                  "architecture": {
+                      "64bit": {
+                          "url": "https://github.com/${{ github.repository }}/releases/download/v\$version/zed-windows.zip"
+                      }
+                  }
+              }
+          }
+          MANIFEST
+
+          # 推送到 scoop 分支
+          git init /tmp/scoop-branch
+          cd /tmp/scoop-branch
+          git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+
+          if git ls-remote --heads origin scoop | grep -q scoop; then
+            git fetch origin scoop --depth 1
+            git checkout scoop
+          else
+            git checkout -b scoop
+          fi
+
+          cp $GITHUB_WORKSPACE/zed-globalization.json .
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add zed-globalization.json
+          git diff --cached --quiet || git commit -m "chore(scoop): 更新到 $VERSION"
+          git push origin scoop

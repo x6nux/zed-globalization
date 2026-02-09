@@ -1,0 +1,136 @@
+# Zed 编辑器翻译术语表
+# AI 翻译时参考此表保持一致性
+
+terms:
+  # 编辑器核心概念
+  workspace: 工作区
+  buffer: 缓冲区
+  pane: 窗格
+  panel: 面板
+  tab: 标签页
+  editor: 编辑器
+  gutter: 行号槽
+  minimap: 迷你地图
+  breadcrumb: 面包屑导航
+  outline: 大纲
+  snippet: 代码片段
+  indent: 缩进
+  fold: 折叠
+  unfold: 展开
+
+  # 项目与文件
+  project: 项目
+  worktree: 工作树
+  file finder: 文件查找器
+  project panel: 项目面板
+  outline panel: 大纲面板
+
+  # 版本控制
+  branch: 分支
+  commit: 提交
+  staged: 已暂存
+  unstaged: 未暂存
+  hunk: 代码块
+  blame: 追溯
+  diff: 差异
+
+  # 搜索与替换
+  search: 搜索
+  replace: 替换
+  regex: 正则表达式
+  case sensitive: 区分大小写
+  whole word: 全词匹配
+
+  # AI 助手
+  assistant: 助手
+  inline assistant: 内联助手
+  context: 上下文
+  thread: 对话线程
+  prompt: 提示词
+  slash command: 斜杠命令
+
+  # 语言服务
+  language server: 语言服务器
+  code action: 代码操作
+  hover: 悬停提示
+  completion: 补全
+  diagnostic: 诊断
+  inlay hint: 内联提示
+  signature help: 签名帮助
+  rename: 重命名
+
+  # 终端
+  terminal: 终端
+  shell: Shell
+
+  # 协作
+  collaboration: 协作
+  channel: 频道
+  call: 通话
+
+  # 设置与主题
+  settings: 设置
+  theme: 主题
+  keymap: 键位映射
+  font: 字体
+  icon theme: 图标主题
+
+  # 扩展
+  extension: 扩展
+  install: 安装
+  uninstall: 卸载
+  update: 更新
+
+  # 通用操作
+  undo: 撤销
+  redo: 重做
+  copy: 复制
+  paste: 粘贴
+  cut: 剪切
+  select all: 全选
+  save: 保存
+  close: 关闭
+  open: 打开
+  toggle: 切换
+  enable: 启用
+  disable: 禁用
+
+keep_original:
+  - Zed
+  - GitHub
+  - GitLab
+  - Copilot
+  - LSP
+  - SSH
+  - HTTP
+  - HTTPS
+  - URL
+  - JSON
+  - TOML
+  - YAML
+  - Rust
+  - Python
+  - TypeScript
+  - JavaScript
+  - Markdown
+  - HTML
+  - CSS
+  - OpenAI
+  - Anthropic
+  - Google AI
+  - Ollama
+  - Vim
+  - Emacs
+  - macOS
+  - Linux
+  - Windows
+  - sccache
+  - Cargo
+  - rustc
+  - npm
+  - REPL
+  - Jupyter
+  - Prettier
+  - ESLint
+  - clangd
+  - rust-analyzer

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zedl10n"
+version = "2.0.0"
+description = "Zed 编辑器多语言本地化工具链"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = [
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+excel = ["pandas>=2.0", "openpyxl>=3.1"]
+ai = ["openai>=1.0"]
+all = ["zedl10n[excel,ai]"]
+
+[project.scripts]
+zedl10n = "zedl10n.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

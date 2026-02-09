@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# 虚拟环境
+.env
+.venv
+env/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 测试与覆盖率
+.tox/
+.nox/
+.coverage
+.pytest_cache/
+htmlcov/
+
+# mypy
+.mypy_cache/
+
+# Zed 源码（构建时临时克隆）
+zed/
+
+# 临时文件
+*.xlsx
+*.tmp
+
+# 生成产物（存放在 i18n 分支）
+string.json
+string_context.json
+scan_files.json
+i18n/

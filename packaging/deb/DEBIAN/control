@@ -1,0 +1,9 @@
+Package: zed-dev
+Version: 0.179.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Depends: libc6 (>= 2.14), libstdc++6 (>= 4.9)
+Maintainer: TC999
+Homepage: https://github.com/TC999/zed-loc
+Description: Zed 编辑器非官方构建汉化

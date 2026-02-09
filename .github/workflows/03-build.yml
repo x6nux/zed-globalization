@@ -1,0 +1,542 @@
+name: 03 构建发行
+
+on:
+  # 由 translate 链式触发
+  repository_dispatch:
+    types: [build-ready]
+
+  # 手动触发
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "是否正式发布 Release"
+        type: boolean
+        default: true
+      version:
+        description: "指定构建版本 (空则自动获取官方最新)"
+        type: string
+      lang:
+        description: "目标语言"
+        type: choice
+        options:
+          - zh-CN
+          - zh-TW
+          - ja
+          - ko
+        default: zh-CN
+
+permissions:
+  contents: write
+
+env:
+  ZED_REPO: https://github.com/zed-industries/zed.git
+  # === 加速配置 ===
+  CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "16"
+  RUSTC_WRAPPER: "sccache"
+  CARGO_INCREMENTAL: "0"
+  SCCACHE_RECACHE_THIRD_PARTY_DEPS: "1"
+  SCCACHE_CACHE_SIZE: "10G"
+  SCCACHE_IDLE_TIMEOUT: "0"
+
+jobs:
+  # ===========================================================================
+  # 1. 智能版本判断 + 语言参数
+  # ===========================================================================
+  versioning:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.set_vars.outputs.v }}
+      should_release: ${{ steps.set_vars.outputs.r }}
+      lang: ${{ steps.set_vars.outputs.lang }}
+      lang_lower: ${{ steps.set_vars.outputs.lang_lower }}
+    steps:
+      - id: set_vars
+        run: |
+          echo "Trigger Event: ${{ github.event_name }}"
+
+          # === 1. 链式触发 (repository_dispatch) ===
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+             VER="${{ github.event.client_payload.version }}"
+             LANG="${{ github.event.client_payload.lang }}"
+             LANG="${LANG:-zh-CN}"
+             echo "链式触发，版本: $VER，语言: $LANG"
+             echo "v=$VER" >> $GITHUB_OUTPUT
+             echo "r=true" >> $GITHUB_OUTPUT
+
+          # === 2. 手动触发 (workflow_dispatch) ===
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+             INPUT_VER="${{ inputs.version }}"
+             LANG="${{ inputs.lang }}"
+             LANG="${LANG:-zh-CN}"
+             if [ -n "$INPUT_VER" ]; then
+                echo "手动指定版本: $INPUT_VER"
+                echo "v=$INPUT_VER" >> $GITHUB_OUTPUT
+             else
+                LATEST=$(curl -s https://api.github.com/repos/zed-industries/zed/releases/latest | jq -r .tag_name)
+                echo "手动触发，自动获取最新: $LATEST"
+                echo "v=$LATEST" >> $GITHUB_OUTPUT
+             fi
+             echo "r=${{ inputs.release }}" >> $GITHUB_OUTPUT
+          fi
+
+          echo "lang=$LANG" >> $GITHUB_OUTPUT
+          # zh-CN → zh-cn, ja → ja
+          LANG_LOWER=$(echo "$LANG" | tr '[:upper:]' '[:lower:]')
+          echo "lang_lower=$LANG_LOWER" >> $GITHUB_OUTPUT
+
+  # ===========================================================================
+  # 2. Windows 构建
+  # ===========================================================================
+  build-windows:
+    needs: versioning
+    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    runs-on: windows-latest
+    env:
+      SCCACHE_DIR: C:\c\sccache
+      SCCACHE_IDLE_TIMEOUT: "0"
+      BUILD_VERSION: ${{ needs.versioning.outputs.version }}
+      TARGET_LANG: ${{ needs.versioning.outputs.lang }}
+      LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 开启 Git Longpaths
+        run: git config --system core.longpaths true
+
+      - name: 设置目录环境
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path C:\c
+          New-Item -ItemType Directory -Force -Path C:\c\sccache
+          echo "CARGO_HOME=C:\c" >> $env:GITHUB_ENV
+
+      - name: 克隆 Zed 源码并检出 Tag
+        shell: pwsh
+        run: |
+          git clone ${{ env.ZED_REPO }} C:\z
+          Set-Location C:\z
+          git checkout $env:BUILD_VERSION
+          Write-Host "已切换到版本: $env:BUILD_VERSION"
+
+      - name: 安装 Python 与工具
+        run: pip install .
+
+      - name: 从 i18n 分支获取翻译文件
+        shell: pwsh
+        run: |
+          git fetch origin i18n
+          git checkout origin/i18n -- "i18n/$env:TARGET_LANG.json"
+          Write-Host "已获取翻译文件: i18n/$env:TARGET_LANG.json"
+
+      - name: 执行本地化替换
+        shell: pwsh
+        run: |
+          Rename-Item -Path "C:\z" -NewName "C:\zed"
+          zedl10n replace --input "i18n\$env:TARGET_LANG.json" --source-root C:\zed
+          Rename-Item -Path "C:\zed" -NewName "C:\z"
+
+      - name: 准备 Rust 环境
+        run: |
+          rustup update stable
+          rustup default stable
+
+      - name: 安装 sccache
+        run: choco install sccache -y
+
+      - name: 启用 sccache 缓存
+        uses: actions/cache@v3
+        with:
+          path: |
+            C:\c\sccache
+            C:\c\registry
+            C:\c\git
+            C:\z\target
+          key: sccache-win-${{ hashFiles('C:\z\Cargo.lock') }}
+          restore-keys: sccache-win-
+
+      - name: 启动 sccache server
+        run: |
+          sccache --start-server
+          sccache --zero-stats
+
+      - name: 构建 Release (带重试)
+        shell: pwsh
+        env:
+          RUSTC_WRAPPER: sccache
+          RELEASE_CHANNEL: stable
+        run: |
+          cd C:\z
+          $maxRetries = 3
+          $retryCount = 0
+          do {
+              $retryCount++
+              Write-Host "Build Attempt $retryCount / $maxRetries"
+              cargo build --release --jobs 2
+              if ($LASTEXITCODE -eq 0) { Write-Host "Success!"; exit 0 }
+              Write-Host "Failed code $LASTEXITCODE."
+              if ($retryCount -lt $maxRetries) { Start-Sleep -Seconds 15 }
+          } while ($retryCount -lt $maxRetries)
+          exit 1
+
+      - name: 停止 sccache
+        shell: pwsh
+        run: |
+          sccache --show-stats
+          sccache --stop-server || true
+
+      - name: 打包 Windows
+        shell: pwsh
+        run: |
+          mkdir zed-dist
+          Copy-Item C:\z\target\release\zed.exe zed-dist\
+          Compress-Archive -Path zed-dist\* -DestinationPath "zed-globalization-$env:LANG_LOWER-windows-x86_64.zip"
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: zed-windows
+          path: zed-globalization-${{ env.LANG_LOWER }}-windows-x86_64.zip
+
+  # ===========================================================================
+  # 3. Linux 构建
+  # ===========================================================================
+  build-linux:
+    needs: versioning
+    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    runs-on: ubuntu-latest
+    env:
+      SCCACHE_DIR: /home/runner/.cache/sccache
+      SCCACHE_IDLE_TIMEOUT: "0"
+      BUILD_VERSION: ${{ needs.versioning.outputs.version }}
+      TARGET_LANG: ${{ needs.versioning.outputs.lang }}
+      LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+    steps:
+      - name: 释放磁盘空间
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: false
+
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 安装 sccache
+        uses: mozilla-actions/sccache-action@v0.0.3
+
+      - name: 安装依赖
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential pkg-config python3 libasound2-dev \
+            libx11-dev libx11-xcb-dev libxkbfile-dev libgtk-3-dev \
+            libxcb-xinput-dev libwayland-dev libxkbcommon-dev \
+            libxkbcommon-x11-dev libxcb1-dev libxcb-render0-dev \
+            libxcb-shape0-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
+            libxcb-randr0-dev libxcb-keysyms1-dev libxcb-util-dev \
+            libgl1-mesa-dev libegl1-mesa-dev libfreetype6-dev libfontconfig1-dev \
+            libssl-dev libudev-dev libclang-dev clang cmake binutils-gold
+          echo "RUSTFLAGS=-C link-arg=-fuse-ld=gold -Clink-arg=-Wl,--no-threads" >> $GITHUB_ENV
+
+      - name: 克隆 Zed 源码并检出 Tag
+        run: |
+          git clone ${{ env.ZED_REPO }} zed
+          cd zed
+          git checkout $BUILD_VERSION
+          echo "Checked out $BUILD_VERSION"
+
+      - name: 安装 Python 与工具
+        run: pip install .
+
+      - name: 从 i18n 分支获取翻译文件
+        run: |
+          git fetch origin i18n
+          git checkout origin/i18n -- "i18n/${TARGET_LANG}.json"
+
+      - name: 执行本地化替换
+        run: zedl10n replace --input "i18n/${TARGET_LANG}.json" --source-root zed
+
+      - name: 启用 sccache 缓存
+        uses: actions/cache@v3
+        with:
+          path: |
+            /home/runner/.cache/sccache
+            ~/.cargo/registry
+            ~/.cargo/git
+            zed/target
+          key: sccache-linux-${{ hashFiles('zed/Cargo.lock') }}
+          restore-keys: sccache-linux-
+
+      - name: 安装 Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: 启动 sccache
+        run: |
+          sccache --stop-server || true
+          sccache --start-server
+          sccache --zero-stats
+          sccache -s
+
+      - name: 构建 Release
+        env:
+          RUSTC_WRAPPER: sccache
+          RELEASE_CHANNEL: stable
+        run: |
+          cd zed
+          cargo build --release --jobs 2 --locked
+
+      - name: 停止 sccache
+        run: |
+          sccache --show-stats
+          sccache --stop-server || true
+
+      - name: 打包 Linux
+        run: |
+          # === tar.gz 包 ===
+          mkdir -p dist/usr/bin
+          mkdir -p dist/usr/share/applications
+          mkdir -p dist/usr/share/icons/hicolor/512x512/apps
+          mkdir -p dist/usr/share/icons/hicolor/1024x1024/apps
+          cp zed/target/release/zed dist/usr/bin/
+
+          cp zed/crates/zed/resources/app-icon.png \
+             dist/usr/share/icons/hicolor/512x512/apps/zed.png
+          cp zed/crates/zed/resources/app-icon@2x.png \
+             dist/usr/share/icons/hicolor/1024x1024/apps/zed.png
+
+          cat > dist/usr/share/applications/zed.desktop <<DESKTOP
+          [Desktop Entry]
+          Version=1.0
+          Type=Application
+          Name=Zed
+          GenericName=Text Editor
+          Comment=A high-performance, multiplayer code editor.
+          TryExec=zed
+          StartupNotify=true
+          Exec=zed %F
+          Icon=zed
+          Categories=Utility;TextEditor;Development;IDE;
+          Keywords=zed;
+          MimeType=text/plain;
+          DESKTOP
+
+          tar -czvf "zed-globalization-${LANG_LOWER}-linux-x86_64.tar.gz" -C dist .
+
+          # === deb 包 ===
+          mkdir -p deb-pkg/DEBIAN deb-pkg/usr/bin
+          mkdir -p deb-pkg/usr/share/applications
+          mkdir -p deb-pkg/usr/share/icons/hicolor/512x512/apps
+          mkdir -p deb-pkg/usr/share/icons/hicolor/1024x1024/apps
+          cp zed/target/release/zed deb-pkg/usr/bin/
+          cp dist/usr/share/applications/zed.desktop deb-pkg/usr/share/applications/
+          cp dist/usr/share/icons/hicolor/512x512/apps/zed.png \
+             deb-pkg/usr/share/icons/hicolor/512x512/apps/
+          cp dist/usr/share/icons/hicolor/1024x1024/apps/zed.png \
+             deb-pkg/usr/share/icons/hicolor/1024x1024/apps/
+
+          RAW_VERSION="${{ needs.versioning.outputs.version }}"
+          CLEAN_VERSION="${RAW_VERSION#v}"
+          cat > deb-pkg/DEBIAN/control <<CTRL
+          Package: zed-globalization
+          Version: $CLEAN_VERSION
+          Architecture: amd64
+          Maintainer: zed-globalization
+          Description: Zed editor with globalization support.
+          CTRL
+          dpkg-deb --build deb-pkg "zed-globalization-${LANG_LOWER}-linux-x86_64.deb"
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: zed-linux
+          path: |
+            zed-globalization-${{ env.LANG_LOWER }}-linux-x86_64.tar.gz
+            zed-globalization-${{ env.LANG_LOWER }}-linux-x86_64.deb
+
+  # ===========================================================================
+  # 4. macOS 构建
+  # ===========================================================================
+  build-macos:
+    needs: versioning
+    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    runs-on: macos-latest
+    env:
+      SCCACHE_DIR: /Users/runner/Library/Caches/Mozilla.sccache
+      SCCACHE_IDLE_TIMEOUT: "0"
+      BUILD_VERSION: ${{ needs.versioning.outputs.version }}
+      TARGET_LANG: ${{ needs.versioning.outputs.lang }}
+      LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 安装 sccache
+        uses: mozilla-actions/sccache-action@v0.0.3
+
+      - name: 克隆 Zed 源码并检出 Tag
+        run: |
+          git clone ${{ env.ZED_REPO }} zed
+          cd zed
+          git checkout $BUILD_VERSION
+
+      - name: 安装 Python 与工具
+        run: pip3 install --break-system-packages .
+
+      - name: 从 i18n 分支获取翻译文件
+        run: |
+          git fetch origin i18n
+          git checkout origin/i18n -- "i18n/${TARGET_LANG}.json"
+
+      - name: 执行本地化替换
+        run: zedl10n replace --input "i18n/${TARGET_LANG}.json" --source-root zed
+
+      - name: 启用 sccache 缓存
+        uses: actions/cache@v3
+        with:
+          path: |
+            /Users/runner/Library/Caches/Mozilla.sccache
+            ~/.cargo/registry
+            ~/.cargo/git
+            zed/target
+          key: sccache-macos-${{ hashFiles('zed/Cargo.lock') }}
+          restore-keys: sccache-macos-
+
+      - name: 安装 Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - name: 启动 sccache
+        run: |
+          sccache --start-server
+          sccache --zero-stats
+
+      - name: 构建 macOS Release
+        env:
+          RUSTC_WRAPPER: sccache
+          RELEASE_CHANNEL: stable
+        run: |
+          cd zed
+          cargo build --release --target aarch64-apple-darwin --jobs 4 --locked
+
+          APP_NAME="Zed.app"
+          mkdir -p "$APP_NAME/Contents/MacOS" "$APP_NAME/Contents/Resources"
+          cp target/aarch64-apple-darwin/release/zed "$APP_NAME/Contents/MacOS/zed"
+
+          # === 生成应用图标 (PNG -> ICNS) ===
+          ICONSET_DIR="AppIcon.iconset"
+          mkdir -p "$ICONSET_DIR"
+          ICON_SRC="crates/zed/resources/app-icon@2x.png"
+          if [ -f "$ICON_SRC" ]; then
+            sips -z 16 16     "$ICON_SRC" --out "$ICONSET_DIR/icon_16x16.png"
+            sips -z 32 32     "$ICON_SRC" --out "$ICONSET_DIR/icon_16x16@2x.png"
+            sips -z 32 32     "$ICON_SRC" --out "$ICONSET_DIR/icon_32x32.png"
+            sips -z 64 64     "$ICON_SRC" --out "$ICONSET_DIR/icon_32x32@2x.png"
+            sips -z 128 128   "$ICON_SRC" --out "$ICONSET_DIR/icon_128x128.png"
+            sips -z 256 256   "$ICON_SRC" --out "$ICONSET_DIR/icon_128x128@2x.png"
+            sips -z 256 256   "$ICON_SRC" --out "$ICONSET_DIR/icon_256x256.png"
+            sips -z 512 512   "$ICON_SRC" --out "$ICONSET_DIR/icon_256x256@2x.png"
+            sips -z 512 512   "$ICON_SRC" --out "$ICONSET_DIR/icon_512x512.png"
+            cp "$ICON_SRC"                       "$ICONSET_DIR/icon_512x512@2x.png"
+            iconutil -c icns "$ICONSET_DIR" -o "$APP_NAME/Contents/Resources/AppIcon.icns"
+            echo "应用图标已生成"
+          else
+            echo "未找到图标源文件 $ICON_SRC"
+          fi
+
+          # === 复制 Document 图标 ===
+          if [ -f "crates/zed/resources/Document.icns" ]; then
+            cp "crates/zed/resources/Document.icns" "$APP_NAME/Contents/Resources/"
+          fi
+
+          cat > "$APP_NAME/Contents/Info.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleExecutable</key>
+              <string>zed</string>
+              <key>CFBundleIdentifier</key>
+              <string>dev.zed.Zed</string>
+              <key>CFBundleName</key>
+              <string>Zed</string>
+              <key>CFBundleIconFile</key>
+              <string>AppIcon</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleShortVersionString</key>
+              <string>${{ needs.versioning.outputs.version }}</string>
+          </dict>
+          </plist>
+          EOF
+
+          # === 等待文件系统并重试 hdiutil ===
+          echo "编译完成，等待文件系统稳定 (10s)..."
+          sleep 10
+
+          echo "开始打包 DMG..."
+          n=0
+          until [ "$n" -ge 10 ]
+          do
+              hdiutil create -volname Zed -srcfolder "$APP_NAME" -ov -format UDZO "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" && break
+              n=$((n+1))
+              echo "hdiutil 失败 (Resource busy?), 等待 15秒后重试 ($n/10)..."
+              sleep 15
+          done
+
+          if [ ! -f "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" ]; then
+              echo "最终打包失败，退出。"
+              exit 1
+          fi
+
+          mv "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" ../
+
+      - name: 停止 sccache
+        run: |
+          sccache --show-stats
+          sccache --stop-server || true
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: zed-macos
+          path: zed-globalization-${{ env.LANG_LOWER }}-macos-aarch64.dmg
+
+  # ===========================================================================
+  # 5. 正式发布
+  # ===========================================================================
+  release:
+    runs-on: ubuntu-latest
+    needs: [versioning, build-windows, build-linux, build-macos]
+    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    env:
+      LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+
+    steps:
+      - name: 下载所有产物
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: 整理文件与生成 Hash
+        run: |
+          mkdir release-dist
+          mv "artifacts/zed-windows/zed-globalization-${LANG_LOWER}-windows-x86_64.zip" release-dist/ || echo "No Windows artifact"
+          mv "artifacts/zed-linux/zed-globalization-${LANG_LOWER}-linux-x86_64.tar.gz" release-dist/ || echo "No Linux tar artifact"
+          mv "artifacts/zed-linux/zed-globalization-${LANG_LOWER}-linux-x86_64.deb" release-dist/ || echo "No Linux deb artifact"
+          mv "artifacts/zed-macos/zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" release-dist/ || echo "No macOS artifact"
+
+          cd release-dist
+          sha256sum * > sha256sums.txt
+
+      - name: 发布 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Zed Globalization ${{ needs.versioning.outputs.lang }} ${{ needs.versioning.outputs.version }}
+          tag_name: ${{ needs.versioning.outputs.version }}
+          files: release-dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
