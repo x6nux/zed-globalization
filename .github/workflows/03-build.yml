@@ -24,6 +24,13 @@ on:
           - ja
           - ko
         default: zh-CN
+      build_profile:
+        description: "构建 Profile (release-fast 编译快但优化略少)"
+        type: choice
+        options:
+          - release
+          - release-fast
+        default: release
 
 permissions:
   contents: write
@@ -49,6 +56,8 @@ jobs:
       should_release: ${{ steps.set_vars.outputs.r }}
       lang: ${{ steps.set_vars.outputs.lang }}
       lang_lower: ${{ steps.set_vars.outputs.lang_lower }}
+      build_profile: ${{ steps.set_vars.outputs.build_profile }}
+      cargo_profile_flag: ${{ steps.set_vars.outputs.cargo_profile_flag }}
     steps:
       - id: set_vars
         run: |
@@ -84,6 +93,21 @@ jobs:
           LANG_LOWER=$(echo "$LANG" | tr '[:upper:]' '[:lower:]')
           echo "lang_lower=$LANG_LOWER" >> $GITHUB_OUTPUT
 
+          # 构建 Profile：手动触发可选，自动触发默认 release
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            PROFILE="${{ inputs.build_profile }}"
+          else
+            PROFILE="release"
+          fi
+          PROFILE="${PROFILE:-release}"
+          echo "build_profile=$PROFILE" >> $GITHUB_OUTPUT
+          # cargo flag: release → --release, 其他 → --profile xxx
+          if [ "$PROFILE" == "release" ]; then
+            echo "cargo_profile_flag=--release" >> $GITHUB_OUTPUT
+          else
+            echo "cargo_profile_flag=--profile $PROFILE" >> $GITHUB_OUTPUT
+          fi
+
   # ===========================================================================
   # 2. Windows 构建
   # ===========================================================================
@@ -97,6 +121,8 @@ jobs:
       BUILD_VERSION: ${{ needs.versioning.outputs.version }}
       TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+      BUILD_PROFILE: ${{ needs.versioning.outputs.build_profile }}
+      CARGO_PROFILE_FLAG: ${{ needs.versioning.outputs.cargo_profile_flag }}
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4
@@ -166,30 +192,81 @@ jobs:
           RUSTC_WRAPPER: sccache
           RELEASE_CHANNEL: stable
         run: |
+          # 启动内存监控后台任务
+          $monitorJob = Start-Job -ScriptBlock {
+              $log = "C:\mem_monitor.csv"
+              "timestamp,used_mb,total_mb,swap_used_mb,swap_total_mb" | Out-File $log
+              while ($true) {
+                  $os = Get-CimInstance Win32_OperatingSystem
+                  $totalMB = [math]::Round($os.TotalVisibleMemorySize / 1024)
+                  $freeMB  = [math]::Round($os.FreePhysicalMemory / 1024)
+                  $usedMB  = $totalMB - $freeMB
+                  $swapTotalMB = [math]::Round(($os.SizeStoredInPagingFiles) / 1024)
+                  $swapFreeMB  = [math]::Round(($os.FreeSpaceInPagingFiles) / 1024)
+                  $swapUsedMB  = $swapTotalMB - $swapFreeMB
+                  $ts = Get-Date -Format "HH:mm:ss"
+                  "$ts,$usedMB,$totalMB,$swapUsedMB,$swapTotalMB" | Out-File $log -Append
+                  Start-Sleep -Seconds 10
+              }
+          }
+
           cd C:\z
           $maxRetries = 3
           $retryCount = 0
           do {
               $retryCount++
-              Write-Host "Build Attempt $retryCount / $maxRetries"
-              cargo build --release --jobs 2
-              if ($LASTEXITCODE -eq 0) { Write-Host "Success!"; exit 0 }
+              Write-Host "Build Attempt $retryCount / $maxRetries (profile: $env:BUILD_PROFILE)"
+              Invoke-Expression "cargo build $env:CARGO_PROFILE_FLAG --jobs 4"
+              if ($LASTEXITCODE -eq 0) { Write-Host "Success!"; break }
               Write-Host "Failed code $LASTEXITCODE."
               if ($retryCount -lt $maxRetries) { Start-Sleep -Seconds 15 }
           } while ($retryCount -lt $maxRetries)
-          exit 1
+
+          # 停止监控并输出摘要
+          Stop-Job $monitorJob; Remove-Job $monitorJob
+          $csv = Import-Csv "C:\mem_monitor.csv"
+          $peakMem  = ($csv | Measure-Object -Property used_mb -Maximum).Maximum
+          $peakSwap = ($csv | Measure-Object -Property swap_used_mb -Maximum).Maximum
+          $totalMem = $csv[0].total_mb
+          $totalSwap = $csv[0].swap_total_mb
+          Write-Host "===== 内存监控摘要 ====="
+          Write-Host "物理内存: 峰值 ${peakMem}MB / 总计 ${totalMem}MB"
+          Write-Host "交换内存: 峰值 ${peakSwap}MB / 总计 ${totalSwap}MB"
+          if ([int]$peakSwap -gt 0) { Write-Host "⚠ 编译期间使用了交换内存!" }
+          Write-Host "采样记录数: $($csv.Count)"
+
+          if ($LASTEXITCODE -ne 0) { exit 1 }
 
       - name: 停止 sccache
         shell: pwsh
         run: |
-          sccache --show-stats
-          sccache --stop-server || true
+          Write-Host ""
+          Write-Host "========================================="
+          Write-Host "         sccache 编译缓存统计"
+          Write-Host "========================================="
+          $stats = sccache --show-stats 2>&1
+          $stats | Write-Host
+          Write-Host "-----------------------------------------"
+          $hits   = ($stats | Select-String "Cache hits\s+(\d+)" | ForEach-Object { $_.Matches[0].Groups[1].Value }) -as [int]
+          $misses = ($stats | Select-String "Cache misses\s+(\d+)" | ForEach-Object { $_.Matches[0].Groups[1].Value }) -as [int]
+          $total  = $hits + $misses
+          if ($total -gt 0) {
+              $rate = [math]::Round($hits / $total * 100, 1)
+              Write-Host ">>> 缓存命中: $hits / $total ($rate%)"
+              if ($rate -lt 30) { Write-Host ">>> ⚠ 命中率偏低，首次构建或缓存失效" }
+          } else {
+              Write-Host ">>> 无编译请求经过 sccache"
+          }
+          Write-Host "========================================="
+          Write-Host ""
+          sccache --stop-server || $true
 
       - name: 打包 Windows
         shell: pwsh
         run: |
+          $profileDir = if ($env:BUILD_PROFILE -eq "release") { "release" } else { $env:BUILD_PROFILE }
           mkdir zed-dist
-          Copy-Item C:\z\target\release\zed.exe zed-dist\ZedG.exe
+          Copy-Item "C:\z\target\$profileDir\zed.exe" zed-dist\ZedG.exe
           Compress-Archive -Path zed-dist\* -DestinationPath "zed-globalization-$env:LANG_LOWER-windows-x86_64.zip"
 
       - name: 上传产物
@@ -211,6 +288,8 @@ jobs:
       BUILD_VERSION: ${{ needs.versioning.outputs.version }}
       TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+      BUILD_PROFILE: ${{ needs.versioning.outputs.build_profile }}
+      CARGO_PROFILE_FLAG: ${{ needs.versioning.outputs.cargo_profile_flag }}
     steps:
       - name: 释放磁盘空间
         uses: jlumbroso/free-disk-space@main
@@ -285,22 +364,81 @@ jobs:
           RUSTC_WRAPPER: sccache
           RELEASE_CHANNEL: stable
         run: |
+          # 启动内存监控后台进程
+          MEM_LOG="/tmp/mem_monitor.csv"
+          echo "timestamp,used_mb,total_mb,swap_used_mb,swap_total_mb" > "$MEM_LOG"
+          (
+            while true; do
+              read _ TOTAL _ FREE _ <<< $(grep -E '^MemTotal:|^MemAvailable:' /proc/meminfo | awk '{print $2}')
+              TOTAL_MB=$(($(awk '/^MemTotal:/{print $2}' /proc/meminfo) / 1024))
+              AVAIL_MB=$(($(awk '/^MemAvailable:/{print $2}' /proc/meminfo) / 1024))
+              USED_MB=$((TOTAL_MB - AVAIL_MB))
+              SWAP_TOTAL_MB=$(($(awk '/^SwapTotal:/{print $2}' /proc/meminfo) / 1024))
+              SWAP_FREE_MB=$(($(awk '/^SwapFree:/{print $2}' /proc/meminfo) / 1024))
+              SWAP_USED_MB=$((SWAP_TOTAL_MB - SWAP_FREE_MB))
+              echo "$(date +%H:%M:%S),$USED_MB,$TOTAL_MB,$SWAP_USED_MB,$SWAP_TOTAL_MB" >> "$MEM_LOG"
+              sleep 10
+            done
+          ) &
+          MONITOR_PID=$!
+
           cd zed
-          cargo build --release --jobs 2 --locked
+          cargo build $CARGO_PROFILE_FLAG --jobs 4 --locked
+          BUILD_EXIT=$?
+
+          # 停止监控并输出摘要
+          kill $MONITOR_PID 2>/dev/null || true
+          echo "===== 内存监控摘要 ====="
+          PEAK_MEM=$(tail -n +2 "$MEM_LOG" | cut -d, -f2 | sort -n | tail -1)
+          PEAK_SWAP=$(tail -n +2 "$MEM_LOG" | cut -d, -f4 | sort -n | tail -1)
+          TOTAL_MEM=$(tail -n +2 "$MEM_LOG" | head -1 | cut -d, -f3)
+          TOTAL_SWAP=$(tail -n +2 "$MEM_LOG" | head -1 | cut -d, -f5)
+          SAMPLES=$(tail -n +2 "$MEM_LOG" | wc -l)
+          echo "物理内存: 峰值 ${PEAK_MEM}MB / 总计 ${TOTAL_MEM}MB"
+          echo "交换内存: 峰值 ${PEAK_SWAP}MB / 总计 ${TOTAL_SWAP}MB"
+          if [ "$PEAK_SWAP" -gt 0 ] 2>/dev/null; then echo "⚠ 编译期间使用了交换内存!"; fi
+          echo "采样记录数: $SAMPLES"
+
+          exit $BUILD_EXIT
 
       - name: 停止 sccache
         run: |
+          echo ""
+          echo "========================================="
+          echo "         sccache 编译缓存统计"
+          echo "========================================="
           sccache --show-stats
+          echo "-----------------------------------------"
+          HITS=$(sccache --show-stats 2>&1 | grep -oP 'Cache hits\s+\K\d+' | head -1)
+          MISSES=$(sccache --show-stats 2>&1 | grep -oP 'Cache misses\s+\K\d+' | head -1)
+          HITS=${HITS:-0}; MISSES=${MISSES:-0}
+          TOTAL=$((HITS + MISSES))
+          if [ "$TOTAL" -gt 0 ]; then
+            RATE=$(awk "BEGIN {printf \"%.1f\", $HITS/$TOTAL*100}")
+            echo ">>> 缓存命中: $HITS / $TOTAL ($RATE%)"
+            if [ "$(echo "$RATE < 30" | bc)" -eq 1 ]; then echo ">>> ⚠ 命中率偏低，首次构建或缓存失效"; fi
+          else
+            echo ">>> 无编译请求经过 sccache"
+          fi
+          echo "========================================="
+          echo ""
           sccache --stop-server || true
 
       - name: 打包 Linux
         run: |
+          # 根据 profile 确定产物目录
+          if [ "$BUILD_PROFILE" = "release" ]; then
+            PROFILE_DIR="release"
+          else
+            PROFILE_DIR="$BUILD_PROFILE"
+          fi
+
           # === tar.gz 包 ===
           mkdir -p dist/usr/bin
           mkdir -p dist/usr/share/applications
           mkdir -p dist/usr/share/icons/hicolor/512x512/apps
           mkdir -p dist/usr/share/icons/hicolor/1024x1024/apps
-          cp zed/target/release/zed dist/usr/bin/zedg
+          cp "zed/target/${PROFILE_DIR}/zed" dist/usr/bin/zedg
 
           cp zed/crates/zed/resources/app-icon.png \
              dist/usr/share/icons/hicolor/512x512/apps/zedg.png
@@ -330,7 +468,7 @@ jobs:
           mkdir -p deb-pkg/usr/share/applications
           mkdir -p deb-pkg/usr/share/icons/hicolor/512x512/apps
           mkdir -p deb-pkg/usr/share/icons/hicolor/1024x1024/apps
-          cp zed/target/release/zed deb-pkg/usr/bin/zedg
+          cp "zed/target/${PROFILE_DIR}/zed" deb-pkg/usr/bin/zedg
           cp dist/usr/share/applications/zedg.desktop deb-pkg/usr/share/applications/
           cp dist/usr/share/icons/hicolor/512x512/apps/zedg.png \
              deb-pkg/usr/share/icons/hicolor/512x512/apps/
@@ -369,6 +507,8 @@ jobs:
       BUILD_VERSION: ${{ needs.versioning.outputs.version }}
       TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+      BUILD_PROFILE: ${{ needs.versioning.outputs.build_profile }}
+      CARGO_PROFILE_FLAG: ${{ needs.versioning.outputs.cargo_profile_flag }}
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4
@@ -420,11 +560,57 @@ jobs:
           RELEASE_CHANNEL: stable
         run: |
           cd zed
-          cargo build --release --target aarch64-apple-darwin --jobs 4 --locked
+          # 根据 profile 确定产物目录
+          if [ "$BUILD_PROFILE" = "release" ]; then
+            PROFILE_DIR="release"
+          else
+            PROFILE_DIR="$BUILD_PROFILE"
+          fi
+
+          # 启动内存监控后台进程
+          MEM_LOG="/tmp/mem_monitor.csv"
+          echo "timestamp,used_mb,total_mb,swap_used_mb,swap_total_mb" > "$MEM_LOG"
+          (
+            TOTAL_MB=$(( $(sysctl -n hw.memsize) / 1024 / 1024 ))
+            while true; do
+              # vm_stat 输出页面统计，页大小 16384 (Apple Silicon)
+              PAGE_SIZE=$(vm_stat | head -1 | grep -oE '[0-9]+')
+              eval $(vm_stat | tail -n +2 | sed -E 's/^(.+):[[:space:]]+([0-9]+)\./\1=\2/' | tr ' ' '_' | tr -d '()' | head -10)
+              FREE_PAGES=${Pages_free:-0}
+              INACTIVE_PAGES=${Pages_inactive:-0}
+              SPECULATIVE_PAGES=${Pages_speculative:-0}
+              AVAIL_MB=$(( (FREE_PAGES + INACTIVE_PAGES + SPECULATIVE_PAGES) * PAGE_SIZE / 1024 / 1024 ))
+              USED_MB=$(( TOTAL_MB - AVAIL_MB ))
+              # macOS swap 使用量
+              SWAP_USED_MB=$(sysctl -n vm.swapusage | awk -F'[= ]+' '{for(i=1;i<=NF;i++) if($i=="used") printf "%d", $(i+1)}')
+              SWAP_TOTAL_MB=$(sysctl -n vm.swapusage | awk -F'[= ]+' '{for(i=1;i<=NF;i++) if($i=="total") printf "%d", $(i+1)}')
+              echo "$(date +%H:%M:%S),$USED_MB,$TOTAL_MB,${SWAP_USED_MB:-0},${SWAP_TOTAL_MB:-0}" >> "$MEM_LOG"
+              sleep 10
+            done
+          ) &
+          MONITOR_PID=$!
+
+          cargo build $CARGO_PROFILE_FLAG --target aarch64-apple-darwin --jobs 4 --locked
+          BUILD_EXIT=$?
+
+          # 停止监控并输出摘要
+          kill $MONITOR_PID 2>/dev/null || true
+          echo "===== 内存监控摘要 ====="
+          PEAK_MEM=$(tail -n +2 "$MEM_LOG" | cut -d, -f2 | sort -n | tail -1)
+          PEAK_SWAP=$(tail -n +2 "$MEM_LOG" | cut -d, -f4 | sort -n | tail -1)
+          TOTAL_MEM=$(tail -n +2 "$MEM_LOG" | head -1 | cut -d, -f3)
+          TOTAL_SWAP=$(tail -n +2 "$MEM_LOG" | head -1 | cut -d, -f5)
+          SAMPLES=$(tail -n +2 "$MEM_LOG" | wc -l)
+          echo "物理内存: 峰值 ${PEAK_MEM}MB / 总计 ${TOTAL_MEM}MB"
+          echo "交换内存: 峰值 ${PEAK_SWAP}MB / 总计 ${TOTAL_SWAP}MB"
+          if [ "${PEAK_SWAP:-0}" -gt 0 ] 2>/dev/null; then echo "⚠ 编译期间使用了交换内存!"; fi
+          echo "采样记录数: $SAMPLES"
+
+          if [ $BUILD_EXIT -ne 0 ]; then exit $BUILD_EXIT; fi
 
           APP_NAME="ZedG.app"
           mkdir -p "$APP_NAME/Contents/MacOS" "$APP_NAME/Contents/Resources"
-          cp target/aarch64-apple-darwin/release/zed "$APP_NAME/Contents/MacOS/zed"
+          cp "target/aarch64-apple-darwin/${PROFILE_DIR}/zed" "$APP_NAME/Contents/MacOS/zed"
 
           # === 生成应用图标 (PNG -> ICNS) ===
           ICONSET_DIR="AppIcon.iconset"
@@ -502,7 +688,25 @@ jobs:
 
       - name: 停止 sccache
         run: |
+          echo ""
+          echo "========================================="
+          echo "         sccache 编译缓存统计"
+          echo "========================================="
           sccache --show-stats
+          echo "-----------------------------------------"
+          HITS=$(sccache --show-stats 2>&1 | grep -oP 'Cache hits\s+\K\d+' | head -1)
+          MISSES=$(sccache --show-stats 2>&1 | grep -oP 'Cache misses\s+\K\d+' | head -1)
+          HITS=${HITS:-0}; MISSES=${MISSES:-0}
+          TOTAL=$((HITS + MISSES))
+          if [ "$TOTAL" -gt 0 ]; then
+            RATE=$(awk "BEGIN {printf \"%.1f\", $HITS/$TOTAL*100}")
+            echo ">>> 缓存命中: $HITS / $TOTAL ($RATE%)"
+            if [ "$(echo "$RATE < 30" | bc)" -eq 1 ]; then echo ">>> ⚠ 命中率偏低，首次构建或缓存失效"; fi
+          else
+            echo ">>> 无编译请求经过 sccache"
+          fi
+          echo "========================================="
+          echo ""
           sccache --stop-server || true
 
       - name: 上传产物
