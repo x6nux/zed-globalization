@@ -532,11 +532,41 @@ jobs:
           cd release-dist
           sha256sum * > sha256sums.txt
 
+      - name: 获取 Zed 官方 Release Notes
+        id: zed_notes
+        env:
+          BUILD_VERSION: ${{ needs.versioning.outputs.version }}
+        run: |
+          # 通过 tag 获取对应的 release body
+          NOTES=$(curl -s "https://api.github.com/repos/zed-industries/zed/releases/tags/${BUILD_VERSION}" | jq -r '.body // empty')
+
+          if [ -z "$NOTES" ]; then
+            echo "未找到 ${BUILD_VERSION} 的 Release Notes，尝试获取最新版本"
+            NOTES=$(curl -s "https://api.github.com/repos/zed-industries/zed/releases/latest" | jq -r '.body // empty')
+          fi
+
+          # 写入文件避免多行字符串转义问题
+          if [ -n "$NOTES" ]; then
+            {
+              echo "## Zed ${BUILD_VERSION} 更新内容"
+              echo ""
+              echo "$NOTES"
+            } > /tmp/release_body.md
+          else
+            echo "## Zed ${BUILD_VERSION}" > /tmp/release_body.md
+            echo "" >> /tmp/release_body.md
+            echo "查看官方更新日志: https://github.com/zed-industries/zed/releases/tag/${BUILD_VERSION}" >> /tmp/release_body.md
+          fi
+
+          echo "Release body 已生成:"
+          head -10 /tmp/release_body.md
+
       - name: 发布 Release
         uses: softprops/action-gh-release@v2
         with:
           name: Zed Globalization ${{ needs.versioning.outputs.lang }} ${{ needs.versioning.outputs.version }}
           tag_name: ${{ needs.versioning.outputs.version }}
+          body_path: /tmp/release_body.md
           files: release-dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
