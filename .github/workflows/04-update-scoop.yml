@@ -84,8 +84,8 @@ jobs:
                       "hash": "$SHA256"
                   }
               },
-              "bin": "zed.exe",
-              "shortcuts": [["zed.exe", "Zed"]],
+              "bin": "ZedG.exe",
+              "shortcuts": [["ZedG.exe", "ZedG"]],
               "checkver": {
                   "github": "https://github.com/${{ github.repository }}"
               },
