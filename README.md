@@ -45,13 +45,13 @@ sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
 ## 自动化流水线
 
 ```
-03-scan (每日定时)     扫描 Zed 新版本，提取待翻译字符串
+01-scan (每日定时)     扫描 Zed 新版本，提取待翻译字符串
        |
-04-translate           AI 并发翻译，推送到 i18n 分支
+02-translate           AI 并发翻译，推送到 i18n 分支
        |
-01-build               三平台编译，生成 Release
+03-build               三平台编译 + patch_agent_env 补丁，生成 Release
        |
-02-update-scoop        更新 Scoop Manifest
+04-update-scoop        更新 Scoop Manifest
 ```
 
 ## 本地使用
@@ -96,8 +96,11 @@ zedl10n pipeline --source-root zed --lang zh-CN --mode full
 ```bash
 git clone https://github.com/zed-industries/zed.git
 zedl10n replace --input i18n/zh-CN.json --source-root zed
+python3 patch_agent_env.py --source-root zed
 cd zed && cargo build --release
 ```
+
+> `patch_agent_env.py` 修复 Zed Agent 插件环境变量被覆盖的问题，使 `ANTHROPIC_API_KEY` 等系统环境变量能正确透传。脚本支持 `--dry-run` 预览，可重复运行（幂等）。
 
 ## AI 配置
 
@@ -115,10 +118,10 @@ cd zed && cargo build --release
 ```
 zed-globalization/
 ├── .github/workflows/
-│   ├── 01-build.yml        # 多平台编译 + 发布
-│   ├── 02-update-scoop.yml # Scoop Manifest 更新
-│   ├── 03-scan.yml         # 定时扫描 + 字符串提取
-│   └── 04-translate.yml    # AI 翻译
+│   ├── 01-scan.yml         # 定时扫描 + 字符串提取
+│   ├── 02-translate.yml    # AI 翻译
+│   ├── 03-build.yml        # 多平台编译 + 发布
+│   └── 04-update-scoop.yml # Scoop Manifest 更新
 ├── config/
 │   └── glossary.yaml       # 翻译术语表
 ├── i18n/                   # 翻译文件（zh-CN, ja, ko 等）
@@ -127,9 +130,10 @@ zed-globalization/
 │   ├── scan.py             # AI 扫描识别待翻译文件
 │   ├── extract.py          # 正则提取字符串 + 上下文
 │   ├── translate.py        # AI 并发翻译（三级降级）
-│   ├── replace.py          # 源码替换（三层保护）
+│   ├── replace.py          # 源码替换（多级路径解析 + 三层保护）
 │   ├── convert.py          # JSON <-> Excel 转换
 │   └── utils.py            # 共享工具与配置
+├── patch_agent_env.py      # 编译前补丁：修复 Agent 环境变量透传
 └── pyproject.toml
 ```
 

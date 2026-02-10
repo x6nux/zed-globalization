@@ -177,6 +177,9 @@ jobs:
           zedl10n replace --input "i18n\$env:TARGET_LANG.json" --source-root C:\zed
           Rename-Item -Path "C:\zed" -NewName "C:\z"
 
+      - name: 应用 Agent 环境变量补丁
+        run: python3 patch_agent_env.py --source-root C:\z
+
       - name: 准备 Rust 环境
         run: |
           rustup update stable
@@ -352,6 +355,9 @@ jobs:
 
       - name: 执行本地化替换
         run: zedl10n replace --input "i18n/${TARGET_LANG}.json" --source-root zed
+
+      - name: 应用 Agent 环境变量补丁
+        run: python3 patch_agent_env.py --source-root zed
 
       - name: 启用 sccache 缓存
         uses: actions/cache@v3
@@ -547,6 +553,9 @@ jobs:
 
       - name: 执行本地化替换
         run: zedl10n replace --input "i18n/${TARGET_LANG}.json" --source-root zed
+
+      - name: 应用 Agent 环境变量补丁
+        run: python3 patch_agent_env.py --source-root zed
 
       - name: 启用 sccache 缓存
         uses: actions/cache@v3
