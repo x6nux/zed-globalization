@@ -60,17 +60,17 @@ jobs:
       cargo_profile_flag: ${{ steps.set_vars.outputs.cargo_profile_flag }}
     steps:
       - id: set_vars
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "Trigger Event: ${{ github.event_name }}"
 
           # === 1. 链式触发 (repository_dispatch) ===
           if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
-             VER="${{ github.event.client_payload.version }}"
+             BASE_VER="${{ github.event.client_payload.version }}"
              LANG="${{ github.event.client_payload.lang }}"
              LANG="${LANG:-zh-CN}"
-             echo "链式触发，版本: $VER，语言: $LANG"
-             echo "v=$VER" >> $GITHUB_OUTPUT
-             echo "r=true" >> $GITHUB_OUTPUT
+             SHOULD_RELEASE="true"
 
           # === 2. 手动触发 (workflow_dispatch) ===
           elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
@@ -78,16 +78,29 @@ jobs:
              LANG="${{ inputs.lang }}"
              LANG="${LANG:-zh-CN}"
              if [ -n "$INPUT_VER" ]; then
-                echo "手动指定版本: $INPUT_VER"
-                echo "v=$INPUT_VER" >> $GITHUB_OUTPUT
+                BASE_VER="$INPUT_VER"
+                echo "手动指定版本: $BASE_VER"
              else
-                LATEST=$(curl -s https://api.github.com/repos/zed-industries/zed/releases/latest | jq -r .tag_name)
-                echo "手动触发，自动获取最新: $LATEST"
-                echo "v=$LATEST" >> $GITHUB_OUTPUT
+                BASE_VER=$(curl -s https://api.github.com/repos/zed-industries/zed/releases/latest | jq -r .tag_name)
+                echo "手动触发，自动获取最新: $BASE_VER"
              fi
-             echo "r=${{ inputs.release }}" >> $GITHUB_OUTPUT
+             SHOULD_RELEASE="${{ inputs.release }}"
           fi
 
+          # === Tag 去重：v0.222.4 → v0.222.4.1 → v0.222.4.2 ===
+          VER="$BASE_VER"
+          if gh release view "$VER" --repo "${{ github.repository }}" >/dev/null 2>&1; then
+            echo "Tag $VER 已存在，查找下一个可用后缀..."
+            SUFFIX=1
+            while gh release view "${BASE_VER}.${SUFFIX}" --repo "${{ github.repository }}" >/dev/null 2>&1; do
+              SUFFIX=$((SUFFIX + 1))
+            done
+            VER="${BASE_VER}.${SUFFIX}"
+            echo "使用新 Tag: $VER"
+          fi
+
+          echo "v=$VER" >> $GITHUB_OUTPUT
+          echo "r=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
           echo "lang=$LANG" >> $GITHUB_OUTPUT
           # zh-CN → zh-cn, ja → ja
           LANG_LOWER=$(echo "$LANG" | tr '[:upper:]' '[:lower:]')
