@@ -41,19 +41,24 @@ jobs:
           echo "Zed 官方最新: $UPSTREAM | 本地最新: $LOCAL"
           echo "local_version=$LOCAL" >> $GITHUB_OUTPUT
 
+          # 提取本地基础版本号（去掉重复构建后缀 .1 .2 等）
+          # v0.222.4.1 → v0.222.4, v0.222.4 → v0.222.4
+          LOCAL_BASE=$(echo "$LOCAL" | sed -E 's/^(v[0-9]+\.[0-9]+\.[0-9]+)\.[0-9]+$/\1/')
+          echo "本地基础版本: $LOCAL_BASE"
+
           # 手动触发时始终执行扫描
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "手动触发，执行扫描"
             echo "version=$UPSTREAM" >> $GITHUB_OUTPUT
             echo "has_update=true" >> $GITHUB_OUTPUT
 
-          elif [ "$UPSTREAM" != "null" ] && [ "$UPSTREAM" != "$LOCAL" ]; then
-            echo "发现新版本: $UPSTREAM"
+          elif [ "$UPSTREAM" != "null" ] && [ "$UPSTREAM" != "$LOCAL_BASE" ]; then
+            echo "发现新版本: $UPSTREAM (本地基础版本: $LOCAL_BASE)"
             echo "version=$UPSTREAM" >> $GITHUB_OUTPUT
             echo "has_update=true" >> $GITHUB_OUTPUT
 
           else
-            echo "版本一致，跳过"
+            echo "版本一致 ($UPSTREAM = $LOCAL_BASE)，跳过"
             echo "has_update=false" >> $GITHUB_OUTPUT
           fi
 
