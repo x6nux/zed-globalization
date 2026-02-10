@@ -473,6 +473,12 @@ jobs:
           </plist>
           EOF
 
+          # === 创建 DMG 暂存目录（含 Applications 快捷方式）===
+          DMG_STAGING="dmg-staging"
+          mkdir -p "$DMG_STAGING"
+          mv "$APP_NAME" "$DMG_STAGING/"
+          ln -s /Applications "$DMG_STAGING/Applications"
+
           # === 等待文件系统并重试 hdiutil ===
           echo "编译完成，等待文件系统稳定 (10s)..."
           sleep 10
@@ -481,7 +487,7 @@ jobs:
           n=0
           until [ "$n" -ge 10 ]
           do
-              hdiutil create -volname Zed -srcfolder "$APP_NAME" -ov -format UDZO "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" && break
+              hdiutil create -volname Zed -srcfolder "$DMG_STAGING" -ov -format UDZO "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" && break
               n=$((n+1))
               echo "hdiutil 失败 (Resource busy?), 等待 15秒后重试 ($n/10)..."
               sleep 15
