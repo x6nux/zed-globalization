@@ -189,7 +189,7 @@ jobs:
         shell: pwsh
         run: |
           mkdir zed-dist
-          Copy-Item C:\z\target\release\zed.exe zed-dist\
+          Copy-Item C:\z\target\release\zed.exe zed-dist\ZedG.exe
           Compress-Archive -Path zed-dist\* -DestinationPath "zed-globalization-$env:LANG_LOWER-windows-x86_64.zip"
 
       - name: 上传产物
@@ -300,24 +300,24 @@ jobs:
           mkdir -p dist/usr/share/applications
           mkdir -p dist/usr/share/icons/hicolor/512x512/apps
           mkdir -p dist/usr/share/icons/hicolor/1024x1024/apps
-          cp zed/target/release/zed dist/usr/bin/
+          cp zed/target/release/zed dist/usr/bin/ZedG
 
           cp zed/crates/zed/resources/app-icon.png \
-             dist/usr/share/icons/hicolor/512x512/apps/zed.png
+             dist/usr/share/icons/hicolor/512x512/apps/ZedG.png
           cp zed/crates/zed/resources/app-icon@2x.png \
-             dist/usr/share/icons/hicolor/1024x1024/apps/zed.png
+             dist/usr/share/icons/hicolor/1024x1024/apps/ZedG.png
 
-          cat > dist/usr/share/applications/zed.desktop <<DESKTOP
+          cat > dist/usr/share/applications/ZedG.desktop <<DESKTOP
           [Desktop Entry]
           Version=1.0
           Type=Application
-          Name=Zed
+          Name=ZedG
           GenericName=Text Editor
-          Comment=A high-performance, multiplayer code editor.
-          TryExec=zed
+          Comment=A high-performance, multiplayer code editor with globalization support.
+          TryExec=ZedG
           StartupNotify=true
-          Exec=zed %F
-          Icon=zed
+          Exec=ZedG %F
+          Icon=ZedG
           Categories=Utility;TextEditor;Development;IDE;
           Keywords=zed;
           MimeType=text/plain;
@@ -330,11 +330,11 @@ jobs:
           mkdir -p deb-pkg/usr/share/applications
           mkdir -p deb-pkg/usr/share/icons/hicolor/512x512/apps
           mkdir -p deb-pkg/usr/share/icons/hicolor/1024x1024/apps
-          cp zed/target/release/zed deb-pkg/usr/bin/
-          cp dist/usr/share/applications/zed.desktop deb-pkg/usr/share/applications/
-          cp dist/usr/share/icons/hicolor/512x512/apps/zed.png \
+          cp zed/target/release/zed deb-pkg/usr/bin/ZedG
+          cp dist/usr/share/applications/ZedG.desktop deb-pkg/usr/share/applications/
+          cp dist/usr/share/icons/hicolor/512x512/apps/ZedG.png \
              deb-pkg/usr/share/icons/hicolor/512x512/apps/
-          cp dist/usr/share/icons/hicolor/1024x1024/apps/zed.png \
+          cp dist/usr/share/icons/hicolor/1024x1024/apps/ZedG.png \
              deb-pkg/usr/share/icons/hicolor/1024x1024/apps/
 
           RAW_VERSION="${{ needs.versioning.outputs.version }}"
@@ -422,7 +422,7 @@ jobs:
           cd zed
           cargo build --release --target aarch64-apple-darwin --jobs 4 --locked
 
-          APP_NAME="Zed.app"
+          APP_NAME="ZedG.app"
           mkdir -p "$APP_NAME/Contents/MacOS" "$APP_NAME/Contents/Resources"
           cp target/aarch64-apple-darwin/release/zed "$APP_NAME/Contents/MacOS/zed"
 
@@ -460,9 +460,9 @@ jobs:
               <key>CFBundleExecutable</key>
               <string>zed</string>
               <key>CFBundleIdentifier</key>
-              <string>dev.zed.Zed</string>
+              <string>dev.zed.ZedG</string>
               <key>CFBundleName</key>
-              <string>Zed</string>
+              <string>ZedG</string>
               <key>CFBundleIconFile</key>
               <string>AppIcon</string>
               <key>CFBundlePackageType</key>
@@ -487,7 +487,7 @@ jobs:
           n=0
           until [ "$n" -ge 10 ]
           do
-              hdiutil create -volname Zed -srcfolder "$DMG_STAGING" -ov -format UDZO "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" && break
+              hdiutil create -volname ZedG -srcfolder "$DMG_STAGING" -ov -format UDZO "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" && break
               n=$((n+1))
               echo "hdiutil 失败 (Resource busy?), 等待 15秒后重试 ($n/10)..."
               sleep 15
