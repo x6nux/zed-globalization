@@ -300,24 +300,24 @@ jobs:
           mkdir -p dist/usr/share/applications
           mkdir -p dist/usr/share/icons/hicolor/512x512/apps
           mkdir -p dist/usr/share/icons/hicolor/1024x1024/apps
-          cp zed/target/release/zed dist/usr/bin/ZedG
+          cp zed/target/release/zed dist/usr/bin/zedg
 
           cp zed/crates/zed/resources/app-icon.png \
-             dist/usr/share/icons/hicolor/512x512/apps/ZedG.png
+             dist/usr/share/icons/hicolor/512x512/apps/zedg.png
           cp zed/crates/zed/resources/app-icon@2x.png \
-             dist/usr/share/icons/hicolor/1024x1024/apps/ZedG.png
+             dist/usr/share/icons/hicolor/1024x1024/apps/zedg.png
 
-          cat > dist/usr/share/applications/ZedG.desktop <<DESKTOP
+          cat > dist/usr/share/applications/zedg.desktop <<DESKTOP
           [Desktop Entry]
           Version=1.0
           Type=Application
           Name=ZedG
           GenericName=Text Editor
           Comment=A high-performance, multiplayer code editor with globalization support.
-          TryExec=ZedG
+          TryExec=zedg
           StartupNotify=true
-          Exec=ZedG %F
-          Icon=ZedG
+          Exec=zedg %F
+          Icon=zedg
           Categories=Utility;TextEditor;Development;IDE;
           Keywords=zed;
           MimeType=text/plain;
@@ -330,11 +330,11 @@ jobs:
           mkdir -p deb-pkg/usr/share/applications
           mkdir -p deb-pkg/usr/share/icons/hicolor/512x512/apps
           mkdir -p deb-pkg/usr/share/icons/hicolor/1024x1024/apps
-          cp zed/target/release/zed deb-pkg/usr/bin/ZedG
-          cp dist/usr/share/applications/ZedG.desktop deb-pkg/usr/share/applications/
-          cp dist/usr/share/icons/hicolor/512x512/apps/ZedG.png \
+          cp zed/target/release/zed deb-pkg/usr/bin/zedg
+          cp dist/usr/share/applications/zedg.desktop deb-pkg/usr/share/applications/
+          cp dist/usr/share/icons/hicolor/512x512/apps/zedg.png \
              deb-pkg/usr/share/icons/hicolor/512x512/apps/
-          cp dist/usr/share/icons/hicolor/1024x1024/apps/ZedG.png \
+          cp dist/usr/share/icons/hicolor/1024x1024/apps/zedg.png \
              deb-pkg/usr/share/icons/hicolor/1024x1024/apps/
 
           RAW_VERSION="${{ needs.versioning.outputs.version }}"
