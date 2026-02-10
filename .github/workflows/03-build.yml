@@ -53,6 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.set_vars.outputs.v }}
+      upstream_version: ${{ steps.set_vars.outputs.upstream_v }}
       should_release: ${{ steps.set_vars.outputs.r }}
       lang: ${{ steps.set_vars.outputs.lang }}
       lang_lower: ${{ steps.set_vars.outputs.lang_lower }}
@@ -100,6 +101,7 @@ jobs:
           fi
 
           echo "v=$VER" >> $GITHUB_OUTPUT
+          echo "upstream_v=$BASE_VER" >> $GITHUB_OUTPUT
           echo "r=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
           echo "lang=$LANG" >> $GITHUB_OUTPUT
           # zh-CN → zh-cn, ja → ja
@@ -131,7 +133,7 @@ jobs:
     env:
       SCCACHE_DIR: C:\c\sccache
       SCCACHE_IDLE_TIMEOUT: "0"
-      BUILD_VERSION: ${{ needs.versioning.outputs.version }}
+      BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
       TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
       BUILD_PROFILE: ${{ needs.versioning.outputs.build_profile }}
@@ -298,7 +300,7 @@ jobs:
     env:
       SCCACHE_DIR: /home/runner/.cache/sccache
       SCCACHE_IDLE_TIMEOUT: "0"
-      BUILD_VERSION: ${{ needs.versioning.outputs.version }}
+      BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
       TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
       BUILD_PROFILE: ${{ needs.versioning.outputs.build_profile }}
@@ -488,7 +490,7 @@ jobs:
           cp dist/usr/share/icons/hicolor/1024x1024/apps/zedg.png \
              deb-pkg/usr/share/icons/hicolor/1024x1024/apps/
 
-          RAW_VERSION="${{ needs.versioning.outputs.version }}"
+          RAW_VERSION="${{ needs.versioning.outputs.upstream_version }}"
           CLEAN_VERSION="${RAW_VERSION#v}"
           cat > deb-pkg/DEBIAN/control <<CTRL
           Package: zed-globalization
@@ -517,7 +519,7 @@ jobs:
     env:
       SCCACHE_DIR: /Users/runner/Library/Caches/Mozilla.sccache
       SCCACHE_IDLE_TIMEOUT: "0"
-      BUILD_VERSION: ${{ needs.versioning.outputs.version }}
+      BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
       TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
       BUILD_PROFILE: ${{ needs.versioning.outputs.build_profile }}
@@ -667,7 +669,7 @@ jobs:
               <key>CFBundlePackageType</key>
               <string>APPL</string>
               <key>CFBundleShortVersionString</key>
-              <string>${{ needs.versioning.outputs.version }}</string>
+              <string>${{ needs.versioning.outputs.upstream_version }}</string>
           </dict>
           </plist>
           EOF
@@ -758,7 +760,7 @@ jobs:
       - name: 获取 Zed 官方 Release Notes
         id: zed_notes
         env:
-          BUILD_VERSION: ${{ needs.versioning.outputs.version }}
+          BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
         run: |
           # 通过 tag 获取对应的 release body
           NOTES=$(curl -s "https://api.github.com/repos/zed-industries/zed/releases/tags/${BUILD_VERSION}" | jq -r '.body // empty')

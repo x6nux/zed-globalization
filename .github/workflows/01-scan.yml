@@ -145,6 +145,8 @@ jobs:
           scan_mode = os.environ.get("SCAN_MODE", "full")
           prev = load_scan_result("scan_result.json")
 
+          root = Path("zed")
+
           if scan_mode == "incremental" and prev.get("files"):
               changed = Path("changed.txt").read_text().splitlines()
               deleted = Path("deleted.txt").read_text().splitlines()
@@ -154,18 +156,21 @@ jobs:
               rel_files = scan_incremental("zed", ai, changed, deleted, prev["files"])
           else:
               print("全量扫描...")
-              abs_files = scan_files("zed", ai)
-              root = Path("zed")
-              rel_files = [
-                  str(Path(f).relative_to(root)) if Path(f).is_absolute() else f
-                  for f in abs_files
-              ]
+              raw_files = scan_files("zed", ai)
+              # 统一转为相对于 source_root 的路径（不含 zed/ 前缀）
+              rel_files = []
+              for f in raw_files:
+                  p = Path(f)
+                  try:
+                      rel_files.append(str(p.relative_to(root)))
+                  except ValueError:
+                      rel_files.append(f)
 
-          # 保存扫描结果
+          # 保存扫描结果（key 格式: crates/editor/src/editor.rs）
           save_scan_result("scan_result.json", new_ver, rel_files)
 
-          # 提取字符串（需要绝对路径）
-          abs_files = [f"zed/{f}" for f in rel_files]
+          # 提取字符串（拼接 source_root 得到实际路径）
+          abs_files = [str(root / f) for f in rel_files]
           extract_all(abs_files, "string.json", "string_context.json")
           PYEOF
 
