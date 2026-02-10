@@ -12,7 +12,7 @@
 
 | 平台 | 文件 | 安装方式 |
 |------|------|---------|
-| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | 打开 DMG 拖入 Applications |
+| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | 打开 DMG 拖入 Applications（[见下方说明](#macos-安装说明)） |
 | Windows (x64) | `zed-globalization-zh-cn-windows-x86_64.zip` | 解压后运行 `zed.exe` |
 | Linux (x64) | `zed-globalization-zh-cn-linux-x86_64.tar.gz` | 解压到 `/usr/local` |
 | Linux (x64 deb) | `zed-globalization-zh-cn-linux-x86_64.deb` | `sudo dpkg -i *.deb` |
@@ -22,6 +22,14 @@
 ```bash
 scoop bucket add zed-globalization https://github.com/x6nux/zed-globalization -b scoop
 scoop install zed-globalization
+```
+
+### macOS 安装说明
+
+由于构建未经过 Apple 签名，macOS 会提示"应用已损坏，无法打开"。安装后在终端执行以下命令即可解决：
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/Zed.app
 ```
 
 ## 特性
