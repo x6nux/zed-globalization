@@ -90,6 +90,69 @@ def _replace_skip_protected(
     return ''.join(parts), count
 
 
+def _resolve_file_path(file_path: str, root: Path) -> Path | None:
+    """多策略解析文件路径，找不到返回 None。
+
+    优先级:
+      1. 绝对路径直接使用
+      2. 相对路径直接存在
+      3. source_root / file_path
+      4. 去掉与 source_root 重复的前缀（如 zed/zed/... → zed/...）
+      5. 兜底：用文件名在 source_root 下搜索
+    """
+    p = Path(file_path)
+
+    # 1) 绝对路径
+    if p.is_absolute() and p.exists():
+        return p
+
+    # 2) 相对路径直接存在
+    if p.exists():
+        return p
+
+    # 3) source_root / file_path
+    fp = root / file_path
+    if fp.exists():
+        return fp
+
+    # 4) 去掉重复的 source_root 目录名前缀
+    try:
+        rel = p.relative_to(root.name)
+        fp = root / rel
+        if fp.exists():
+            return fp
+    except ValueError:
+        pass
+
+    # 5) 兜底：用文件名在 source_root 下搜索
+    filename = p.name
+    candidates = list(root.rglob(filename))
+    if len(candidates) == 1:
+        log.debug("路径兜底命中: %s → %s", file_path, candidates[0])
+        return candidates[0]
+    if len(candidates) > 1:
+        # 多个同名文件时，用路径后缀匹配度最高的
+        suffix_parts = p.parts
+        best = max(candidates, key=lambda c: _path_overlap(c, suffix_parts))
+        log.debug("路径兜底(多候选): %s → %s", file_path, best)
+        return best
+
+    log.warning("文件不存在，跳过: %s", file_path)
+    return None
+
+
+def _path_overlap(candidate: Path, suffix_parts: tuple[str, ...]) -> int:
+    """计算候选路径与目标路径后缀的重叠段数"""
+    c_parts = candidate.parts
+    overlap = 0
+    for a, b in zip(reversed(c_parts), reversed(suffix_parts)):
+        if a == b:
+            overlap += 1
+        else:
+            break
+    return overlap
+
+
 def replace_in_source(
     translations: TranslationDict, source_root: str = "."
 ) -> int:
@@ -99,22 +162,9 @@ def replace_in_source(
     missing_files: list[str] = []
 
     for file_path, raw_replacements in translations.items():
-        p = Path(file_path)
-        if p.is_absolute():
-            fp = p
-        elif p.exists():
-            fp = p
-        else:
-            fp = root / file_path
-            # 如果路径已经以 source_root 的目录名开头，尝试去掉前缀
-            if not fp.exists():
-                try:
-                    rel = p.relative_to(root.name)
-                    fp = root / rel
-                except ValueError:
-                    pass
-        if not fp.exists():
-            missing_files.append(str(fp))
+        fp = _resolve_file_path(file_path, root)
+        if fp is None:
+            missing_files.append(file_path)
             continue
 
         try:
