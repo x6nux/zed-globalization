@@ -31,6 +31,26 @@ def _build_parser() -> argparse.ArgumentParser:
     p_scan.add_argument(
         "--source-root", required=True, help="Zed 源码根目录"
     )
+    p_scan.add_argument(
+        "--prev-result", default="",
+        help="上次扫描结果 scan_result.json 路径（提供则启用增量模式）",
+    )
+    p_scan.add_argument(
+        "--changed", default="",
+        help="变化文件列表（每行一个相对路径的文本文件）",
+    )
+    p_scan.add_argument(
+        "--deleted", default="",
+        help="删除文件列表（每行一个相对路径的文本文件）",
+    )
+    p_scan.add_argument(
+        "--version", default="",
+        help="当前扫描对应的 Zed 版本号（保存到 scan_result.json）",
+    )
+    p_scan.add_argument(
+        "--output", default="scan_result.json",
+        help="扫描结果输出路径（默认 scan_result.json）",
+    )
     _add_ai_args(p_scan)
 
     # --- extract ---
@@ -114,7 +134,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p_pipe.add_argument(
         "--skip-scan", action="store_true",
-        help="跳过 AI 扫描，复用上次的 scan_files.json 缓存",
+        help="跳过 AI 扫描，复用上次的 scan_result.json 缓存",
     )
     _add_ai_args(p_pipe)
 
@@ -134,9 +154,7 @@ def main() -> None:
     setup_logging(args.verbose)
 
     if args.command == "scan":
-        from .scan import run
-
-        run(args)
+        _run_scan(args)
     elif args.command == "extract":
         from .extract import run
 
@@ -157,9 +175,69 @@ def main() -> None:
         _run_pipeline(args)
 
 
+def _read_lines(path: str) -> list[str]:
+    """读取文本文件，返回非空行列表"""
+    from pathlib import Path
+
+    p = Path(path)
+    if not p.exists():
+        return []
+    return [line.strip() for line in p.read_text().splitlines() if line.strip()]
+
+
+def _run_scan(args: argparse.Namespace) -> None:
+    """scan 命令入口：支持全量 / 增量两种模式"""
+    import logging
+
+    from .scan import (
+        load_scan_result,
+        save_scan_result,
+        scan_files,
+        scan_incremental,
+    )
+    from .utils import AIConfig
+
+    log = logging.getLogger(__name__)
+    ai_cfg = AIConfig(
+        base_url=args.base_url,
+        api_key=args.api_key,
+        model=args.model,
+        concurrency=args.concurrency,
+    )
+
+    prev_result_path = getattr(args, "prev_result", "")
+    prev = load_scan_result(prev_result_path) if prev_result_path else None
+
+    if prev and prev.get("files"):
+        # 增量模式
+        changed = _read_lines(args.changed) if args.changed else []
+        deleted = _read_lines(args.deleted) if args.deleted else []
+        if not changed and not deleted:
+            log.warning("增量模式但未提供变化/删除文件列表，回退到全量扫描")
+            files = scan_files(args.source_root, ai_cfg)
+        else:
+            files = scan_incremental(
+                args.source_root, ai_cfg, changed, deleted, prev["files"],
+            )
+    else:
+        # 全量模式
+        files = scan_files(args.source_root, ai_cfg)
+        # 全量模式返回绝对路径，转为相对路径
+        from pathlib import Path
+
+        root = Path(args.source_root)
+        files = [
+            str(Path(f).relative_to(root)) if Path(f).is_absolute() else f
+            for f in files
+        ]
+
+    version = getattr(args, "version", "") or "unknown"
+    save_scan_result(args.output, version, files)
+    log.info("扫描完成，共 %d 个文件需要翻译", len(files))
+
+
 def _run_pipeline(args: argparse.Namespace) -> None:
     """一键流水线: scan → extract → translate"""
-    import json
     import logging
     import time
     from pathlib import Path
@@ -169,7 +247,7 @@ def _run_pipeline(args: argparse.Namespace) -> None:
     log = logging.getLogger(__name__)
     t0 = time.time()
 
-    scan_cache = "scan_files.json"
+    scan_result_path = "scan_result.json"
     skip_scan = getattr(args, "skip_scan", False)
 
     ai_cfg = AIConfig(
@@ -179,32 +257,45 @@ def _run_pipeline(args: argparse.Namespace) -> None:
         concurrency=args.concurrency,
     )
 
-    # 如果存在 scan 缓存且指定了 --skip-scan，直接复用
-    if skip_scan and Path(scan_cache).exists():
-        with open(scan_cache) as f:
-            files = json.load(f)
-        log.info("跳过扫描，从缓存加载 %d 个文件: %s", len(files), scan_cache)
+    # 如果存在缓存且指定了 --skip-scan，直接复用
+    if skip_scan and Path(scan_result_path).exists():
+        from .scan import load_scan_result
+
+        prev = load_scan_result(scan_result_path)
+        rel_files = prev.get("files", [])
+        log.info(
+            "跳过扫描，从缓存加载 %d 个文件 (版本 %s)",
+            len(rel_files), prev.get("version", "?"),
+        )
     else:
         ai_cfg.validate()
 
-        # 1. scan
         log.info("=" * 50)
         log.info("阶段 1/3: AI 扫描 — 识别需要翻译的文件")
         log.info("=" * 50)
         t1 = time.time()
-        from .scan import scan_files
+        from .scan import save_scan_result, scan_files
 
-        files = scan_files(args.source_root, ai_cfg)
-        log.info("扫描完成: %d 个待翻译文件 (耗时 %.0fs)", len(files), time.time() - t1)
+        abs_files = scan_files(args.source_root, ai_cfg)
+        # 转为相对路径保存
+        root = Path(args.source_root)
+        rel_files = [
+            str(Path(f).relative_to(root)) if Path(f).is_absolute() else f
+            for f in abs_files
+        ]
+        save_scan_result(scan_result_path, "local", rel_files)
+        log.info(
+            "扫描完成: %d 个待翻译文件 (耗时 %.0fs)",
+            len(rel_files), time.time() - t1,
+        )
 
-        # 保存 scan 结果缓存
-        with open(scan_cache, "w") as f:
-            json.dump(files, f, ensure_ascii=False, indent=2)
-        log.info("扫描结果已缓存: %s", scan_cache)
-
-    if not files:
+    if not rel_files:
         log.warning("未发现需要翻译的文件，流水线结束")
         return
+
+    # 将相对路径转为绝对路径供 extract 使用
+    root = Path(args.source_root)
+    abs_files = [str(root / f) for f in rel_files]
 
     # 2. extract
     log.info("=" * 50)
@@ -215,7 +306,7 @@ def _run_pipeline(args: argparse.Namespace) -> None:
 
     strings_path = "string.json"
     context_path = "string_context.json"
-    all_strings = extract_all(files, strings_path, context_path)
+    all_strings = extract_all(abs_files, strings_path, context_path)
     total_strings = sum(len(v) for v in all_strings.values())
     log.info("提取完成: %d 个字符串 (耗时 %.0fs)", total_strings, time.time() - t2)
 

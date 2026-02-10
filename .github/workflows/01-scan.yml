@@ -31,6 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.check.outputs.version }}
+      local_version: ${{ steps.check.outputs.local_version }}
       has_update: ${{ steps.check.outputs.has_update }}
     steps:
       - id: check
@@ -38,6 +39,7 @@ jobs:
           UPSTREAM=$(curl -s https://api.github.com/repos/zed-industries/zed/releases/latest | jq -r .tag_name)
           LOCAL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
           echo "Zed 官方最新: $UPSTREAM | 本地最新: $LOCAL"
+          echo "local_version=$LOCAL" >> $GITHUB_OUTPUT
 
           # 手动触发时始终执行扫描
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
@@ -70,10 +72,47 @@ jobs:
       - name: 安装依赖
         run: pip install ".[ai]"
 
-      - name: 克隆 Zed 源码
+      - name: 获取上次扫描结果
         run: |
-          git clone --depth 1 $ZED_REPO zed
-          cd zed && git checkout ${{ needs.check-version.outputs.version }} 2>/dev/null || true
+          git fetch origin i18n 2>/dev/null || true
+          git checkout origin/i18n -- scan_result.json 2>/dev/null || echo '{}' > scan_result.json
+          echo "上次扫描结果:"
+          cat scan_result.json | head -5
+
+      - name: 克隆 Zed 源码
+        env:
+          NEW_VER: ${{ needs.check-version.outputs.version }}
+        run: |
+          git clone --depth 1 --branch "$NEW_VER" $ZED_REPO zed 2>/dev/null \
+            || git clone --depth 1 $ZED_REPO zed
+
+          # 增量模式需要旧版本 tag 来做 diff
+          OLD_VER=$(jq -r '.version // empty' scan_result.json 2>/dev/null || true)
+          if [ -n "$OLD_VER" ] && [ "$OLD_VER" != "null" ] && [ "$OLD_VER" != "$NEW_VER" ]; then
+            echo "获取旧版本 tag: $OLD_VER (用于 git diff)"
+            cd zed
+            git fetch origin tag "$OLD_VER" --no-tags 2>/dev/null || true
+          fi
+
+      - name: 生成变化文件列表
+        env:
+          NEW_VER: ${{ needs.check-version.outputs.version }}
+        run: |
+          OLD_VER=$(jq -r '.version // empty' scan_result.json 2>/dev/null || true)
+          HAS_PREV=$(jq -r 'if .files and (.files | length > 0) then "true" else "false" end' scan_result.json 2>/dev/null || echo "false")
+
+          if [ "$HAS_PREV" = "true" ] && [ -n "$OLD_VER" ] && [ "$OLD_VER" != "null" ] && [ "$OLD_VER" != "$NEW_VER" ]; then
+            echo "增量模式: $OLD_VER -> $NEW_VER"
+            cd zed
+            git diff --name-only --diff-filter=ACMR "$OLD_VER" "$NEW_VER" -- crates/ > ../changed.txt 2>/dev/null || true
+            git diff --name-only --diff-filter=D "$OLD_VER" "$NEW_VER" -- crates/ > ../deleted.txt 2>/dev/null || true
+            cd ..
+            echo "变化文件: $(wc -l < changed.txt) 个, 删除文件: $(wc -l < deleted.txt) 个"
+            echo "SCAN_MODE=incremental" >> $GITHUB_ENV
+          else
+            echo "全量模式（无上次扫描结果或版本相同）"
+            echo "SCAN_MODE=full" >> $GITHUB_ENV
+          fi
 
       - name: AI 扫描 + 提取字符串
         env:
@@ -81,21 +120,53 @@ jobs:
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
           AI_MODEL: ${{ secrets.AI_MODEL }}
           AI_CONCURRENCY: ${{ vars.AI_CONCURRENCY || '10' }}
+          NEW_VER: ${{ needs.check-version.outputs.version }}
         run: |
           python3 << 'PYEOF'
-          from zedl10n.scan import scan_files
+          import json, os
+          from pathlib import Path
+          from zedl10n.scan import (
+              load_scan_result, save_scan_result,
+              scan_files, scan_incremental,
+          )
           from zedl10n.extract import extract_all
           from zedl10n.utils import AIConfig, setup_logging
+
           setup_logging()
           ai = AIConfig()
           ai.validate()
-          files = scan_files("zed", ai)
-          extract_all(files, "string.json", "string_context.json")
+
+          new_ver = os.environ.get("NEW_VER", "unknown")
+          scan_mode = os.environ.get("SCAN_MODE", "full")
+          prev = load_scan_result("scan_result.json")
+
+          if scan_mode == "incremental" and prev.get("files"):
+              changed = Path("changed.txt").read_text().splitlines()
+              deleted = Path("deleted.txt").read_text().splitlines()
+              changed = [f.strip() for f in changed if f.strip()]
+              deleted = [f.strip() for f in deleted if f.strip()]
+              print(f"增量扫描: {len(changed)} 个变化文件, {len(deleted)} 个删除文件")
+              rel_files = scan_incremental("zed", ai, changed, deleted, prev["files"])
+          else:
+              print("全量扫描...")
+              abs_files = scan_files("zed", ai)
+              root = Path("zed")
+              rel_files = [
+                  str(Path(f).relative_to(root)) if Path(f).is_absolute() else f
+                  for f in abs_files
+              ]
+
+          # 保存扫描结果
+          save_scan_result("scan_result.json", new_ver, rel_files)
+
+          # 提取字符串（需要绝对路径）
+          abs_files = [f"zed/{f}" for f in rel_files]
+          extract_all(abs_files, "string.json", "string_context.json")
           PYEOF
 
       - name: 推送到 i18n 分支
         run: |
-          cp string.json string_context.json /tmp/
+          cp string.json string_context.json scan_result.json /tmp/
 
           if git ls-remote --heads origin i18n | grep -q i18n; then
             git clone --branch i18n --single-branch --depth 1 \
@@ -107,11 +178,11 @@ jobs:
             git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
           fi
 
-          cp /tmp/string.json /tmp/string_context.json /tmp/i18n-branch/
+          cp /tmp/string.json /tmp/string_context.json /tmp/scan_result.json /tmp/i18n-branch/
           cd /tmp/i18n-branch
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add string.json string_context.json
+          git add string.json string_context.json scan_result.json
           git diff --cached --quiet || git commit -m "feat(i18n): 更新扫描结果"
           git push origin i18n
 

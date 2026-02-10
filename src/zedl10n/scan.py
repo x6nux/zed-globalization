@@ -1,16 +1,22 @@
-"""AI 扫描识别需翻译的 .rs 文件"""
+"""AI 扫描识别需翻译的 .rs 文件（支持全量 / 增量两种模式）"""
 
 from __future__ import annotations
 
 import argparse
 import asyncio
+import json
 import logging
 import random
 from pathlib import Path
+from typing import Any
 
 from .utils import AIConfig, ProgressBar
 
 log = logging.getLogger(__name__)
+
+# --- 扫描结果持久化格式 ---
+# {"version": "v0.175.0", "files": ["crates/editor/src/editor.rs", ...]}
+ScanResult = dict[str, Any]
 
 # AI 分析提示词
 _SYSTEM_PROMPT = """你是一个代码分析助手。你需要判断给定的 Rust 源文件是否包含需要翻译的用户界面字符串。
@@ -118,18 +124,23 @@ async def _analyze_file(
     return False
 
 
-async def _scan_async(
-    source_root: str, ai_cfg: AIConfig
+async def _scan_file_list(
+    file_list: list[Path],
+    source_root: str,
+    ai_cfg: AIConfig,
+    desc: str = "扫描",
 ) -> list[str]:
-    """异步并发扫描所有文件（含二轮重试机制）"""
+    """对指定文件列表做 AI 扫描，返回需要翻译的文件路径（含二轮重试）"""
     from openai import AsyncOpenAI
+
+    if not file_list:
+        return []
 
     client = AsyncOpenAI(base_url=ai_cfg.base_url, api_key=ai_cfg.api_key)
     semaphore = asyncio.Semaphore(ai_cfg.concurrency)
-    all_files = find_all_rs_files(source_root)
     results: list[str] = []
     yes_count = 0
-    pbar = ProgressBar(len(all_files), desc="扫描")
+    pbar = ProgressBar(len(file_list), desc=desc)
 
     async def check(fp: Path) -> bool | None:
         nonlocal yes_count
@@ -146,11 +157,11 @@ async def _scan_async(
             pbar.update(extra=f"发现 {yes_count} 个待翻译")
             return result
 
-    done = await asyncio.gather(*[check(fp) for fp in all_files])
+    done = await asyncio.gather(*[check(fp) for fp in file_list])
     pbar.finish()
 
     failed_files: list[Path] = []
-    for fp, r in zip(all_files, done):
+    for fp, r in zip(file_list, done):
         if r is True:
             results.append(str(fp))
         elif r is None:
@@ -165,6 +176,14 @@ async def _scan_async(
         ))
 
     return results
+
+
+async def _scan_async(
+    source_root: str, ai_cfg: AIConfig
+) -> list[str]:
+    """全量扫描所有 .rs 文件"""
+    all_files = find_all_rs_files(source_root)
+    return await _scan_file_list(all_files, source_root, ai_cfg, desc="全量扫描")
 
 
 async def _retry_failed(
@@ -206,9 +225,97 @@ async def _retry_failed(
 
 
 def scan_files(source_root: str, ai_cfg: AIConfig) -> list[str]:
-    """同步入口，返回需要翻译的文件路径列表"""
+    """全量扫描，返回需要翻译的文件路径列表（绝对路径）"""
     ai_cfg.validate()
     return asyncio.run(_scan_async(source_root, ai_cfg))
+
+
+# ---- 增量扫描 ----
+
+def load_scan_result(path: str | Path) -> ScanResult:
+    """读取上次扫描结果，不存在或解析失败返回空结果"""
+    p = Path(path)
+    if not p.exists():
+        return {"version": "", "files": []}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        if isinstance(data, dict) and "files" in data:
+            return data
+    except (json.JSONDecodeError, OSError) as e:
+        log.warning("读取上次扫描结果失败 %s: %s", path, e)
+    return {"version": "", "files": []}
+
+
+def save_scan_result(
+    path: str | Path, version: str, files: list[str],
+) -> None:
+    """保存扫描结果"""
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    data: ScanResult = {"version": version, "files": sorted(files)}
+    Path(path).write_text(
+        json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8",
+    )
+    log.info("扫描结果已保存: %s (版本 %s, %d 个文件)", path, version, len(files))
+
+
+def scan_incremental(
+    source_root: str,
+    ai_cfg: AIConfig,
+    changed_files: list[str],
+    deleted_files: list[str],
+    previous_files: list[str],
+) -> list[str]:
+    """增量扫描：只 AI 分析变化的文件，合并上次结果。
+
+    所有路径均为相对于 source_root 的相对路径。
+
+    合并逻辑:
+        新结果 = (previous - deleted - changed) + 新扫描中判定为 YES 的
+    """
+    ai_cfg.validate()
+
+    # 只关注 .rs 文件
+    changed_rs = [f for f in changed_files if f.endswith(".rs")]
+    deleted_set = set(deleted_files)
+    changed_set = set(changed_rs)
+
+    if not changed_rs:
+        log.info("没有变化的 .rs 文件需要扫描")
+        kept = [f for f in previous_files if f not in deleted_set]
+        return kept
+
+    log.info(
+        "增量扫描: %d 个变化文件, %d 个删除文件, 上次 %d 个文件",
+        len(changed_rs), len(deleted_files), len(previous_files),
+    )
+
+    # 构建绝对路径列表给扫描引擎
+    root = Path(source_root)
+    abs_files = [root / f for f in changed_rs if (root / f).exists()]
+    if not abs_files:
+        log.warning("变化文件均不存在于源码中，跳过扫描")
+        kept = [f for f in previous_files if f not in deleted_set]
+        return kept
+
+    # AI 扫描变化的文件
+    newly_yes_abs = asyncio.run(
+        _scan_file_list(abs_files, source_root, ai_cfg, desc="增量扫描"),
+    )
+    # 转回相对路径
+    newly_yes = {str(Path(f).relative_to(root)) for f in newly_yes_abs}
+
+    # 合并：保留未变化的 + 新扫描通过的
+    kept = [
+        f for f in previous_files
+        if f not in deleted_set and f not in changed_set
+    ]
+    merged = sorted(set(kept) | newly_yes)
+
+    log.info(
+        "增量合并完成: 保留 %d + 新增 %d = 共 %d 个待翻译文件",
+        len(kept), len(newly_yes), len(merged),
+    )
+    return merged
 
 
 def run(args: argparse.Namespace) -> None:
