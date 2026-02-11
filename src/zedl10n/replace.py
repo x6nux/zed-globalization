@@ -7,17 +7,22 @@ import logging
 import re
 from pathlib import Path
 
-from .utils import TranslationDict, extract_placeholders, load_json, save_json
+from .utils import (
+    TranslationDict, extract_placeholders, load_json,
+    normalize_fullwidth, save_json,
+)
 
 log = logging.getLogger(__name__)
 
 # (file_path, original) 组成的集合，替换时跳过
 _do_not_translate: set[tuple[str, str]] = set()
+# 全局禁止翻译（不限文件）
+_global_do_not_translate: set[str] = set()
 
 
 def load_do_not_translate(path: str) -> None:
     """加载禁止翻译的字符串列表"""
-    global _do_not_translate
+    global _do_not_translate, _global_do_not_translate
     p = Path(path)
     if not p.exists():
         log.warning("do_not_translate 文件不存在: %s", path)
@@ -25,7 +30,12 @@ def load_do_not_translate(path: str) -> None:
     data = load_json(path)
     entries = data.get("entries", [])
     _do_not_translate = {(e["file"], e["original"]) for e in entries}
-    log.info("已加载 %d 条禁止翻译规则", len(_do_not_translate))
+    global_entries = data.get("global_entries", [])
+    _global_do_not_translate = {e["original"] for e in global_entries}
+    log.info(
+        "已加载禁止翻译规则: %d 条文件级 + %d 条全局",
+        len(_do_not_translate), len(_global_do_not_translate),
+    )
 
 # 纯 ASCII 标点/空白字符串——替换它们会破坏 Rust 语法
 _PUNCT_ONLY = re.compile(r'^[\s\x20-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]+$')
@@ -78,6 +88,45 @@ def _check_placeholders(src: list[str], dst: list[str]) -> bool:
     return src_named == dst_named
 
 
+# 合法的 Rust 转义序列后缀（反斜杠后面跟这些字符是合法的）
+_RUST_ESCAPES = frozenset('nrtx0u\\"\'')
+
+
+def _escape_for_rust_source(value: str) -> str:
+    """将 Python 字符串转为 Rust 源码中双引号内的文本。
+
+    - 实际控制字符（换行/回车/制表）→ 转义序列
+    - 孤立反斜杠（不构成合法 Rust 转义）→ 加倍
+    - 裸引号 → 转义为 \\"
+    - 已转义的序列（\\", \\\\, \\n 等）→ 原样保留
+    """
+    out: list[str] = []
+    i = 0
+    while i < len(value):
+        ch = value[i]
+        if ch == '\n':
+            out.append('\\n')
+        elif ch == '\r':
+            out.append('\\r')
+        elif ch == '\t':
+            out.append('\\t')
+        elif ch == '\\':
+            nxt = value[i + 1] if i + 1 < len(value) else ''
+            if nxt in _RUST_ESCAPES:
+                out.append('\\')
+                out.append(nxt)
+                i += 2  # 消费整个转义序列
+                continue
+            else:
+                out.append('\\\\')  # 孤立反斜杠，加倍
+        elif ch == '"':
+            out.append('\\"')
+        else:
+            out.append(ch)
+        i += 1
+    return ''.join(out)
+
+
 def _filter_replacements(
     replacements: dict[str, str], file_path: str,
 ) -> dict[str, str]:
@@ -87,7 +136,11 @@ def _filter_replacements(
         if not new_value:
             clean[original] = new_value
             continue
-        # 禁止翻译列表检查（dispatch_context、match_arm、序列化等）
+        # 全局禁止翻译（HTTP headers、MIME types 等）
+        if original in _global_do_not_translate:
+            log.debug("跳过(全局禁止): %r (%s)", original, file_path)
+            continue
+        # 文件级禁止翻译（dispatch_context、match_arm、序列化等）
         if (file_path, original) in _do_not_translate:
             log.debug("跳过(禁止列表): %r (%s)", original, file_path)
             continue
@@ -212,15 +265,18 @@ def replace_in_source(
             log.warning("读取失败 %s: %s", fp, e)
             continue
 
-        replacements = _filter_replacements(raw_replacements, file_path)
+        # 全角→半角，防止残留全角符号破坏 Rust 语法
+        normalized = {k: normalize_fullwidth(v) if v else v
+                      for k, v in raw_replacements.items()}
+        replacements = _filter_replacements(normalized, file_path)
         protected = _find_protected_ranges(content)
 
         count = 0
         for original, new_value in replacements.items():
             if not new_value:
                 continue
-            # 确保译文中的双引号被转义为 \"，防止破坏 Rust 字符串语法
-            safe_value = new_value.replace('\\"', '"').replace('"', '\\"')
+            # JSON 解码后的值转回 Rust 源码转义格式
+            safe_value = _escape_for_rust_source(new_value)
             old_text = f'"{original}"'
             new_text = f'"{safe_value}"'
             new_content, n = _replace_skip_protected(
