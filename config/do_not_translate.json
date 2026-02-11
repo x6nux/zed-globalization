@@ -1,5 +1,21 @@
 {
   "description": "Strings that must never be translated - they are used as program identifiers, not user-facing text",
+  "global_entries": [
+    {"original": "Content-Type", "reason": "http_header"},
+    {"original": "Content-Length", "reason": "http_header"},
+    {"original": "Content-Disposition", "reason": "http_header"},
+    {"original": "Authorization", "reason": "http_header"},
+    {"original": "Accept", "reason": "http_header"},
+    {"original": "Accept-Encoding", "reason": "http_header"},
+    {"original": "User-Agent", "reason": "http_header"},
+    {"original": "Cache-Control", "reason": "http_header"},
+    {"original": "application/json", "reason": "mime_type"},
+    {"original": "application/xml", "reason": "mime_type"},
+    {"original": "application/octet-stream", "reason": "mime_type"},
+    {"original": "text/plain", "reason": "mime_type"},
+    {"original": "text/html", "reason": "mime_type"},
+    {"original": "multipart/form-data", "reason": "mime_type"}
+  ],
   "entries": [
     {
       "file": "zed/crates/acp_thread/src/acp_thread.rs",
