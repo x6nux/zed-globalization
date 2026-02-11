@@ -240,6 +240,15 @@ def extract_crate_name(file_path: str) -> str:
         return "unknown"
 
 
+def normalize_fullwidth(text: str) -> str:
+    """全角 ASCII 字符（U+FF01-FF5E）转半角（U+0021-007E）"""
+    return text.translate(
+        str.maketrans(
+            {chr(c): chr(c - 0xFEE0) for c in range(0xFF01, 0xFF5F)}
+        )
+    )
+
+
 def load_json(path: str | Path) -> Any:
     """读取 JSON 文件"""
     with open(path, "r", encoding="utf-8") as f:

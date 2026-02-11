@@ -15,7 +15,7 @@ from .prompts import (
 )
 from .utils import (
     AIConfig, ProgressBar, TranslationDict,
-    build_glossary_section, load_json,
+    build_glossary_section, load_json, normalize_fullwidth,
     parse_json_response, parse_numbered_response,
     parse_xml_response, save_json,
 )
@@ -391,6 +391,11 @@ def translate_all(
         all_strings, existing,
         mode, lang, glossary_path, ai_cfg, source_root,
     ))
+    # 全角 ASCII 符号统一转半角，避免破坏 Rust 源码语法
+    for fp in result:
+        for s, t in result[fp].items():
+            if t:
+                result[fp][s] = normalize_fullwidth(t)
     save_json(result, output_path)
     log.info("翻译结果已保存: %s", output_path)
 
