@@ -7,12 +7,16 @@ import logging
 import re
 from pathlib import Path
 
-from .utils import TranslationDict, load_json
+from .utils import TranslationDict, extract_placeholders, load_json, save_json
 
 log = logging.getLogger(__name__)
 
 # 纯 ASCII 标点/空白字符串——替换它们会破坏 Rust 语法
 _PUNCT_ONLY = re.compile(r'^[\s\x20-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]+$')
+
+# 纯小写 ASCII 标识符（含连字符/下划线）——键名、枚举值、内部标识符
+# 如 "backspace", "delete", "ctrl-alt-delete", "delete_path"
+_ASCII_IDENTIFIER = re.compile(r'^[a-z][a-z0-9_-]*$')
 
 # 中文标点 → ASCII 标点映射（修复字符串之间被误替换的分隔符）
 _ZH_PUNCT_BETWEEN_STRINGS = re.compile(r'(?<=\w")\s*[、，]\s*(?=")')
@@ -21,13 +25,41 @@ _ZH_SEMICOLON_BETWEEN_STRINGS = re.compile(r'(?<=\w")\s*[；]\s*(?=")')
 # 不可替换区域：字节字符串 + 属性宏
 # 字节字符串: br##"..."##, br#"..."#, br"...", b"..."
 # 属性宏: #[action(...)], #[serde(...)], #[derive(...)] 等
+# 注意: #[error("...")] 包含用户可见的错误消息，不应被保护
 _PROTECTED_RE = re.compile(
     r'br(#+)".*?"\1'               # br#"..."#
     r'|br"(?:[^"\\]|\\.)*"'        # br"..."
     r'|b"(?:[^"\\]|\\.)*"'         # b"..."
-    r'|#\[[\w:]+\([^]]*?\)\]',     # #[attr(...)]
+    r'|#\[(?!error\b)[\w:]+\([^]]*?\)\]',  # #[attr(...)]（排除 #[error]）
     re.DOTALL,
 )
+
+
+def _is_positional(ph: str) -> bool:
+    """判断占位符是否按位置绑定参数。
+
+    位置绑定（顺序敏感）：{}, {:?}, {:.2}, %s, %d 等
+    命名/索引（顺序无关）：{name}, {0}, {name:?} 等
+    """
+    if ph.startswith("%"):
+        return True
+    inner = ph[1:-1]  # 去掉 { }
+    return inner == "" or inner.startswith(":")
+
+
+def _check_placeholders(src: list[str], dst: list[str]) -> bool:
+    """校验占位符兼容性。
+
+    - 位置绑定占位符（{}, {:?} 等）：顺序必须严格一致
+    - 命名/索引占位符（{name}, {0} 等）：只需集合一致，顺序随意
+    """
+    src_pos = [p for p in src if _is_positional(p)]
+    dst_pos = [p for p in dst if _is_positional(p)]
+    if src_pos != dst_pos:
+        return False
+    src_named = sorted(p for p in src if not _is_positional(p))
+    dst_named = sorted(p for p in dst if not _is_positional(p))
+    return src_named == dst_named
 
 
 def _filter_replacements(
@@ -42,6 +74,19 @@ def _filter_replacements(
         # 纯标点/空白字符串不应被翻译（如 ", " → "、" 会破坏数组语法）
         if _PUNCT_ONLY.match(original):
             log.debug("跳过纯标点: %r → %r (%s)", original, new_value, file_path)
+            continue
+        # 纯小写标识符不应被替换（键名、枚举值等：backspace, delete, tab）
+        if _ASCII_IDENTIFIER.match(original):
+            log.debug("跳过标识符: %r → %r (%s)", original, new_value, file_path)
+            continue
+        # 占位符兜底校验
+        src_ph = extract_placeholders(original)
+        dst_ph = extract_placeholders(new_value)
+        if not _check_placeholders(src_ph, dst_ph):
+            log.warning(
+                "占位符不匹配，跳过: %r → %r (原文=%s, 译文=%s) [%s]",
+                original, new_value, src_ph, dst_ph, file_path,
+            )
             continue
         clean[original] = new_value
     return clean
@@ -175,15 +220,33 @@ def replace_in_source(
             total_count += count
 
     if missing_files:
-        log.warning("以下 %d 个文件未找到:", len(missing_files))
+        log.warning("以下 %d 个文件在源码中不存在:", len(missing_files))
         for f in missing_files[:10]:
             log.warning("  %s", f)
 
     log.info("替换完成: 共 %d 处", total_count)
-    return total_count
+    return total_count, missing_files
+
+
+def _cleanup_translation_json(
+    input_path: str, missing_files: list[str],
+) -> None:
+    """从翻译 JSON 中删除源码中不存在的文件条目并回写"""
+    if not missing_files:
+        return
+    data: TranslationDict = load_json(input_path)
+    removed = 0
+    for fp in missing_files:
+        if fp in data:
+            del data[fp]
+            removed += 1
+    if removed:
+        save_json(data, input_path)
+        log.info("已从翻译文件中清理 %d 个不存在的文件条目", removed)
 
 
 def run(args: argparse.Namespace) -> None:
     """CLI 入口"""
     translations: TranslationDict = load_json(args.input)
-    replace_in_source(translations, args.source_root)
+    _, missing = replace_in_source(translations, args.source_root)
+    _cleanup_translation_json(args.input, missing)

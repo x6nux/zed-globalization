@@ -1,0 +1,319 @@
+name: 01 提取与翻译
+
+on:
+  schedule:
+    - cron: "0 21 * * *" # 每天北京时间 05:00 (UTC 21:00)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "提取模式"
+        type: choice
+        options:
+          - incremental
+          - full
+        default: incremental
+      target_lang:
+        description: "目标语言"
+        type: choice
+        options:
+          - zh-CN
+          - zh-TW
+          - ja
+          - ko
+        default: zh-CN
+      chain:
+        description: "完成后自动触发构建"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+env:
+  ZED_REPO: https://github.com/zed-industries/zed.git
+
+jobs:
+  # ====== 检测 Zed 是否发布新版本 ======
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      local_version: ${{ steps.check.outputs.local_version }}
+      has_update: ${{ steps.check.outputs.has_update }}
+    steps:
+      - id: check
+        run: |
+          UPSTREAM=$(curl -s https://api.github.com/repos/zed-industries/zed/releases/latest | jq -r .tag_name)
+          LOCAL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+          echo "Zed 官方最新: $UPSTREAM | 本地最新: $LOCAL"
+          echo "local_version=$LOCAL" >> $GITHUB_OUTPUT
+
+          # 提取本地基础版本号（去掉重复构建后缀 .1 .2 等）
+          # v0.222.4.1 → v0.222.4, v0.222.4 → v0.222.4
+          LOCAL_BASE=$(echo "$LOCAL" | sed -E 's/^(v[0-9]+\.[0-9]+\.[0-9]+)\.[0-9]+$/\1/')
+          echo "本地基础版本: $LOCAL_BASE"
+
+          # 手动触发时始终执行
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "手动触发，执行提取与翻译"
+            echo "version=$UPSTREAM" >> $GITHUB_OUTPUT
+            echo "has_update=true" >> $GITHUB_OUTPUT
+
+          elif [ "$UPSTREAM" != "null" ] && [ "$UPSTREAM" != "$LOCAL_BASE" ]; then
+            echo "发现新版本: $UPSTREAM (本地基础版本: $LOCAL_BASE)"
+            echo "version=$UPSTREAM" >> $GITHUB_OUTPUT
+            echo "has_update=true" >> $GITHUB_OUTPUT
+
+          else
+            echo "版本一致 ($UPSTREAM = $LOCAL_BASE)，跳过"
+            echo "has_update=false" >> $GITHUB_OUTPUT
+          fi
+
+  # ====== 字符串提取 + AI 翻译 ======
+  translate:
+    needs: check-version
+    if: needs.check-version.outputs.has_update == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安装依赖
+        run: pip install ".[ai]"
+
+      - name: 从 i18n 分支获取数据
+        run: |
+          git fetch origin i18n 2>/dev/null || true
+          git checkout origin/i18n -- scan_result.json 2>/dev/null || echo '{}' > scan_result.json
+          git checkout origin/i18n -- string.json 2>/dev/null || echo '{}' > string.json
+          git checkout origin/i18n -- string_context.json 2>/dev/null || echo '{}' > string_context.json
+          git checkout origin/i18n -- i18n/ 2>/dev/null || mkdir -p i18n
+
+      - name: 确定参数
+        id: params
+        run: |
+          # === 目标语言 ===
+          INPUT_LANG="${{ inputs.target_lang }}"
+          TARGET_LANG="${INPUT_LANG:-zh-CN}"
+          echo "TARGET_LANG=$TARGET_LANG" >> $GITHUB_OUTPUT
+          echo "目标语言: $TARGET_LANG"
+
+          # === 版本号 ===
+          NEW_VER="${{ needs.check-version.outputs.version }}"
+          echo "VERSION=$NEW_VER" >> $GITHUB_OUTPUT
+          echo "构建版本: $NEW_VER"
+
+          # === 提取模式 ===
+          INPUT_MODE="${{ inputs.mode }}"
+          EXTRACT_MODE="${INPUT_MODE:-incremental}"
+          echo "EXTRACT_MODE=$EXTRACT_MODE" >> $GITHUB_OUTPUT
+          echo "提取模式: $EXTRACT_MODE"
+
+      - name: 克隆 Zed 源码
+        env:
+          NEW_VER: ${{ steps.params.outputs.VERSION }}
+        run: |
+          git clone --depth 1 --branch "$NEW_VER" $ZED_REPO zed 2>/dev/null \
+            || git clone --depth 1 $ZED_REPO zed
+
+          # 增量模式需要旧版本 tag 来做 diff
+          OLD_VER=$(jq -r '.version // empty' scan_result.json 2>/dev/null || true)
+          if [ -n "$OLD_VER" ] && [ "$OLD_VER" != "null" ] && [ "$OLD_VER" != "$NEW_VER" ]; then
+            echo "获取旧版本 tag: $OLD_VER (用于 git diff)"
+            cd zed
+            git fetch origin tag "$OLD_VER" --no-tags 2>/dev/null || true
+          fi
+
+      - name: 提取字符串
+        env:
+          NEW_VER: ${{ steps.params.outputs.VERSION }}
+          EXTRACT_MODE: ${{ steps.params.outputs.EXTRACT_MODE }}
+        run: |
+          python3 << 'PYEOF'
+          import json, os
+          from pathlib import Path
+          from zedl10n.scan import find_all_rs_files, load_scan_result, save_scan_result
+          from zedl10n.extract import extract_all
+          from zedl10n.utils import setup_logging
+
+          setup_logging()
+
+          new_ver = os.environ.get("NEW_VER", "unknown")
+          mode = os.environ.get("EXTRACT_MODE", "incremental")
+          prev = load_scan_result("scan_result.json")
+          old_ver = prev.get("version", "")
+          root = Path("zed")
+
+          use_incremental = (
+              mode == "incremental"
+              and old_ver
+              and old_ver != "null"
+              and prev.get("files")
+          )
+
+          resolved = False
+
+          if use_incremental and old_ver == new_ver:
+              # 版本相同，直接复用已有文件列表
+              rel_files = prev["files"]
+              print(f"增量模式: 版本未变 ({old_ver})，复用已有 {len(rel_files)} 个文件")
+              resolved = True
+
+          elif use_incremental:
+              import subprocess
+              print(f"增量模式: {old_ver} -> {new_ver}")
+
+              # git diff 找变化和删除的文件
+              try:
+                  changed_out = subprocess.run(
+                      ["git", "diff", "--name-only", "--diff-filter=ACMR",
+                       old_ver, new_ver, "--", "crates/"],
+                      capture_output=True, text=True, cwd="zed"
+                  )
+                  deleted_out = subprocess.run(
+                      ["git", "diff", "--name-only", "--diff-filter=D",
+                       old_ver, new_ver, "--", "crates/"],
+                      capture_output=True, text=True, cwd="zed"
+                  )
+                  changed = [f.strip() for f in changed_out.stdout.splitlines() if f.strip()]
+                  deleted = [f.strip() for f in deleted_out.stdout.splitlines() if f.strip()]
+              except Exception as e:
+                  print(f"git diff 失败，回退到全量模式: {e}")
+                  changed, deleted = None, None
+
+              if changed is not None:
+                  # 只处理 .rs 文件
+                  changed_rs = [f for f in changed if f.endswith(".rs")]
+                  deleted_set = set(deleted)
+                  changed_set = set(changed_rs)
+                  print(f"变化 .rs 文件: {len(changed_rs)} 个, 删除文件: {len(deleted)} 个")
+
+                  # 从已有结果中移除被删除和变化的文件
+                  prev_files = prev.get("files", [])
+                  kept = [f for f in prev_files if f not in deleted_set and f not in changed_set]
+
+                  # 对变化的 .rs 文件执行提取，有内容的就保留
+                  new_files = []
+                  for f in changed_rs:
+                      fp = root / f
+                      if fp.exists():
+                          new_files.append(f)
+
+                  rel_files = sorted(set(kept) | set(new_files))
+                  print(f"增量合并: 保留 {len(kept)} + 新增/变化 {len(new_files)} = {len(rel_files)} 个文件")
+                  resolved = True
+
+          if not resolved:
+              print("全量模式: 扫描所有 .rs 文件")
+              all_files = find_all_rs_files("zed")
+              rel_files = [str(f.relative_to(root)) for f in all_files]
+              print(f"共找到 {len(rel_files)} 个 .rs 文件")
+
+          # 保存扫描结果
+          save_scan_result("scan_result.json", new_ver, rel_files)
+
+          # 提取字符串
+          abs_files = [str(root / f) for f in rel_files]
+          extract_all(abs_files, "string.json", "string_context.json")
+          PYEOF
+
+      - name: AI 翻译
+        env:
+          AI_BASE_URL: ${{ secrets.AI_BASE_URL }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          AI_MODEL: ${{ secrets.AI_MODEL }}
+          AI_CONCURRENCY: ${{ vars.AI_CONCURRENCY || '10' }}
+          TARGET_LANG: ${{ steps.params.outputs.TARGET_LANG }}
+          EXTRACT_MODE: ${{ steps.params.outputs.EXTRACT_MODE }}
+        run: |
+          zedl10n translate \
+            --input string.json \
+            --output "i18n/${TARGET_LANG}.json" \
+            --context string_context.json \
+            --glossary config/glossary.yaml \
+            --source-root zed \
+            --mode "$EXTRACT_MODE" \
+            --lang "$TARGET_LANG"
+
+      - name: 清理不存在的文件条目
+        env:
+          TARGET_LANG: ${{ steps.params.outputs.TARGET_LANG }}
+        run: |
+          python3 << 'PYEOF'
+          import json, os
+          from pathlib import Path
+
+          lang = os.environ.get("TARGET_LANG", "zh-CN")
+          trans_path = f"i18n/{lang}.json"
+
+          if not Path(trans_path).exists():
+              print("翻译文件不存在，跳过清理")
+              exit(0)
+
+          with open(trans_path, "r", encoding="utf-8") as f:
+              data = json.load(f)
+
+          root = Path("zed")
+          removed = []
+          for fp in list(data.keys()):
+              # 解析路径：zed/crates/xxx -> crates/xxx
+              rel = fp[4:] if fp.startswith("zed/") else fp
+              if not (root / rel).exists():
+                  removed.append(fp)
+                  del data[fp]
+
+          if removed:
+              with open(trans_path, "w", encoding="utf-8") as f:
+                  json.dump(data, f, ensure_ascii=False, indent=2)
+              print(f"已清理 {len(removed)} 个源码中不存在的文件条目:")
+              for r in removed[:20]:
+                  print(f"  - {r}")
+          else:
+              print("所有文件条目均存在于源码中，无需清理")
+          PYEOF
+
+      - name: 推送到 i18n 分支
+        run: |
+          cp string.json string_context.json scan_result.json /tmp/
+          cp -r i18n/ /tmp/i18n-result/
+
+          if git ls-remote --heads origin i18n | grep -q i18n; then
+            git clone --branch i18n --single-branch --depth 1 \
+              "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" \
+              /tmp/i18n-branch
+          else
+            mkdir /tmp/i18n-branch && cd /tmp/i18n-branch
+            git init && git checkout -b i18n
+            git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          fi
+
+          cp /tmp/string.json /tmp/string_context.json /tmp/scan_result.json /tmp/i18n-branch/
+          mkdir -p /tmp/i18n-branch/i18n
+          cp /tmp/i18n-result/* /tmp/i18n-branch/i18n/
+
+          cd /tmp/i18n-branch
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add string.json string_context.json scan_result.json i18n/
+          git diff --cached --quiet || git commit -m "feat(i18n): 更新提取与翻译结果"
+          git push origin i18n
+
+      # 定时触发或手动+chain 时链式调用构建
+      - name: 触发构建工作流
+        if: github.event_name == 'schedule' || inputs.chain == true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" == "schedule" ]; then
+            LANG_VALUE="zh-CN"
+          else
+            LANG_VALUE="${{ steps.params.outputs.TARGET_LANG }}"
+          fi
+
+          gh api repos/${{ github.repository }}/dispatches \
+            -f event_type=build-ready \
+            -f "client_payload[version]=${{ steps.params.outputs.VERSION }}" \
+            -f "client_payload[lang]=$LANG_VALUE"

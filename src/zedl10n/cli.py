@@ -88,6 +88,9 @@ def _build_parser() -> argparse.ArgumentParser:
     p_tr.add_argument(
         "--lang", default="zh-CN", help="目标语言"
     )
+    p_tr.add_argument(
+        "--source-root", default="", help="Zed 源码根目录（用于传递完整源文件上下文）"
+    )
     _add_ai_args(p_tr)
 
     # --- replace ---
@@ -116,7 +119,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # --- pipeline ---
-    p_pipe = sub.add_parser("pipeline", help="一键流水线: 扫描→提取→翻译")
+    p_pipe = sub.add_parser("pipeline", help="一键流水线: 提取→翻译")
     p_pipe.add_argument(
         "--source-root", required=True, help="Zed 源码根目录"
     )
@@ -131,10 +134,6 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p_pipe.add_argument(
         "--glossary", default="config/glossary.yaml", help="术语表路径"
-    )
-    p_pipe.add_argument(
-        "--skip-scan", action="store_true",
-        help="跳过 AI 扫描，复用上次的 scan_result.json 缓存",
     )
     _add_ai_args(p_pipe)
 
@@ -237,7 +236,7 @@ def _run_scan(args: argparse.Namespace) -> None:
 
 
 def _run_pipeline(args: argparse.Namespace) -> None:
-    """一键流水线: scan → extract → translate"""
+    """一键流水线: 提取 → 翻译（跳过 AI 扫描，直接使用所有 .rs 文件）"""
     import logging
     import time
     from pathlib import Path
@@ -247,74 +246,40 @@ def _run_pipeline(args: argparse.Namespace) -> None:
     log = logging.getLogger(__name__)
     t0 = time.time()
 
-    scan_result_path = "scan_result.json"
-    skip_scan = getattr(args, "skip_scan", False)
-
     ai_cfg = AIConfig(
         base_url=args.base_url,
         api_key=args.api_key,
         model=args.model,
         concurrency=args.concurrency,
     )
+    ai_cfg.validate()
 
-    # 如果存在缓存且指定了 --skip-scan，直接复用
-    if skip_scan and Path(scan_result_path).exists():
-        from .scan import load_scan_result
-
-        prev = load_scan_result(scan_result_path)
-        rel_files = prev.get("files", [])
-        log.info(
-            "跳过扫描，从缓存加载 %d 个文件 (版本 %s)",
-            len(rel_files), prev.get("version", "?"),
-        )
-    else:
-        ai_cfg.validate()
-
-        log.info("=" * 50)
-        log.info("阶段 1/3: AI 扫描 — 识别需要翻译的文件")
-        log.info("=" * 50)
-        t1 = time.time()
-        from .scan import save_scan_result, scan_files
-
-        abs_files = scan_files(args.source_root, ai_cfg)
-        # 转为相对路径保存
-        root = Path(args.source_root)
-        rel_files = [
-            str(Path(f).relative_to(root)) if Path(f).is_absolute() else f
-            for f in abs_files
-        ]
-        save_scan_result(scan_result_path, "local", rel_files)
-        log.info(
-            "扫描完成: %d 个待翻译文件 (耗时 %.0fs)",
-            len(rel_files), time.time() - t1,
-        )
-
-    if not rel_files:
-        log.warning("未发现需要翻译的文件，流水线结束")
-        return
-
-    # 将相对路径转为绝对路径供 extract 使用
-    root = Path(args.source_root)
-    abs_files = [str(root / f) for f in rel_files]
-
-    # 2. extract
+    # 1. 提取
     log.info("=" * 50)
-    log.info("阶段 2/3: 字符串提取")
+    log.info("阶段 1/2: 字符串提取")
     log.info("=" * 50)
-    t2 = time.time()
+    t1 = time.time()
     from .extract import extract_all
+    from .scan import find_all_rs_files
+
+    all_files = find_all_rs_files(args.source_root)
+    abs_files = [str(f) for f in all_files]
+
+    if not abs_files:
+        log.warning("未发现 .rs 文件，流水线结束")
+        return
 
     strings_path = "string.json"
     context_path = "string_context.json"
     all_strings = extract_all(abs_files, strings_path, context_path)
     total_strings = sum(len(v) for v in all_strings.values())
-    log.info("提取完成: %d 个字符串 (耗时 %.0fs)", total_strings, time.time() - t2)
+    log.info("提取完成: %d 个字符串 (耗时 %.0fs)", total_strings, time.time() - t1)
 
-    # 3. translate
+    # 2. 翻译
     log.info("=" * 50)
-    log.info("阶段 3/3: AI 翻译")
+    log.info("阶段 2/2: AI 翻译")
     log.info("=" * 50)
-    t3 = time.time()
+    t2 = time.time()
     from .translate import translate_all
 
     output_path = f"i18n/{args.lang}.json"
@@ -326,8 +291,9 @@ def _run_pipeline(args: argparse.Namespace) -> None:
         mode=args.mode,
         lang=args.lang,
         ai_cfg=ai_cfg,
+        source_root=args.source_root,
     )
-    log.info("翻译完成 (耗时 %.0fs)", time.time() - t3)
+    log.info("翻译完成 (耗时 %.0fs)", time.time() - t2)
 
     log.info("=" * 50)
     log.info("全部完成! 总耗时 %.0fs, 输出: %s", time.time() - t0, output_path)

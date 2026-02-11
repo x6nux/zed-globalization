@@ -9,8 +9,14 @@
 """
 
 import argparse
+import io
 import sys
 from pathlib import Path
+
+# Windows CI 默认 cp1252 编码，无法输出中文
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 PATCH_MARKER = "[ZED_GLOBALIZATION_PATCH]"
 
