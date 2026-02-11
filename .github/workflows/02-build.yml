@@ -334,13 +334,13 @@ jobs:
         run: |
           mkdir zed-dist
           Copy-Item "D:\z\target\release\zed.exe" zed-dist\ZedG.exe
-          Compress-Archive -Path zed-dist\* -DestinationPath "zed-globalization-$env:LANG_LOWER-windows-x86_64.zip"
+          Compress-Archive -Path zed-dist\* -DestinationPath "zedg-$env:LANG_LOWER-windows-x86_64-$env:BUILD_VERSION.zip"
 
       - name: 上传产物
         uses: actions/upload-artifact@v4
         with:
           name: zed-windows
-          path: zed-globalization-${{ env.LANG_LOWER }}-windows-x86_64.zip
+          path: zedg-${{ env.LANG_LOWER }}-windows-x86_64-${{ env.BUILD_VERSION }}.zip
 
   # ===========================================================================
   # 4. Linux 构建
@@ -529,7 +529,7 @@ jobs:
           MimeType=text/plain;
           DESKTOP
 
-          tar -czvf "zed-globalization-${LANG_LOWER}-linux-x86_64.tar.gz" -C dist .
+          tar -czvf "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.tar.gz" -C dist .
 
           # === deb 包 ===
           mkdir -p deb-pkg/DEBIAN deb-pkg/usr/bin
@@ -546,21 +546,21 @@ jobs:
           RAW_VERSION="${{ needs.versioning.outputs.upstream_version }}"
           CLEAN_VERSION="${RAW_VERSION#v}"
           cat > deb-pkg/DEBIAN/control <<CTRL
-          Package: zed-globalization
+          Package: zedg
           Version: $CLEAN_VERSION
           Architecture: amd64
           Maintainer: zed-globalization
           Description: Zed editor with globalization support.
           CTRL
-          dpkg-deb --build deb-pkg "zed-globalization-${LANG_LOWER}-linux-x86_64.deb"
+          dpkg-deb --build deb-pkg "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb"
 
       - name: 上传产物
         uses: actions/upload-artifact@v4
         with:
           name: zed-linux
           path: |
-            zed-globalization-${{ env.LANG_LOWER }}-linux-x86_64.tar.gz
-            zed-globalization-${{ env.LANG_LOWER }}-linux-x86_64.deb
+            zedg-${{ env.LANG_LOWER }}-linux-x86_64-${{ env.BUILD_VERSION }}.tar.gz
+            zedg-${{ env.LANG_LOWER }}-linux-x86_64-${{ env.BUILD_VERSION }}.deb
 
   # ===========================================================================
   # 5. macOS 构建
@@ -723,18 +723,18 @@ jobs:
           n=0
           until [ "$n" -ge 10 ]
           do
-              hdiutil create -volname ZedG -srcfolder "$DMG_STAGING" -ov -format UDZO "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" && break
+              hdiutil create -volname ZedG -srcfolder "$DMG_STAGING" -ov -format UDZO "zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" && break
               n=$((n+1))
               echo "hdiutil 失败 (Resource busy?), 等待 15秒后重试 ($n/10)..."
               sleep 15
           done
 
-          if [ ! -f "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" ]; then
+          if [ ! -f "zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" ]; then
               echo "最终打包失败，退出。"
               exit 1
           fi
 
-          mv "zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" ../
+          mv "zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" ../
 
       - name: 停止 sccache
         run: |
@@ -780,7 +780,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: zed-macos
-          path: zed-globalization-${{ env.LANG_LOWER }}-macos-aarch64.dmg
+          path: zedg-${{ env.LANG_LOWER }}-macos-aarch64-${{ env.BUILD_VERSION }}.dmg
 
   # ===========================================================================
   # 6. 正式发布
@@ -791,6 +791,7 @@ jobs:
     if: ${{ needs.versioning.outputs.should_release == 'true' }}
     env:
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+      BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
 
     steps:
       - name: 下载所有产物
@@ -801,10 +802,10 @@ jobs:
       - name: 整理文件与生成 Hash
         run: |
           mkdir release-dist
-          mv "artifacts/zed-windows/zed-globalization-${LANG_LOWER}-windows-x86_64.zip" release-dist/ || echo "No Windows artifact"
-          mv "artifacts/zed-linux/zed-globalization-${LANG_LOWER}-linux-x86_64.tar.gz" release-dist/ || echo "No Linux tar artifact"
-          mv "artifacts/zed-linux/zed-globalization-${LANG_LOWER}-linux-x86_64.deb" release-dist/ || echo "No Linux deb artifact"
-          mv "artifacts/zed-macos/zed-globalization-${LANG_LOWER}-macos-aarch64.dmg" release-dist/ || echo "No macOS artifact"
+          mv "artifacts/zed-windows/zedg-${LANG_LOWER}-windows-x86_64-${BUILD_VERSION}.zip" release-dist/ || echo "No Windows artifact"
+          mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.tar.gz" release-dist/ || echo "No Linux tar artifact"
+          mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb" release-dist/ || echo "No Linux deb artifact"
+          mv "artifacts/zed-macos/zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" release-dist/ || echo "No macOS artifact"
 
           cd release-dist
           sha256sum * > sha256sums.txt
