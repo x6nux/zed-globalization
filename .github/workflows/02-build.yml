@@ -100,22 +100,64 @@ jobs:
           echo "lang_lower=$LANG_LOWER" >> $GITHUB_OUTPUT
 
   # ===========================================================================
-  # 2. Windows 构建
+  # 2. 在 Linux 上统一执行本地化替换，生成补丁
+  # ===========================================================================
+  prepare:
+    runs-on: ubuntu-latest
+    needs: versioning
+    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    env:
+      BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
+      TARGET_LANG: ${{ needs.versioning.outputs.lang }}
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 克隆 Zed 源码并检出 Tag
+        run: |
+          git clone --depth 1 --branch $BUILD_VERSION ${{ env.ZED_REPO }} zed
+
+      - name: 安装 Python 与工具
+        run: pip install .
+
+      - name: 从 i18n 分支获取翻译文件
+        run: |
+          git fetch origin i18n
+          git checkout origin/i18n -- "i18n/${TARGET_LANG}.json"
+
+      - name: 执行本地化替换
+        run: zedl10n replace --input "i18n/${TARGET_LANG}.json" --source-root zed
+
+      - name: 应用 Agent 环境变量补丁
+        run: python3 patch_agent_env.py --source-root zed
+
+      - name: 生成本地化补丁
+        run: |
+          cd zed
+          git add -A
+          git diff --cached --binary > ../l10n.patch
+          echo "补丁大小: $(du -h ../l10n.patch | cut -f1)"
+
+      - name: 上传补丁文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: l10n-patch
+          path: l10n.patch
+          retention-days: 1
+
+  # ===========================================================================
+  # 3. Windows 构建
   # ===========================================================================
   build-windows:
-    needs: versioning
+    needs: [versioning, prepare]
     if: ${{ needs.versioning.outputs.should_release == 'true' }}
     runs-on: windows-latest
     env:
       SCCACHE_DIR: D:\c\sccache
       SCCACHE_IDLE_TIMEOUT: "0"
       BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
-      TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
     steps:
-      - name: 检出仓库
-        uses: actions/checkout@v4
-
       - name: 开启 Git Longpaths
         run: git config --system core.longpaths true
 
@@ -133,30 +175,21 @@ jobs:
       - name: 克隆 Zed 源码并检出 Tag
         shell: pwsh
         run: |
-          git clone ${{ env.ZED_REPO }} D:\z
+          git -c core.autocrlf=false clone ${{ env.ZED_REPO }} D:\z
           Set-Location D:\z
           git checkout $env:BUILD_VERSION
           Write-Host "已切换到版本: $env:BUILD_VERSION"
 
-      - name: 安装 Python 与工具
-        run: pip install .
+      - name: 下载本地化补丁
+        uses: actions/download-artifact@v4
+        with:
+          name: l10n-patch
 
-      - name: 从 i18n 分支获取翻译文件
-        shell: pwsh
+      - name: 应用本地化补丁
+        shell: bash
         run: |
-          git fetch origin i18n
-          git checkout origin/i18n -- "i18n/$env:TARGET_LANG.json"
-          Write-Host "已获取翻译文件: i18n/$env:TARGET_LANG.json"
-
-      - name: 执行本地化替换
-        shell: pwsh
-        run: |
-          Rename-Item -Path "D:\z" -NewName "D:\zed"
-          zedl10n replace --input "i18n\$env:TARGET_LANG.json" --source-root D:\zed
-          Rename-Item -Path "D:\zed" -NewName "D:\z"
-
-      - name: 应用 Agent 环境变量补丁
-        run: python3 patch_agent_env.py --source-root D:\z
+          cd /d/z
+          git apply "$GITHUB_WORKSPACE/l10n.patch"
 
       - name: 准备 Rust 环境
         run: |
@@ -287,17 +320,16 @@ jobs:
           path: zed-globalization-${{ env.LANG_LOWER }}-windows-x86_64.zip
 
   # ===========================================================================
-  # 3. Linux 构建
+  # 4. Linux 构建
   # ===========================================================================
   build-linux:
-    needs: versioning
+    needs: [versioning, prepare]
     if: ${{ needs.versioning.outputs.should_release == 'true' }}
     runs-on: ubuntu-latest
     env:
       SCCACHE_DIR: /home/runner/.cache/sccache
       SCCACHE_IDLE_TIMEOUT: "0"
       BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
-      TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
     steps:
       - name: 释放磁盘空间
@@ -309,9 +341,6 @@ jobs:
           haskell: true
           large-packages: true
           swap-storage: false
-
-      - name: 检出仓库
-        uses: actions/checkout@v4
 
       - name: 安装 sccache
         uses: mozilla-actions/sccache-action@v0.0.3
@@ -336,19 +365,15 @@ jobs:
           git checkout $BUILD_VERSION
           echo "Checked out $BUILD_VERSION"
 
-      - name: 安装 Python 与工具
-        run: pip install .
+      - name: 下载本地化补丁
+        uses: actions/download-artifact@v4
+        with:
+          name: l10n-patch
 
-      - name: 从 i18n 分支获取翻译文件
+      - name: 应用本地化补丁
         run: |
-          git fetch origin i18n
-          git checkout origin/i18n -- "i18n/${TARGET_LANG}.json"
-
-      - name: 执行本地化替换
-        run: zedl10n replace --input "i18n/${TARGET_LANG}.json" --source-root zed
-
-      - name: 应用 Agent 环境变量补丁
-        run: python3 patch_agent_env.py --source-root zed
+          cd zed
+          git apply ../l10n.patch
 
       - name: 恢复 sccache 缓存
         uses: actions/cache/restore@v4
@@ -515,22 +540,18 @@ jobs:
             zed-globalization-${{ env.LANG_LOWER }}-linux-x86_64.deb
 
   # ===========================================================================
-  # 4. macOS 构建
+  # 5. macOS 构建
   # ===========================================================================
   build-macos:
-    needs: versioning
+    needs: [versioning, prepare]
     if: ${{ needs.versioning.outputs.should_release == 'true' }}
     runs-on: macos-latest
     env:
       SCCACHE_DIR: /Users/runner/Library/Caches/Mozilla.sccache
       SCCACHE_IDLE_TIMEOUT: "0"
       BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
-      TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
     steps:
-      - name: 检出仓库
-        uses: actions/checkout@v4
-
       - name: 安装 sccache
         uses: mozilla-actions/sccache-action@v0.0.3
 
@@ -540,19 +561,15 @@ jobs:
           cd zed
           git checkout $BUILD_VERSION
 
-      - name: 安装 Python 与工具
-        run: pip3 install --break-system-packages .
+      - name: 下载本地化补丁
+        uses: actions/download-artifact@v4
+        with:
+          name: l10n-patch
 
-      - name: 从 i18n 分支获取翻译文件
+      - name: 应用本地化补丁
         run: |
-          git fetch origin i18n
-          git checkout origin/i18n -- "i18n/${TARGET_LANG}.json"
-
-      - name: 执行本地化替换
-        run: zedl10n replace --input "i18n/${TARGET_LANG}.json" --source-root zed
-
-      - name: 应用 Agent 环境变量补丁
-        run: python3 patch_agent_env.py --source-root zed
+          cd zed
+          git apply ../l10n.patch
 
       - name: 恢复 sccache 缓存
         uses: actions/cache/restore@v4
@@ -743,7 +760,7 @@ jobs:
           path: zed-globalization-${{ env.LANG_LOWER }}-macos-aarch64.dmg
 
   # ===========================================================================
-  # 5. 正式发布
+  # 6. 正式发布
   # ===========================================================================
   release:
     runs-on: ubuntu-latest
