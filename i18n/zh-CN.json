@@ -1125,7 +1125,12 @@
         "git x": "",
         "edit_file": "",
         "echo hello": "",
-        "^echo\\s": ""
+        "^echo\\s": "",
+        "^cargo\\\\s": "",
+        "^npm\\\\s": "",
+        "sudo\\\\s": "",
+        "^git\\\\s": "",
+        "^echo\\\\s": ""
     },
     "zed/crates/agent/src/tools/copy_path_tool.rs": {
         "directory1/a/something.txt": "",
@@ -4733,7 +4738,10 @@
         "channel-editor": "",
         "{display_name} ({})": "{display_name} ({})",
         "Collab Panel": "协作面板",
-        "Join channel": "加入频道"
+        "Join channel": "加入频道",
+        "Are you sure you want to leave \\\"#{}\\\"?": "确定要离开 \"#{}\" 吗？",
+        "Are you sure you want to remove the channel \\\"{}\\\"?": "确定要移除频道 \"{}\" 吗？",
+        "Are you sure you want to remove \\\"{}\\\" from your contacts?": "确定要从联系人中移除 \"{}\" 吗？"
     },
     "zed/crates/collab_ui/src/notification_panel.rs": {
         "NotificationPanel": "",
@@ -6000,7 +6008,8 @@
         "/v2/{}/manifests/latest": "",
         "sha256:035e9c9fd9bd61f6d3965fa4bf11f3ddfd2490a8cf324f152c13cc3724d67d09": "",
         "/v2/{}/blobs/sha256:035e9c9fd9bd61f6d3965fa4bf11f3ddfd2490a8cf324f152c13cc3724d67d09": "",
-        "Alpine": ""
+        "Alpine": "",
+        "{ \\\"token\\\": \\\"thisisatoken\\\" }": ""
     },
     "zed/crates/diagnostics/src/buffer_diagnostics.rs": {
         "diagnostics updated for server {language_server_id}. recording change": "已更新语言服务器 {language_server_id} 的诊断。正在记录更改",
@@ -7567,7 +7576,9 @@
         "Branch picker should be focused when selecting an entry": "",
         "State should transition to CreateRemote with the URL": "",
         "Branch list picker should still be focused after confirming remote URL": "",
-        "branch-{:02}": ""
+        "branch-{:02}": "",
+        "Create Branch: \\\"{name}\\\"…": "创建分支: \"{name}\"…",
+        "Create Remote: \\\"{name}\\\"": "创建远程仓库: \"{name}\""
     },
     "zed/crates/git_ui/src/clone.rs": {
         "Select as Repository Destination": "选择仓库目标位置",
@@ -10234,7 +10245,16 @@
         "{invalid json": "",
         "{\"city\":": "",
         "\"Boston\"": "",
-        "[image omitted": "[已省略图片]"
+        "[image omitted": "[已省略图片]",
+        "{\\\"forecast\\\":\\\"Sunny\\\"}": "",
+        "{\\\"city\\\":\\\"Bos": "",
+        "ton\\\"}": "",
+        "{\\\"city\\\":\\\"Boston\\\"}": "",
+        "{\\\"city\\\":\\\"NYC\\\"}": "",
+        "{\\\"city\\\":\\\"LA\\\"}": "",
+        "{\\\"query\\\":\\\"test\\\"}": "",
+        "{\\\"city\\\":": "",
+        "\\\"Boston\\\"": ""
     },
     "zed/crates/language_models/src/provider/open_ai_compatible.rs": {
         "{}_API_KEY": "",
@@ -11563,7 +11583,8 @@
         "test name with regex chars .*+?^${}()|[]\\\\": "",
         "test name with regex chars \\\\.\\\\*\\\\+\\\\?\\\\^\\\\$\\\\{\\\\}\\\\(\\\\)\\\\|\\\\[\\\\]\\\\\\\\": "",
         "test name with multiple (.+?) and (.+?)retty and %b and \\\\(\\\\.\\\\+\\\\?\\\\)": "",
-        "\"{}\"": ""
+        "\"{}\"": "",
+        "[Symbol(\\\"inline\\\")]": ""
     },
     "zed/crates/line_ending_selector/src/line_ending_indicator.rs": {
         "change-line-ending": "",
@@ -13208,7 +13229,10 @@
         "-F": "",
         "cd \"$HOME/{working_dir}\" {} ": "",
         "cd \"{working_dir}\" {} ": "",
-        "cd \"$HOME/work\" && exec env INPUT_VA=val remote_program arg1 arg2": ""
+        "cd \"$HOME/work\" && exec env INPUT_VA=val remote_program arg1 arg2": "",
+        "put -r \\\"{src_path_display}\\\" \\\"{dest_path_str}\\\"\\n": "",
+        "{tmp_path}\\\\remote_server.exe": "",
+        "put {src_path_display} {dest_path_str}\\n": ""
     },
     "zed/crates/remote/src/transport/wsl.rs": {
         "Connecting to WSL distro {} with user {:?}": "正在连接到 WSL 发行版 {}，用户 {:?}",
@@ -15385,7 +15409,10 @@
         "Use Autoclose": "使用自动闭合",
         "Files or globs of files that will be excluded by Zed entirely. They will be skipped during file scans, file searches, and not be displayed in the project file tree. Takes precedence over \\\"File Scan Inclusions\\\"": "将被 Zed 完全排除的文件或文件 glob 模式。它们将在文件扫描、文件搜索期间被跳过，并且不会显示在项目文件树中。优先级高于“文件扫描包含项”",
         "Files or globs of files that will be included by Zed, even when ignored by git. This is useful for files that are not tracked by git, but are still important to your project. Note that globs that are overly broad can slow down Zed's file scanning. \\\"File Scan Exclusions\\\" takes precedence over these inclusions": "将被 Zed 包含的文件或文件 glob 模式，即使被 git 忽略。这对于未被 git 跟踪但对项目仍然重要的文件很有用。请注意，过于宽泛的 glob 模式可能会减慢 Zed 的文件扫描速度。“文件扫描排除项”优先于这些包含项",
-        "Globs to match files that will be considered \\\"hidden\\\" and can be hidden from the project panel.": "用于匹配将被视为“隐藏”并可以从项目面板中隐藏的文件的 Glob 模式。"
+        "Globs to match files that will be considered \\\"hidden\\\" and can be hidden from the project panel.": "用于匹配将被视为“隐藏”并可以从项目面板中隐藏的文件的 Glob 模式。",
+        "Whether to use additional LSP queries to format (and amend) the code after every \\\"trigger\\\" symbol input, defined by LSP server capabilities": "是否使用额外的 LSP 查询在每次输入由 LSP 服务器功能定义的 \"触发\" 符号后格式化（并修正）代码",
+        "Visible character used to render space characters when show_whitespaces is enabled (default: \\\"•\\\")": "当启用 show_whitespaces 时用于渲染空格字符的可见字符（默认：\"•\"）",
+        "Visible character used to render tab characters when show_whitespaces is enabled (default: \\\"→\\\")": "当启用 show_whitespaces 时用于渲染制表符字符的可见字符（默认：\"→\"）"
     },
     "zed/crates/settings_ui/src/pages/edit_prediction_provider_setup.rs": {
         "http://localhost:11434": "",
@@ -19712,7 +19739,27 @@
         "$0": "",
         "$0 is invalid": "",
         "cost is $": "",
-        "line1\nline2": ""
+        "line1\nline2": "",
+        "Unknown escape sequence: \\\\{}": "未知的转义序列: \\{}",
+        "/cmd \\\"multi word\\\" simple": "",
+        "\\\"multi word\\\" simple": "",
+        "\\\"foo bar\\\"": "",
+        "\\\"foo bar\\\" baz \\\"qux\\\"": "",
+        "\\\"foo \\\\\\\"bar\\\\\\\" baz\\\"": "",
+        "foo \\\"bar\\\" baz": "",
+        "\\\"foo\\\\\\\\bar\\\"": "",
+        "foo\\\\bar": "",
+        "\\\"foo": "",
+        "foo\\\"bar": "",
+        "\\\"\\\\x\\\"": "",
+        "\\\"line1\\\\nline2\\\"": "",
+        "\\\\$1 escaped": "",
+        "line1\\\\nline2": "",
+        "cost is \\\\$1": "",
+        "say \\\\\\\"hi\\\\\\\"": "",
+        "path\\\\\\\\file": "",
+        "\\\"こんにちは\\\" 世界": "",
+        "🎉 \\\"🎊 party\\\"": ""
     },
     "zed/crates/assistant_slash_commands/src/cargo_workspace_command.rs": {
         "You are in a Rust project.": "你正处于一个 Rust 项目中。",
@@ -21400,7 +21447,26 @@
         "export function getSecret() { return 'public'; }": "",
         "private.js": "",
         "const SECRET_KEY = \"private_value\";": "",
-        "{\"secret_data\": \"hidden\"}": ""
+        "{\"secret_data\": \"hidden\"}": "",
+        "function\\\\s+\\\\w+": "",
+        "\\n## Matches in {}": "\n## 在 {} 中的匹配",
+        "\\n### ": "\n### ",
+        "```\\n": "",
+        "\\n```\\n": "",
+        "\\n{} lines remaining in ancestor node. Read the file to see all.": "\n祖先节点中还有 {} 行。请阅读文件以查看全部。",
+        "Showing matches {}-{} (there were more matches found; use offset: {} to see next page):\\n{output}": "显示匹配 {}-{}（还有更多匹配项；使用 offset: {} 查看下一页）：\n{output}",
+        "Found {matches_found} matches:\\n{output}": "找到 {matches_found} 个匹配：\n{output}",
+        "fn main() {\\n    println!(\\\"Hello, world!\\\");\\n}": "",
+        "fn helper() {\\n    println!(\\\"I'm a helper!\\\");\\n}": "",
+        "fn test_main() {\\n    assert!(true);\\n}": "",
+        "This file has UPPERCASE and lowercase text.\\nUPPERCASE patterns should match only with case_sensitive: true": "",
+        "root\\\\": "",
+        "fn main() { println!(\\\"This file is in the project\\\"); }": "",
+        "SECRET_KEY=abc123\\nfn secret() { /* private */ }": "",
+        "fn main() { let secret_key = \\\"hidden\\\"; }": "",
+        "const API_KEY: &str = \\\"secret_value\\\";": "",
+        "pub fn get_config() -> String { \\\"config\\\".to_string() }": "",
+        "const SECRET_KEY = \\\"private_value\\\";": ""
     },
     "zed/crates/agent/src/tools/list_directory_tool.rs": {
         "Cannot list directory": "无法列出目录",
@@ -21728,7 +21794,15 @@
         "Pattern ^echo\\\\s should NOT match 'git status'": "",
         "echoHello": "",
         "Pattern ^echo\\\\s should NOT match 'echoHello' (requires whitespace)": "",
-        "default_mode should be Confirm when not specified": ""
+        "default_mode should be Confirm when not specified": "",
+        "rm\\\\s+-rf": "",
+        "DROP\\\\s+TABLE": "",
+        "^git\\\\s": "",
+        "\\\\.env$": "",
+        "sudo\\\\s": "",
+        "^git\\\\s+status": "",
+        "del /f /s /q c:\\\\": "",
+        "rd /s /q c:\\\\windows": ""
     },
     "zed/crates/agent_ui/src/agent_ui.rs": {
         "Add Context": "添加上下文",
@@ -22155,7 +22229,29 @@
         "Job rollback failed, the app might be left in an inconsistent state: ({:?})": "任务回滚失败，应用可能处于不一致状态: ({:?})",
         "Autoupdate failed, rollback successful": "自动更新失败，回滚成功",
         "doesn't run in the main binary": "不在主二进制文件中运行",
-        "Update completed successfully": "更新成功完成"
+        "Update completed successfully": "更新成功完成",
+        "old\\\\Zed.exe": "",
+        "old\\\\bin": "",
+        "bin\\\\Zed.exe": "",
+        "old\\\\bin\\\\Zed.exe": "",
+        "bin\\\\zed": "",
+        "old\\\\bin\\\\zed": "",
+        "old\\\\OpenConsole.exe": "",
+        "old\\\\x64": "",
+        "old\\\\arm64": "",
+        "x64\\\\OpenConsole.exe": "",
+        "old\\\\x64\\\\OpenConsole.exe": "",
+        "arm64\\\\OpenConsole.exe": "",
+        "old\\\\arm64\\\\OpenConsole.exe": "",
+        "old\\\\conpty.dll": "",
+        "install\\\\Zed.exe": "",
+        "install\\\\bin\\\\Zed.exe": "",
+        "install\\\\bin\\\\zed": "",
+        "install\\\\x64": "",
+        "install\\\\arm64": "",
+        "install\\\\x64\\\\OpenConsole.exe": "",
+        "install\\\\arm64\\\\OpenConsole.exe": "",
+        "install\\\\conpty.dll": ""
     },
     "zed/crates/aws_http_client/src/aws_http_client.rs": {
         "AwsHttpConnector": "",
@@ -26223,7 +26319,11 @@
         "Zed v{version} ({sha}) - OS: {os} - Zed v{version}": "Zed v{version} ({sha}) - OS: {os} - Zed v{version}",
         "unknown": "未知",
         "snake_case": "",
-        "Failed to send autocomplete metrics for sweep_ai: {:?}\nBody: {}": "发送 sweep_ai 自动补全指标失败: {:?}\nBody: {}"
+        "Failed to send autocomplete metrics for sweep_ai: {:?}\nBody: {}": "发送 sweep_ai 自动补全指标失败: {:?}\nBody: {}",
+        "Request failed with status: {:?}\\nBody: {}": "请求失败，状态码：{:?}\n响应内容：{}",
+        "User renamed {:?} to {:?}\\n": "用户将 {:?} 重命名为 {:?}\n",
+        "File: {}:\\n{}\\n": "文件：{}:\n{}\n",
+        "Failed to send autocomplete metrics for sweep_ai: {:?}\\nBody: {}": "发送 sweep_ai 自动补全指标失败：{:?}\n响应内容：{}"
     },
     "zed/crates/edit_prediction/src/udiff.rs": {
         "project has no worktree": "项目没有工作树",
@@ -30041,7 +30141,20 @@
         "abˇcdef\ngh\nˇijk": "",
         "abcˇdef\ngh\nˇijk": "",
         "abc\ndefg\nhijkl\nmn": "",
-        "abc\ndefg\n\nhijkl\nmn": ""
+        "abc\ndefg\n\nhijkl\nmn": "",
+        "\\nˇ   ˇlorem": "",
+        "ˇ\\nˇ   lorem": "",
+        "\\nlorem\\nˇ   ˇipsum": "",
+        "\\n\\nˇ\\nˇ": "",
+        "abcˇdef\\ngh\\nijˇk": "",
+        "abcdef\\nˇgh\\nijˇk": "",
+        "\\nˇ   loremˇ": "",
+        "    loremˇ    ˇ\\nipsum\\n": "",
+        "\\nˇ\\nˇ\\n\\n": "",
+        "abˇcdef\\ngh\\nˇijk": "",
+        "abcˇdef\\ngh\\nˇijk": "",
+        "abc\\ndefg\\nhijkl\\nmn": "",
+        "abc\\ndefg\\n\\nhijkl\\nmn": ""
     },
     "zed/crates/editor/src/persistence.rs": {
         "NOT NULL": "",
@@ -31411,7 +31524,8 @@
         "wasm extension channel, extension {} (id {})": "wasm 扩展通道，扩展 {} (id {})",
         "main thread message channel should not be closed yet, extension {} (id {})": "主线程消息通道不应关闭，扩展 {} (id {})",
         "main thread message channel, extension {name} (id {id})": "主线程消息通道，扩展 {name} (id {id})",
-        "from extension \"{}\" version {}: {}": "来自扩展 \"{}\" 版本 {}: {}"
+        "from extension \"{}\" version {}: {}": "来自扩展 \"{}\" 版本 {}: {}",
+        "from extension \\\"{}\\\" version {}: {}": "来自扩展 \"{}\" 版本 {}：{}"
     },
     "zed/crates/feature_flags/src/feature_flags.rs": {
         "ZED_DISABLE_STAFF": "",
@@ -34069,7 +34183,8 @@
         "The native clipboard is not accessible due to being held by an other party.": "由于被其他方占用，无法访问本机剪贴板。",
         "The image or the text that was about the be transferred to/from the clipboard could not be converted to the appropriate format.": "无法将即将传入/传出剪贴板的图像或文本转换为适当的格式。",
         "Unknown error while interacting with the clipboard: {description}": "与剪贴板交互时发生未知错误：{description}",
-        "{name} - \"{self}\"": "{name} - \"{self}\""
+        "{name} - \"{self}\"": "{name} - \"{self}\"",
+        "{name} - \\\"{self}\\\"": ""
     },
     "zed/crates/gpui/src/platform/linux/x11/display.rs": {
         "No screen found with index {x_screen_index}": "未找到索引为 {x_screen_index} 的屏幕"
@@ -36354,7 +36469,8 @@
         "../../languages/src/rust/runnables.scm": "",
         "../../languages/src/rust/debugger.scm": "",
         "../../languages/src/rust/imports.scm": "",
-        "Could not parse queries": "无法解析查询"
+        "Could not parse queries": "无法解析查询",
+        "\\\"": ""
     },
     "zed/crates/language/src/language_registry.rs": {
         "Plain Text": "纯文本",
@@ -36851,7 +36967,8 @@
         "email": "",
         "#/definitions/User": "",
         "...": "",
-        "name": ""
+        "name": "",
+        "Schema cannot be made compatible because it contains \\\"{key}\\\"": "无法使 Schema 兼容，因为它包含 \"{key}\""
     },
     "zed/crates/language_models/src/extension.rs": {
         "anthropic": "",
@@ -40252,7 +40369,8 @@
         "Invalid git status code: {head}": "无效的 git 状态代码: {head}",
         "Invalid code for unmerged status: {code:?}": "无效的未合并状态代码: {code:?}",
         "Invalid git status code: {status}": "无效的 git 状态代码: {status}",
-        "Invalid code for tracked status: {code:?}": "无效的已跟踪状态代码: {code:?}"
+        "Invalid code for tracked status: {code:?}": "无效的已跟踪状态代码: {code:?}",
+        "remote \\\"{remote}\\\" not found": "找不到远程仓库 \"{remote}\""
     },
     "zed/crates/project/src/image_store.rs": {
         "{}": "",
@@ -40437,7 +40555,7 @@
         "Attempting to resolve code actions {:?}": "",
         "Failed to resolve code action {:?} with language server {}": "",
         "No code actions were resolved, continuing": "",
-        "code action '{}' with title \"{}\" on server {}": "",
+        "code action '{}' with title \"{}\" on server {}": "代码操作 '{}'，标题为 \"{}\"，位于服务器 {}",
         "Executing {}": "",
         "Failed to resolve {}. Error: {}": "",
         "No changes for code action. Skipping {}": "",
@@ -40464,7 +40582,7 @@
         "{buffer_path}": "",
         "Untitled": "",
         "failed to acquire stdin": "",
-        "command failed with exit code {:?}:\nstdout: {}\nstderr: {}": "",
+        "command failed with exit code {:?}:\nstdout: {}\nstderr: {}": "命令执行失败，退出码 {:?}:\n标准输出: {}\n标准错误: {}",
         "{old_path:?} is not parseable as an URI": "",
         "no snapshots found for buffer {buffer_id} and server {server_id}": "",
         "snapshot not found for buffer {buffer_id} server {server_id} at version {version}": "",
@@ -42107,7 +42225,17 @@
         "tests\\\\C": "",
         "Case sensitivity should not be enabled when \\C pattern item is preceded by a backslash.": "当 \\C 模式项前面有反斜杠时，不应启用区分大小写。",
         "^hello$\n": "",
-        "hello\nworld\nhello\nworld": ""
+        "hello\nworld\nhello\nworld": "",
+        "test\\\\C": "",
+        "Case sensitivity should be enabled when \\\\C pattern item is present in the query.": "当查询中存在 \\C 模式项时，应启用区分大小写。",
+        "test\\\\c": "",
+        "Case sensitivity should be disabled when \\\\c pattern item is present, even if initially set to true.": "当存在 \\c 模式项时，应禁用区分大小写，即使初始设置为 true。",
+        "test\\\\c\\\\C": "",
+        "Case sensitivity should be enabled when \\\\C is the last pattern item, even after a \\\\c.": "当 \\C 是最后一个模式项时，应启用区分大小写，即使前面有 \\c。",
+        "tests\\\\\\\\C": "",
+        "Case sensitivity should not be enabled when \\\\C pattern item is preceded by a backslash.": "当 \\C 模式项前面有反斜杠时，不应启用区分大小写。",
+        "^hello$\\n": "",
+        "hello\\nworld\\nhello\\nworld": ""
     },
     "zed/crates/project/tests/integration/search_history.rs": {
         "No current selection should be set for the default search history": "默认搜索历史不应设置当前选中项",
@@ -43299,7 +43427,8 @@
         "v root_b": "",
         "v root_c": "",
         "Initial state with files marked in root_b": "在 root_b 中标记文件时的初始状态",
-        "After deletion in root_b as it's last deletion, selection should be in root_b": "由于是最后一次删除，在 root_b 中删除后，选择应位于 root_b 中"
+        "After deletion in root_b as it's last deletion, selection should be in root_b": "由于是最后一次删除，在 root_b 中删除后，选择应位于 root_b 中",
+        "new_dir_3\\\\": ""
     },
     "zed/crates/prompt_store/src/prompts.rs": {
         ".rules": "",
@@ -44098,7 +44227,7 @@
         ", ": "",
         "KeymapAction": "",
         "Error loading built-in keymap \"{asset_path}\": {error_message}": "加载内置键位映射 \"{asset_path}\" 时出错：{error_message}",
-        "JSON parse error in built-in keymap \"{asset_path}\": {error}": "内置键位映射 \"{asset_path}\" 中存在 JSON 解析错误：{error}",
+        "JSON parse error in built-in keymap \"{asset_path}\": {error}": "内置键位映射 \"{asset_path}\" 的 JSON 解析错误：{error}",
         "test-support": "",
         "{error_message}": "{error_message}",
         "JSON parse error: {error}": "JSON 解析错误：{error}",
@@ -44106,9 +44235,9 @@
         "\n\n - Unrecognized fields: {}": "\n\n - 无法识别的字段：{}",
         "{:?}": "",
         "  ": "",
-        "\n": "",
+        "\n": "\n",
         "\n\n- In binding {}, {indented_err}": "\n\n- 在绑定 {} 中，{indented_err}",
-        "\"{}\"": "",
+        "\"{}\"": "\"{}\"",
         "Errors in user keymap file.": "用户键位映射文件中存在错误。",
         "\nIn section without context predicate:": "\n在没有上下文谓词的区块中：",
         "\nIn section with {}:": "\n在带有 {} 的区块中：",
@@ -45189,7 +45318,13 @@
         "[1,2,   ": "",
         ",    4]": "",
         "updated": "",
-        "[true, false, true]": ""
+        "[true, false, true]": "",
+        "\\\"{new_key}\\\": {new_val},\\n{space:width$}": "",
+        "\\n{space:width$}": "",
+        "\\n ": "",
+        "\\n": "",
+        "{\\n    \\n}": "",
+        "hello \\\"quoted\\\" world": ""
     },
     "zed/crates/settings_macros/src/settings_macros.rs": {
         "MergeFrom cannot be derived for unions": "无法为 union 类型派生 MergeFrom",
@@ -50792,7 +50927,9 @@
         "We control the other side": "",
         "test": "",
         "{}": "",
-        "{} {} {}": ""
+        "{} {} {}": "",
+        "C:\\\\Users\\\\user\\\\file.txt": "",
+        "\\\\": ""
     },
     "zed/crates/vercel/src/vercel.rs": {
         "https://api.v0.dev/v1": "",
@@ -54285,7 +54422,9 @@
         "crate::module::default::sub": "",
         "Module crate::module::default::sub should not be affected by crate::module::default filter": "模块 crate::module::default::sub 不应受 crate::module::default 过滤器影响",
         "crate::submodule": "",
-        "crate::submodule should be disabled by disabling `crate` filter": "通过禁用 `crate` 过滤器应该禁用 crate::submodule"
+        "crate::submodule should be disabled by disabling `crate` filter": "通过禁用 `crate` 过滤器应该禁用 crate::submodule",
+        "Invalid log level \\\"{level_str}\\\", to disable logging set to \\\"off\\\". Defaulting to \\\"off\\\".": "无效的日志级别 \"{level_str}\"，如要禁用日志请设置为 \"off\"。默认为 \"off\"。",
+        "Invalid log level \\\"{level_str}\\\", ignoring": "无效的日志级别 \"{level_str}\"，已忽略"
     },
     "zed/crates/zlog/src/sink.rs": {
         "\\x1b[0m": "",
