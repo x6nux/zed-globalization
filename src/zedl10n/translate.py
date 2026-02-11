@@ -338,7 +338,7 @@ async def _translate_async(
         if file_path not in result:
             result[file_path] = {}
         for s in strings:
-            if mode == "full" or not result.get(file_path, {}).get(s):
+            if mode == "full" or s not in result.get(file_path, {}):
                 to_translate[s] = ""
         if not to_translate:
             continue
