@@ -35,7 +35,7 @@ env:
   RUSTC_WRAPPER: "sccache"
   CARGO_INCREMENTAL: "0"
   SCCACHE_RECACHE_THIRD_PARTY_DEPS: "1"
-  SCCACHE_CACHE_SIZE: "10G"
+  SCCACHE_CACHE_SIZE: "3G"
   SCCACHE_IDLE_TIMEOUT: "0"
 
 jobs:
@@ -166,15 +166,14 @@ jobs:
       - name: 安装 sccache
         run: choco install sccache -y
 
-      - name: 启用 sccache 缓存
-        uses: actions/cache@v4
+      - name: 恢复 sccache 缓存
+        uses: actions/cache/restore@v4
         with:
           path: |
             D:\c\sccache
             D:\c\registry
             D:\c\git
-          key: sccache-win-${{ github.run_id }}
-          restore-keys: sccache-win-
+          key: sccache-win
 
       - name: 启动 sccache server
         run: |
@@ -256,6 +255,24 @@ jobs:
           Write-Host ""
           sccache --stop-server || $true
 
+      - name: 清理旧缓存
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: gh api -X DELETE "repos/${{ github.repository }}/actions/caches?key=sccache-win"
+
+      - name: 保存 sccache 缓存
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            D:\c\sccache
+            D:\c\registry
+            D:\c\git
+          key: sccache-win
+
       - name: 打包 Windows
         shell: pwsh
         run: |
@@ -333,15 +350,14 @@ jobs:
       - name: 应用 Agent 环境变量补丁
         run: python3 patch_agent_env.py --source-root zed
 
-      - name: 启用 sccache 缓存
-        uses: actions/cache@v4
+      - name: 恢复 sccache 缓存
+        uses: actions/cache/restore@v4
         with:
           path: |
             /home/runner/.cache/sccache
             ~/.cargo/registry
             ~/.cargo/git
-          key: sccache-linux-${{ github.run_id }}
-          restore-keys: sccache-linux-
+          key: sccache-linux
 
       - name: 安装 Rust
         uses: dtolnay/rust-toolchain@stable
@@ -417,6 +433,23 @@ jobs:
           echo "========================================="
           echo ""
           sccache --stop-server || true
+
+      - name: 清理旧缓存
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X DELETE "repos/${{ github.repository }}/actions/caches?key=sccache-linux"
+
+      - name: 保存 sccache 缓存
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            /home/runner/.cache/sccache
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: sccache-linux
 
       - name: 打包 Linux
         run: |
@@ -521,15 +554,14 @@ jobs:
       - name: 应用 Agent 环境变量补丁
         run: python3 patch_agent_env.py --source-root zed
 
-      - name: 启用 sccache 缓存
-        uses: actions/cache@v4
+      - name: 恢复 sccache 缓存
+        uses: actions/cache/restore@v4
         with:
           path: |
             /Users/runner/Library/Caches/Mozilla.sccache
             ~/.cargo/registry
             ~/.cargo/git
-          key: sccache-macos-${{ github.run_id }}
-          restore-keys: sccache-macos-
+          key: sccache-macos
 
       - name: 安装 Rust
         uses: dtolnay/rust-toolchain@stable
@@ -686,6 +718,23 @@ jobs:
           echo "========================================="
           echo ""
           sccache --stop-server || true
+
+      - name: 清理旧缓存
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X DELETE "repos/${{ github.repository }}/actions/caches?key=sccache-macos"
+
+      - name: 保存 sccache 缓存
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            /Users/runner/Library/Caches/Mozilla.sccache
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: sccache-macos
 
       - name: 上传产物
         uses: actions/upload-artifact@v4
