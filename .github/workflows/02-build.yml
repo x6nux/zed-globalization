@@ -148,6 +148,8 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: 编译检查
+        env:
+          RUSTC_WRAPPER: ""
         run: |
           cd zed
           cargo check 2>&1 | tail -5
