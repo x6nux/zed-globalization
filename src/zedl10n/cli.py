@@ -101,6 +101,10 @@ def _build_parser() -> argparse.ArgumentParser:
     p_rep.add_argument(
         "--source-root", default=".", help="Zed 源码根目录"
     )
+    p_rep.add_argument(
+        "--do-not-translate", default="",
+        help="禁止翻译列表 JSON 文件路径",
+    )
 
     # --- convert ---
     p_conv = sub.add_parser("convert", help="JSON <-> Excel 转换")

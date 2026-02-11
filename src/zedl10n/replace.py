@@ -11,6 +11,22 @@ from .utils import TranslationDict, extract_placeholders, load_json, save_json
 
 log = logging.getLogger(__name__)
 
+# (file_path, original) 组成的集合，替换时跳过
+_do_not_translate: set[tuple[str, str]] = set()
+
+
+def load_do_not_translate(path: str) -> None:
+    """加载禁止翻译的字符串列表"""
+    global _do_not_translate
+    p = Path(path)
+    if not p.exists():
+        log.warning("do_not_translate 文件不存在: %s", path)
+        return
+    data = load_json(path)
+    entries = data.get("entries", [])
+    _do_not_translate = {(e["file"], e["original"]) for e in entries}
+    log.info("已加载 %d 条禁止翻译规则", len(_do_not_translate))
+
 # 纯 ASCII 标点/空白字符串——替换它们会破坏 Rust 语法
 _PUNCT_ONLY = re.compile(r'^[\s\x20-\x2f\x3a-\x40\x5b-\x60\x7b-\x7e]+$')
 
@@ -70,6 +86,10 @@ def _filter_replacements(
     for original, new_value in replacements.items():
         if not new_value:
             clean[original] = new_value
+            continue
+        # 禁止翻译列表检查（dispatch_context、match_arm、序列化等）
+        if (file_path, original) in _do_not_translate:
+            log.debug("跳过(禁止列表): %r (%s)", original, file_path)
             continue
         # 纯标点/空白字符串不应被翻译（如 ", " → "、" 会破坏数组语法）
         if _PUNCT_ONLY.match(original):
@@ -247,6 +267,9 @@ def _cleanup_translation_json(
 
 def run(args: argparse.Namespace) -> None:
     """CLI 入口"""
+    dnt_path = getattr(args, "do_not_translate", "")
+    if dnt_path:
+        load_do_not_translate(dnt_path)
     translations: TranslationDict = load_json(args.input)
     _, missing = replace_in_source(translations, args.source_root)
     _cleanup_translation_json(args.input, missing)
