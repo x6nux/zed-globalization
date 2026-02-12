@@ -94,12 +94,31 @@ class ProgressBar:
 
 def setup_logging(verbose: bool = False) -> None:
     """统一日志配置"""
+    import io
+
+    # Windows CI 默认 cp1252，无法输出中文日志
+    if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+        sys.stdout = io.TextIOWrapper(
+            sys.stdout.buffer, encoding="utf-8", errors="replace",
+        )
+        sys.stderr = io.TextIOWrapper(
+            sys.stderr.buffer, encoding="utf-8", errors="replace",
+        )
+
     level = logging.DEBUG if verbose else logging.INFO
-    logging.basicConfig(
-        level=level,
-        format="%(asctime)s [%(levelname)s] %(message)s",
+
+    class _ClearLineFormatter(logging.Formatter):
+        """输出日志前先清除进度条所在行，避免混行"""
+
+        def format(self, record: logging.LogRecord) -> str:
+            return f"\n{super().format(record)}"
+
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(_ClearLineFormatter(
+        fmt="%(asctime)s [%(levelname)s] %(message)s",
         datefmt="%H:%M:%S",
-    )
+    ))
+    logging.basicConfig(level=level, handlers=[handler])
     # 压制 httpx/openai 的 HTTP Request 日志
     logging.getLogger("httpx").setLevel(logging.WARNING)
     logging.getLogger("openai").setLevel(logging.WARNING)
@@ -167,6 +186,31 @@ def parse_numbered_response(raw: str, keys: list[str]) -> dict[str, str]:
     return result
 
 
+def extract_placeholders(s: str) -> list[str]:
+    """提取字符串中所有格式占位符，忽略 {{ 和 }} 转义。
+
+    支持的占位符类型:
+    - Rust format!: {}, {0}, {name}, {:?}, {:#?}, {:x}, {:.2}, {name:?}, {value:.2}
+    - C 风格: %s, %d, %f, %x, %o, %u, %ld, %lld, %zu 等
+
+    返回按出现顺序排列的占位符列表。
+    """
+    import re
+
+    # 先把转义花括号 {{ 和 }} 替换为占位标记，避免干扰匹配
+    masked = s.replace("{{", "\x00\x00").replace("}}", "\x01\x01")
+
+    # 匹配 Rust 格式占位符: {}, {0}, {name}, {:?}, {:#?}, {name:?}, {:.2} 等
+    rust_pattern = re.compile(r"\{[^{}]*\}")
+    placeholders = [m.group() for m in rust_pattern.finditer(masked)]
+
+    # 匹配 C 风格占位符: %s, %d, %f, %x, %ld 等
+    c_pattern = re.compile(r"%(?:l{0,2}[diouxXeEfgGcs]|zu|[%])")
+    placeholders.extend(m.group() for m in c_pattern.finditer(masked) if m.group() != "%%")
+
+    return placeholders
+
+
 def build_glossary_section(glossary_path: str) -> str:
     """构建术语表提示文本"""
     path = Path(glossary_path)
@@ -194,6 +238,15 @@ def extract_crate_name(file_path: str) -> str:
         return parts[idx + 1] if idx + 1 < len(parts) else "unknown"
     except ValueError:
         return "unknown"
+
+
+def normalize_fullwidth(text: str) -> str:
+    """全角 ASCII 字符（U+FF01-FF5E）转半角（U+0021-007E）"""
+    return text.translate(
+        str.maketrans(
+            {chr(c): chr(c - 0xFEE0) for c in range(0xFF01, 0xFF5F)}
+        )
+    )
 
 
 def load_json(path: str | Path) -> Any:

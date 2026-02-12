@@ -4,111 +4,23 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import json
 import logging
 import random
 from pathlib import Path
 
+from .prompts import (
+    SYSTEM_PROMPT_TEMPLATE, XML_FALLBACK_INSTRUCTION,
+    build_fix_prompt, build_numbered_instruction,
+    build_user_prompt, estimate_tokens, validate_placeholders,
+)
 from .utils import (
     AIConfig, ProgressBar, TranslationDict,
-    build_glossary_section, extract_crate_name,
-    load_json, parse_json_response, parse_numbered_response,
+    build_glossary_section, load_json, normalize_fullwidth,
+    parse_json_response, parse_numbered_response,
     parse_xml_response, save_json,
 )
 
 log = logging.getLogger(__name__)
-
-_SYSTEM_PROMPT_TEMPLATE = """你是一个专业的软件界面翻译专家，正在翻译 Zed 代码编辑器的用户界面。
-
-目标语言: {lang}
-
-翻译规则:
-1. 对需要翻译的 UI 字符串，返回准确、自然的翻译
-2. 对不需要翻译的内容，返回空字符串 ""。不需要翻译的内容包括：
-   - URL、文件路径、目录路径
-   - 纯数字、版本号
-   - 纯标点符号、特殊字符
-   - 编程标识符（变量名、函数名、类名）
-   - API 名称、HTTP 方法、MIME 类型
-   - 正则表达式
-   - 代码片段、命令行指令
-   - 只有一两个字母的缩写
-3. 保持快捷键占位符不变（如 {{key}}）
-4. 保持字符串中的格式占位符不变（如 {{}}、%s、{{0}}）
-5. 严禁将 ASCII 标点替换为中文标点。逗号保持 ","，不要变为 "、" 或 "，"；分号保持 ";"，不要变为 "；"
-
-{glossary_section}
-
-输入格式: JSON 对象 {{"原文": ""}}
-输出格式: JSON 对象 {{"原文": "译文"}}（不需翻译的返回空字符串）
-
-重要: 只返回 JSON 对象，不要添加任何解释文字或 markdown 标记。"""
-
-_USER_PROMPT_TEMPLATE = """文件: {file_path}
-模块: {crate_name}
-
-以下是需要翻译的字符串及其代码上下文:
-
-{entries}
-
-请翻译以上字符串，返回 JSON 对象。"""
-
-_XML_FALLBACK_INSTRUCTION = """
-（重要：此次请使用 XML 格式返回，不要使用 JSON）
-
-输出格式:
-<translations>
-<t><s><![CDATA[原文1]]></s><v>译文1</v></t>
-<t><s><![CDATA[原文2]]></s><v></v></t>
-</translations>
-
-注意：原文必须用 <![CDATA[...]]> 包裹，防止特殊字符干扰 XML 解析。
-不需要翻译的字符串，<v> 标签内留空。只返回 XML，不要添加解释。"""
-
-
-def _build_numbered_instruction(count: int) -> str:
-    """构建编号格式降级指令"""
-    return f"""
-（重要：此次请使用编号格式返回，不要使用 JSON 或 XML）
-
-按上面的字符串编号，逐条返回翻译结果。格式如下:
-[##1##]译文1
-[##2##]
-[##3##]译文3
-
-规则:
-- 每条以 [##编号##] 开头，紧跟译文（同一行）
-- 不需要翻译的字符串，[##编号##] 后面留空即可
-- 不要添加任何解释文字
-- 必须包含所有编号，从 1 到 {count}"""
-
-
-def _build_entries_text(
-    strings: dict[str, str], contexts: dict[str, dict] | None,
-) -> str:
-    """构建待翻译条目文本（含上下文）"""
-    lines: list[str] = []
-    for i, (s, _) in enumerate(strings.items(), 1):
-        lines.append(f'{i}. "{s}"')
-        if contexts and s in contexts:
-            ctx = contexts[s].get("context", "")
-            if ctx:
-                lines.append(f"   代码上下文: {ctx[:200]}")
-    return "\n".join(lines)
-
-
-def _build_user_prompt(
-    file_path: str, strings: dict[str, str], contexts: dict[str, dict] | None,
-) -> str:
-    """构建用户 prompt"""
-    crate_name = extract_crate_name(file_path)
-    entries_text = _build_entries_text(strings, contexts)
-    prompt = _USER_PROMPT_TEMPLATE.format(
-        file_path=file_path, crate_name=crate_name, entries=entries_text,
-    )
-    input_json = {s: "" for s in strings}
-    prompt += f"\n\n输入:\n```json\n{json.dumps(input_json, ensure_ascii=False)}\n```"
-    return prompt
 
 
 async def _call_ai(
@@ -138,16 +50,16 @@ async def _call_ai(
     return ""
 
 
-async def _translate_batch(
+async def _fetch_translation(
     client: object,
     model: str,
     file_path: str,
     strings: dict[str, str],
-    contexts: dict[str, dict] | None,
+    file_content: str,
     system_prompt: str,
 ) -> dict[str, str]:
-    """翻译一批字符串：JSON → XML(CDATA) → 编号格式 三级降级"""
-    user_prompt = _build_user_prompt(file_path, strings, contexts)
+    """通过 JSON → XML(CDATA) → 编号格式 三级降级获取翻译结果"""
+    user_prompt = build_user_prompt(file_path, strings, file_content)
 
     # 第一级: JSON 格式重试 3 次
     for attempt in range(3):
@@ -161,7 +73,7 @@ async def _translate_batch(
             return {}
 
     # 第二级: XML(CDATA) 格式重试 3 次
-    xml_prompt = user_prompt + _XML_FALLBACK_INSTRUCTION
+    xml_prompt = user_prompt + XML_FALLBACK_INSTRUCTION
     for attempt in range(3):
         try:
             raw = await _call_ai(client, model, system_prompt, xml_prompt)
@@ -175,7 +87,7 @@ async def _translate_batch(
 
     # 第三级: 编号格式重试 3 次
     keys = list(strings.keys())
-    numbered_prompt = user_prompt + _build_numbered_instruction(len(keys))
+    numbered_prompt = user_prompt + build_numbered_instruction(len(keys))
     for attempt in range(3):
         try:
             raw = await _call_ai(client, model, system_prompt, numbered_prompt)
@@ -193,24 +105,219 @@ async def _translate_batch(
     return {}
 
 
+async def _translate_batch(
+    client: object,
+    model: str,
+    file_path: str,
+    strings: dict[str, str],
+    file_content: str,
+    system_prompt: str,
+) -> dict[str, str]:
+    """翻译一批字符串，含占位符校验和自动重试"""
+    result = await _fetch_translation(
+        client, model, file_path, strings, file_content, system_prompt,
+    )
+    if not result:
+        return result
+
+    # 占位符校验 + 重试（最多 2 次）
+    for retry in range(2):
+        errors = validate_placeholders(result)
+        if not errors:
+            return result
+        log.debug(
+            "占位符不匹配 %d 条，重试修正 (%d/2): %s",
+            len(errors), retry + 1, file_path,
+        )
+        fix_prompt = build_fix_prompt(errors, result)
+        try:
+            raw = await _call_ai(client, model, system_prompt, fix_prompt)
+            fixed = parse_json_response(raw)
+        except Exception as e:
+            log.warning("占位符修正请求失败 %s: %s", file_path, e)
+            break
+        if fixed:
+            for key, val in fixed.items():
+                if key in result:
+                    result[key] = val
+
+    # 最终校验：仍有问题的条目丢弃为空字符串
+    final_errors = validate_placeholders(result)
+    for original, (src_ph, dst_ph) in final_errors.items():
+        log.warning(
+            "占位符校验失败，丢弃译文: %r (原文占位符=%s, 译文占位符=%s) [%s]",
+            original, src_ph, dst_ph, file_path,
+        )
+        result[original] = ""
+
+    return result
+
+
+MAX_INPUT_TOKENS = 140_000
+
+
+def _estimate_request_tokens(
+    system_prompt: str, file_path: str,
+    strings: dict[str, str], file_content: str,
+) -> int:
+    """估算完整请求（system + user prompt）的 token 数"""
+    user_prompt = build_user_prompt(file_path, strings, file_content)
+    return estimate_tokens(system_prompt) + estimate_tokens(user_prompt)
+
+
+def _truncate_file_content(
+    file_content: str, strings: dict[str, str],
+    system_prompt: str, max_tokens: int,
+) -> str:
+    """当源文件过大时，保留字符串附近上下文并截断其余部分"""
+    budget = max_tokens - estimate_tokens(system_prompt) - 5000
+    if budget <= 0:
+        return ""
+    if estimate_tokens(file_content) <= budget:
+        return file_content
+
+    # 找到每个字符串在文件中的行号（匹配带引号的字面量）
+    lines = file_content.split("\n")
+    hit_lines: set[int] = set()
+    for s in strings:
+        quoted = f'"{s}"'
+        for i, line in enumerate(lines):
+            if quoted in line:
+                hit_lines.add(i)
+
+    if not hit_lines:
+        # 没找到匹配，按比例从头截断
+        ratio = budget / estimate_tokens(file_content)
+        cut = int(len(file_content) * ratio)
+        return file_content[:cut] + "\n... (文件过大，已截断)"
+
+    # 从大窗口开始尝试，逐步缩小直到满足 budget
+    for ctx_lines in (80, 40, 20, 10):
+        kept = _build_context_regions(lines, hit_lines, ctx_lines)
+        if estimate_tokens(kept) <= budget:
+            log.debug(
+                "源文件过大，保留 %d 处字符串附近 ±%d 行上下文",
+                len(hit_lines), ctx_lines,
+            )
+            return kept
+
+    # 最小窗口仍超限，用最小窗口的结果再按比例截断
+    kept = _build_context_regions(lines, hit_lines, 5)
+    if estimate_tokens(kept) > budget:
+        ratio = budget / estimate_tokens(kept)
+        cut = int(len(kept) * ratio)
+        kept = kept[:cut] + "\n... (已截断)"
+    return kept
+
+
+def _build_context_regions(
+    lines: list[str], hit_lines: set[int], ctx: int,
+) -> str:
+    """围绕命中行构建上下文区域，合并重叠区间"""
+    total = len(lines)
+    # 构建区间 [start, end)
+    intervals: list[tuple[int, int]] = []
+    for ln in sorted(hit_lines):
+        intervals.append((max(0, ln - ctx), min(total, ln + ctx + 1)))
+
+    # 合并重叠区间
+    merged: list[tuple[int, int]] = []
+    for start, end in intervals:
+        if merged and start <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+        else:
+            merged.append((start, end))
+
+    # 拼接各区域
+    parts: list[str] = []
+    for i, (start, end) in enumerate(merged):
+        if i == 0 and start > 0:
+            parts.append(f"// ... (省略第 1-{start} 行)")
+        elif i > 0:
+            prev_end = merged[i - 1][1]
+            parts.append(f"// ... (省略第 {prev_end+1}-{start} 行)")
+        parts.append("\n".join(lines[start:end]))
+    if merged[-1][1] < total:
+        parts.append(f"// ... (省略第 {merged[-1][1]+1}-{total} 行)")
+
+    return "\n".join(parts)
+
+
 def _split_batch(
-    strings: dict[str, str], max_size: int = 150,
-) -> list[dict[str, str]]:
-    """将大字典拆分为多个小批次"""
+    strings: dict[str, str],
+    system_prompt: str,
+    file_path: str,
+    file_content: str,
+    max_tokens: int = MAX_INPUT_TOKENS,
+) -> tuple[list[dict[str, str]], str]:
+    """根据 token 预算将字符串拆分为多批。
+
+    如果源文件过大，自动截断。返回 (批次列表, 实际使用的 file_content)。
+    """
+    # 源文件过大时智能截断（保留字符串附近上下文）
+    content = _truncate_file_content(
+        file_content, strings, system_prompt, max_tokens,
+    )
+
     items = list(strings.items())
-    return [
-        dict(items[i : i + max_size]) for i in range(0, len(items), max_size)
+    # 先尝试全部放一批
+    total = _estimate_request_tokens(
+        system_prompt, file_path, dict(items), content,
+    )
+    if total <= max_tokens:
+        return [dict(items)], content
+
+    # 超限：估算每条字符串的平均 token 开销，计算初始批容量
+    overhead = _estimate_request_tokens(
+        system_prompt, file_path, {}, content,
+    )
+    per_string = max(1, (total - overhead) // len(items))
+    capacity = max(10, (max_tokens - overhead) // per_string)
+
+    # 验证并缩减直到满足限制
+    while capacity >= 10:
+        test_batch = dict(items[:capacity])
+        tokens = _estimate_request_tokens(
+            system_prompt, file_path, test_batch, content,
+        )
+        if tokens <= max_tokens:
+            break
+        capacity = int(capacity * 0.8)
+    capacity = max(10, capacity)
+
+    batches = [
+        dict(items[i : i + capacity])
+        for i in range(0, len(items), capacity)
     ]
+    return batches, content
+
+
+def _read_source_file(file_path: str, source_root: str) -> str:
+    """读取源文件内容，找不到则返回空字符串"""
+    if not source_root:
+        return ""
+    root = Path(source_root)
+    candidates = [root / file_path]
+    # 如果 file_path 以 "zed/" 开头，也尝试去掉前缀
+    if file_path.startswith("zed/"):
+        candidates.append(root / file_path[4:])
+    for p in candidates:
+        if p.exists():
+            try:
+                return p.read_text(encoding="utf-8")
+            except Exception:
+                return ""
+    return ""
 
 
 async def _translate_async(
     all_strings: TranslationDict,
     existing: TranslationDict,
-    all_contexts: dict[str, dict] | None,
     mode: str,
     lang: str,
     glossary_path: str,
     ai_cfg: AIConfig,
+    source_root: str = "",
 ) -> TranslationDict:
     """异步并发翻译"""
     from openai import AsyncOpenAI
@@ -219,7 +326,7 @@ async def _translate_async(
     semaphore = asyncio.Semaphore(ai_cfg.concurrency)
 
     glossary_section = build_glossary_section(glossary_path)
-    system_prompt = _SYSTEM_PROMPT_TEMPLATE.format(
+    system_prompt = SYSTEM_PROMPT_TEMPLATE.format(
         lang=lang, glossary_section=glossary_section,
     )
 
@@ -231,18 +338,21 @@ async def _translate_async(
         if file_path not in result:
             result[file_path] = {}
         for s in strings:
-            if mode == "full" or not result.get(file_path, {}).get(s):
+            if mode == "full" or s not in result.get(file_path, {}):
                 to_translate[s] = ""
         if not to_translate:
             continue
-        file_contexts = all_contexts.get(file_path) if all_contexts else None
-        for batch in _split_batch(to_translate):
+        raw_content = _read_source_file(file_path, source_root)
+        batches, file_content = _split_batch(
+            to_translate, system_prompt, file_path, raw_content,
+        )
+        for batch in batches:
             async def do_batch(
-                fp: str = file_path, b: dict = batch, ctx: dict | None = file_contexts,
+                fp: str = file_path, b: dict = batch, fc: str = file_content,
             ) -> tuple[str, dict[str, str]]:
                 async with semaphore:
                     return fp, await _translate_batch(
-                        client, ai_cfg.model, fp, b, ctx, system_prompt,
+                        client, ai_cfg.model, fp, b, fc, system_prompt,
                     )
             tasks.append(asyncio.create_task(do_batch()))
 
@@ -267,6 +377,7 @@ def translate_all(
     strings_path: str, output_path: str, context_path: str = "",
     glossary_path: str = "config/glossary.yaml", mode: str = "incremental",
     lang: str = "zh-CN", ai_cfg: AIConfig | None = None,
+    source_root: str = "",
 ) -> None:
     """同步入口"""
     if ai_cfg is None:
@@ -275,16 +386,16 @@ def translate_all(
 
     all_strings: TranslationDict = load_json(strings_path)
     existing = load_json(output_path) if Path(output_path).exists() else {}
-    all_contexts = (
-        load_json(context_path)
-        if context_path and Path(context_path).exists()
-        else None
-    )
 
     result = asyncio.run(_translate_async(
-        all_strings, existing, all_contexts,
-        mode, lang, glossary_path, ai_cfg,
+        all_strings, existing,
+        mode, lang, glossary_path, ai_cfg, source_root,
     ))
+    # 全角 ASCII 符号统一转半角，避免破坏 Rust 源码语法
+    for fp in result:
+        for s, t in result[fp].items():
+            if t:
+                result[fp][s] = normalize_fullwidth(t)
     save_json(result, output_path)
     log.info("翻译结果已保存: %s", output_path)
 
@@ -298,4 +409,5 @@ def run(args: argparse.Namespace) -> None:
     translate_all(
         args.input, args.output, args.context,
         args.glossary, args.mode, args.lang, ai_cfg,
+        source_root=getattr(args, "source_root", ""),
     )

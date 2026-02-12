@@ -31,6 +31,26 @@ def _build_parser() -> argparse.ArgumentParser:
     p_scan.add_argument(
         "--source-root", required=True, help="Zed 源码根目录"
     )
+    p_scan.add_argument(
+        "--prev-result", default="",
+        help="上次扫描结果 scan_result.json 路径（提供则启用增量模式）",
+    )
+    p_scan.add_argument(
+        "--changed", default="",
+        help="变化文件列表（每行一个相对路径的文本文件）",
+    )
+    p_scan.add_argument(
+        "--deleted", default="",
+        help="删除文件列表（每行一个相对路径的文本文件）",
+    )
+    p_scan.add_argument(
+        "--version", default="",
+        help="当前扫描对应的 Zed 版本号（保存到 scan_result.json）",
+    )
+    p_scan.add_argument(
+        "--output", default="scan_result.json",
+        help="扫描结果输出路径（默认 scan_result.json）",
+    )
     _add_ai_args(p_scan)
 
     # --- extract ---
@@ -68,6 +88,9 @@ def _build_parser() -> argparse.ArgumentParser:
     p_tr.add_argument(
         "--lang", default="zh-CN", help="目标语言"
     )
+    p_tr.add_argument(
+        "--source-root", default="", help="Zed 源码根目录（用于传递完整源文件上下文）"
+    )
     _add_ai_args(p_tr)
 
     # --- replace ---
@@ -77,6 +100,10 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p_rep.add_argument(
         "--source-root", default=".", help="Zed 源码根目录"
+    )
+    p_rep.add_argument(
+        "--do-not-translate", default="",
+        help="禁止翻译列表 JSON 文件路径",
     )
 
     # --- convert ---
@@ -96,7 +123,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # --- pipeline ---
-    p_pipe = sub.add_parser("pipeline", help="一键流水线: 扫描→提取→翻译")
+    p_pipe = sub.add_parser("pipeline", help="一键流水线: 提取→翻译")
     p_pipe.add_argument(
         "--source-root", required=True, help="Zed 源码根目录"
     )
@@ -112,11 +139,23 @@ def _build_parser() -> argparse.ArgumentParser:
     p_pipe.add_argument(
         "--glossary", default="config/glossary.yaml", help="术语表路径"
     )
-    p_pipe.add_argument(
-        "--skip-scan", action="store_true",
-        help="跳过 AI 扫描，复用上次的 scan_files.json 缓存",
-    )
     _add_ai_args(p_pipe)
+
+    # --- release-notes ---
+    p_rn = sub.add_parser(
+        "release-notes", help="获取并翻译 Zed Release Notes",
+    )
+    p_rn.add_argument(
+        "--version", required=True, help="Zed 版本号（如 v0.222.4）",
+    )
+    p_rn.add_argument(
+        "--lang", default="zh-CN", help="目标语言",
+    )
+    p_rn.add_argument(
+        "--output", default="/tmp/release_body.md",
+        help="输出文件路径",
+    )
+    _add_ai_args(p_rn)
 
     return parser
 
@@ -134,9 +173,7 @@ def main() -> None:
     setup_logging(args.verbose)
 
     if args.command == "scan":
-        from .scan import run
-
-        run(args)
+        _run_scan(args)
     elif args.command == "extract":
         from .extract import run
 
@@ -155,11 +192,75 @@ def main() -> None:
         run(args)
     elif args.command == "pipeline":
         _run_pipeline(args)
+    elif args.command == "release-notes":
+        from .release_notes import run
+
+        run(args)
+
+
+def _read_lines(path: str) -> list[str]:
+    """读取文本文件，返回非空行列表"""
+    from pathlib import Path
+
+    p = Path(path)
+    if not p.exists():
+        return []
+    return [line.strip() for line in p.read_text().splitlines() if line.strip()]
+
+
+def _run_scan(args: argparse.Namespace) -> None:
+    """scan 命令入口：支持全量 / 增量两种模式"""
+    import logging
+
+    from .scan import (
+        load_scan_result,
+        save_scan_result,
+        scan_files,
+        scan_incremental,
+    )
+    from .utils import AIConfig
+
+    log = logging.getLogger(__name__)
+    ai_cfg = AIConfig(
+        base_url=args.base_url,
+        api_key=args.api_key,
+        model=args.model,
+        concurrency=args.concurrency,
+    )
+
+    prev_result_path = getattr(args, "prev_result", "")
+    prev = load_scan_result(prev_result_path) if prev_result_path else None
+
+    if prev and prev.get("files"):
+        # 增量模式
+        changed = _read_lines(args.changed) if args.changed else []
+        deleted = _read_lines(args.deleted) if args.deleted else []
+        if not changed and not deleted:
+            log.warning("增量模式但未提供变化/删除文件列表，回退到全量扫描")
+            files = scan_files(args.source_root, ai_cfg)
+        else:
+            files = scan_incremental(
+                args.source_root, ai_cfg, changed, deleted, prev["files"],
+            )
+    else:
+        # 全量模式
+        files = scan_files(args.source_root, ai_cfg)
+        # 全量模式返回绝对路径，转为相对路径
+        from pathlib import Path
+
+        root = Path(args.source_root)
+        files = [
+            str(Path(f).relative_to(root)) if Path(f).is_absolute() else f
+            for f in files
+        ]
+
+    version = getattr(args, "version", "") or "unknown"
+    save_scan_result(args.output, version, files)
+    log.info("扫描完成，共 %d 个文件需要翻译", len(files))
 
 
 def _run_pipeline(args: argparse.Namespace) -> None:
-    """一键流水线: scan → extract → translate"""
-    import json
+    """一键流水线: 提取 → 翻译（跳过 AI 扫描，直接使用所有 .rs 文件）"""
     import logging
     import time
     from pathlib import Path
@@ -169,61 +270,40 @@ def _run_pipeline(args: argparse.Namespace) -> None:
     log = logging.getLogger(__name__)
     t0 = time.time()
 
-    scan_cache = "scan_files.json"
-    skip_scan = getattr(args, "skip_scan", False)
-
     ai_cfg = AIConfig(
         base_url=args.base_url,
         api_key=args.api_key,
         model=args.model,
         concurrency=args.concurrency,
     )
+    ai_cfg.validate()
 
-    # 如果存在 scan 缓存且指定了 --skip-scan，直接复用
-    if skip_scan and Path(scan_cache).exists():
-        with open(scan_cache) as f:
-            files = json.load(f)
-        log.info("跳过扫描，从缓存加载 %d 个文件: %s", len(files), scan_cache)
-    else:
-        ai_cfg.validate()
-
-        # 1. scan
-        log.info("=" * 50)
-        log.info("阶段 1/3: AI 扫描 — 识别需要翻译的文件")
-        log.info("=" * 50)
-        t1 = time.time()
-        from .scan import scan_files
-
-        files = scan_files(args.source_root, ai_cfg)
-        log.info("扫描完成: %d 个待翻译文件 (耗时 %.0fs)", len(files), time.time() - t1)
-
-        # 保存 scan 结果缓存
-        with open(scan_cache, "w") as f:
-            json.dump(files, f, ensure_ascii=False, indent=2)
-        log.info("扫描结果已缓存: %s", scan_cache)
-
-    if not files:
-        log.warning("未发现需要翻译的文件，流水线结束")
-        return
-
-    # 2. extract
+    # 1. 提取
     log.info("=" * 50)
-    log.info("阶段 2/3: 字符串提取")
+    log.info("阶段 1/2: 字符串提取")
     log.info("=" * 50)
-    t2 = time.time()
+    t1 = time.time()
     from .extract import extract_all
+    from .scan import find_all_rs_files
+
+    all_files = find_all_rs_files(args.source_root)
+    abs_files = [str(f) for f in all_files]
+
+    if not abs_files:
+        log.warning("未发现 .rs 文件，流水线结束")
+        return
 
     strings_path = "string.json"
     context_path = "string_context.json"
-    all_strings = extract_all(files, strings_path, context_path)
+    all_strings = extract_all(abs_files, strings_path, context_path)
     total_strings = sum(len(v) for v in all_strings.values())
-    log.info("提取完成: %d 个字符串 (耗时 %.0fs)", total_strings, time.time() - t2)
+    log.info("提取完成: %d 个字符串 (耗时 %.0fs)", total_strings, time.time() - t1)
 
-    # 3. translate
+    # 2. 翻译
     log.info("=" * 50)
-    log.info("阶段 3/3: AI 翻译")
+    log.info("阶段 2/2: AI 翻译")
     log.info("=" * 50)
-    t3 = time.time()
+    t2 = time.time()
     from .translate import translate_all
 
     output_path = f"i18n/{args.lang}.json"
@@ -235,8 +315,9 @@ def _run_pipeline(args: argparse.Namespace) -> None:
         mode=args.mode,
         lang=args.lang,
         ai_cfg=ai_cfg,
+        source_root=args.source_root,
     )
-    log.info("翻译完成 (耗时 %.0fs)", time.time() - t3)
+    log.info("翻译完成 (耗时 %.0fs)", time.time() - t2)
 
     log.info("=" * 50)
     log.info("全部完成! 总耗时 %.0fs, 输出: %s", time.time() - t0, output_path)
