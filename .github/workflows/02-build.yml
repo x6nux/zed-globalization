@@ -810,24 +810,6 @@ jobs:
       BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
 
     steps:
-      - name: 下载所有产物
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: 整理文件与生成 Hash
-        run: |
-          mkdir release-dist
-          mv "artifacts/zed-windows/zedg-${LANG_LOWER}-windows-x86_64-${BUILD_VERSION}.zip" release-dist/ || echo "No Windows artifact"
-          mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.tar.gz" release-dist/ || echo "No Linux tar artifact"
-          mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb" release-dist/ || echo "No Linux deb artifact"
-          mv "artifacts/zed-macos/zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" release-dist/ || echo "No macOS artifact"
-          mv "artifacts/l10n-patch/l10n.patch" "release-dist/zedg-${LANG_LOWER}-l10n-${BUILD_VERSION}.patch" || echo "No l10n patch"
-          mv "artifacts/l10n-patch/l10n-source.tar.gz" "release-dist/zedg-${LANG_LOWER}-source-${BUILD_VERSION}.tar.gz" || echo "No l10n source"
-
-          cd release-dist
-          sha256sum * > sha256sums.txt
-
       - name: 检出仓库
         uses: actions/checkout@v4
 
@@ -852,6 +834,24 @@ jobs:
             --output /tmp/release_body.md
           echo "--- Release body preview ---"
           head -30 /tmp/release_body.md
+
+      - name: 下载所有产物
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: 整理文件与生成 Hash
+        run: |
+          mkdir release-dist
+          mv "artifacts/zed-windows/zedg-${LANG_LOWER}-windows-x86_64-${BUILD_VERSION}.zip" release-dist/ || echo "No Windows artifact"
+          mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.tar.gz" release-dist/ || echo "No Linux tar artifact"
+          mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb" release-dist/ || echo "No Linux deb artifact"
+          mv "artifacts/zed-macos/zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" release-dist/ || echo "No macOS artifact"
+          mv "artifacts/l10n-patch/l10n.patch" "release-dist/zedg-${LANG_LOWER}-l10n-${BUILD_VERSION}.patch" || echo "No l10n patch"
+          mv "artifacts/l10n-patch/l10n-source.tar.gz" "release-dist/zedg-${LANG_LOWER}-source-${BUILD_VERSION}.tar.gz" || echo "No l10n source"
+
+          cd release-dist
+          sha256sum * > sha256sums.txt
 
       - name: 发布 Release
         uses: softprops/action-gh-release@v2
