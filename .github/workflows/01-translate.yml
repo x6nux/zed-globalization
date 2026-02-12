@@ -2,7 +2,7 @@ name: 01 提取与翻译
 
 on:
   schedule:
-    - cron: "0 21 * * *" # 每天北京时间 05:00 (UTC 21:00)
+    - cron: "*/30 * * * *" # 每 30 分钟轮询一次 Zed 新版本
   workflow_dispatch:
     inputs:
       mode:
@@ -25,6 +25,10 @@ on:
         description: "完成后自动触发构建"
         type: boolean
         default: false
+
+concurrency:
+  group: translate
+  cancel-in-progress: false
 
 permissions:
   contents: write

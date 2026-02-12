@@ -27,6 +27,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: build
+  cancel-in-progress: false
+
 env:
   ZED_REPO: https://github.com/zed-industries/zed.git
   # === 加速配置 ===
