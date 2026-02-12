@@ -14,10 +14,27 @@ Get the pre-built binaries from [Releases](https://github.com/x6nux/zed-globaliz
 
 | Platform | File | Installation |
 |----------|------|-------------|
-| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | Open DMG and drag to Applications |
+| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg` ([more](#macos-installation)) |
 | Windows (x64) | `zed-globalization-zh-cn-windows-x86_64.zip` | Extract and run `zed.exe` |
 | Linux (x64) | `zed-globalization-zh-cn-linux-x86_64.tar.gz` | Extract to `/usr/local` |
 | Linux (x64 deb) | `zed-globalization-zh-cn-linux-x86_64.deb` | `sudo dpkg -i *.deb` |
+
+### macOS Installation
+
+**Homebrew (Recommended):**
+
+```bash
+brew tap x6nux/zedg
+brew install --cask zedg
+```
+
+**DMG Manual Install:**
+
+Download the DMG from Releases, open it and drag ZedG to Applications. Since the build is not Apple-signed, macOS will show a "damaged" warning on first launch. Run the following command to fix it:
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
+```
 
 **Windows Scoop:**
 
@@ -39,13 +56,12 @@ scoop install zed-globalization
 ## Automation Pipeline
 
 ```
-03-scan (daily cron)    Detect new Zed releases, extract translatable strings
+01-translate (cron/manual)   Detect new Zed releases, extract and translate strings
        |
-04-translate            Concurrent AI translation, push to i18n branch
+02-build                     Cross-platform compilation + patch_agent_env, create Release
        |
-01-build                Cross-platform compilation, create Release
-       |
-02-update-scoop         Update Scoop Manifest
+       ├── 03-update-scoop        Update Scoop Manifest
+       └── 04-update-homebrew     Update Homebrew Cask
 ```
 
 ## Local Usage
@@ -109,10 +125,10 @@ Compatible with any OpenAI-compatible API. Priority: CLI flag > env variable > d
 ```
 zed-globalization/
 ├── .github/workflows/
-│   ├── 01-build.yml        # Cross-platform build + release
-│   ├── 02-update-scoop.yml # Scoop Manifest update
-│   ├── 03-scan.yml         # Scheduled scan + string extraction
-│   └── 04-translate.yml    # AI translation
+│   ├── 01-translate.yml        # Scheduled scan + AI translation
+│   ├── 02-build.yml            # Cross-platform build + release
+│   ├── 03-update-scoop.yml    # Scoop Manifest update
+│   └── 04-update-homebrew.yml # Homebrew Cask update
 ├── config/
 │   └── glossary.yaml       # Translation glossary
 ├── i18n/                   # Translation files (zh-CN, ja, ko, etc.)

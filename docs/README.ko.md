@@ -14,10 +14,27 @@
 
 | 플랫폼 | 파일 | 설치 방법 |
 |--------|------|----------|
-| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | DMG 열고 Applications로 드래그 |
+| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg` ([자세히](#macos-설치)) |
 | Windows (x64) | `zed-globalization-zh-cn-windows-x86_64.zip` | 압축 해제 후 `zed.exe` 실행 |
 | Linux (x64) | `zed-globalization-zh-cn-linux-x86_64.tar.gz` | `/usr/local`에 압축 해제 |
 | Linux (x64 deb) | `zed-globalization-zh-cn-linux-x86_64.deb` | `sudo dpkg -i *.deb` |
+
+### macOS 설치
+
+**Homebrew (권장):**
+
+```bash
+brew tap x6nux/zedg
+brew install --cask zedg
+```
+
+**DMG 수동 설치:**
+
+Releases에서 DMG를 다운로드하고, ZedG를 Applications로 드래그합니다. Apple 서명이 없기 때문에 처음 실행 시 "앱이 손상되었습니다" 경고가 표시됩니다. 다음 명령으로 해결할 수 있습니다:
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
+```
 
 **Windows Scoop:**
 
@@ -39,13 +56,12 @@ scoop install zed-globalization
 ## 자동화 파이프라인
 
 ```
-03-scan (매일 정시)      Zed 신규 버전 감지, 번역 대상 문자열 추출
+01-translate (정시/수동)   Zed 신규 버전 감지, 문자열 추출 및 번역
        |
-04-translate             AI 동시 번역, i18n 브랜치에 푸시
+02-build                   3개 플랫폼 컴파일 + patch_agent_env, Release 생성
        |
-01-build                 3개 플랫폼 컴파일, Release 생성
-       |
-02-update-scoop          Scoop Manifest 업데이트
+       ├── 03-update-scoop      Scoop Manifest 업데이트
+       └── 04-update-homebrew   Homebrew Cask 업데이트
 ```
 
 ## 로컬 사용
@@ -109,10 +125,10 @@ OpenAI 호환 API 지원. 우선순위: CLI 옵션 > 환경 변수 > 기본값.
 ```
 zed-globalization/
 ├── .github/workflows/
-│   ├── 01-build.yml        # 멀티 플랫폼 빌드 + 릴리스
-│   ├── 02-update-scoop.yml # Scoop Manifest 업데이트
-│   ├── 03-scan.yml         # 정시 스캔 + 문자열 추출
-│   └── 04-translate.yml    # AI 번역
+│   ├── 01-translate.yml        # 정시 스캔 + AI 번역
+│   ├── 02-build.yml            # 멀티 플랫폼 빌드 + 릴리스
+│   ├── 03-update-scoop.yml    # Scoop Manifest 업데이트
+│   └── 04-update-homebrew.yml # Homebrew Cask 업데이트
 ├── config/
 │   └── glossary.yaml       # 번역 용어집
 ├── i18n/                   # 번역 파일 (zh-CN, ja, ko 등)

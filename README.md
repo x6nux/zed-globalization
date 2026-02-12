@@ -12,24 +12,33 @@
 
 | 平台 | 文件 | 安装方式 |
 |------|------|---------|
-| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | 打开 DMG 拖入 Applications（[见下方说明](#macos-安装说明)） |
+| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg`（[更多方式](#macos-安装)） |
 | Windows (x64) | `zed-globalization-zh-cn-windows-x86_64.zip` | 解压后运行 `ZedG.exe` |
 | Linux (x64) | `zed-globalization-zh-cn-linux-x86_64.tar.gz` | 解压到 `/usr/local` |
 | Linux (x64 deb) | `zed-globalization-zh-cn-linux-x86_64.deb` | `sudo dpkg -i *.deb` |
+
+### macOS 安装
+
+**Homebrew（推荐）：**
+
+```bash
+brew tap x6nux/zedg
+brew install --cask zedg
+```
+
+**DMG 手动安装：**
+
+从 Releases 下载 DMG，打开后将 ZedG 拖入 Applications。由于构建未经 Apple 签名，首次打开会提示"应用已损坏"，在终端执行以下命令即可：
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
+```
 
 **Windows Scoop 安装：**
 
 ```bash
 scoop bucket add zed-globalization https://github.com/x6nux/zed-globalization -b scoop
 scoop install zed-globalization
-```
-
-### macOS 安装说明
-
-由于构建未经过 Apple 签名，macOS 会提示"应用已损坏，无法打开"。安装后在终端执行以下命令即可解决：
-
-```bash
-sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
 ```
 
 ## 特性
@@ -45,13 +54,12 @@ sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
 ## 自动化流水线
 
 ```
-01-scan (每日定时)     扫描 Zed 新版本，提取待翻译字符串
+01-translate (定时/手动)   扫描 Zed 新版本，提取并翻译字符串
        |
-02-translate           AI 并发翻译，推送到 i18n 分支
+02-build                   三平台编译 + patch_agent_env 补丁，生成 Release
        |
-03-build               三平台编译 + patch_agent_env 补丁，生成 Release
-       |
-04-update-scoop        更新 Scoop Manifest
+       ├── 03-update-scoop      更新 Scoop Manifest
+       └── 04-update-homebrew   更新 Homebrew Cask
 ```
 
 ## 本地使用
@@ -122,10 +130,10 @@ cd zed && cargo build --release
 ```
 zed-globalization/
 ├── .github/workflows/
-│   ├── 01-scan.yml         # 定时扫描 + 字符串提取
-│   ├── 02-translate.yml    # AI 翻译
-│   ├── 03-build.yml        # 多平台编译 + 发布
-│   └── 04-update-scoop.yml # Scoop Manifest 更新
+│   ├── 01-translate.yml        # 定时扫描 + AI 翻译
+│   ├── 02-build.yml            # 多平台编译 + 发布
+│   ├── 03-update-scoop.yml    # Scoop Manifest 更新
+│   └── 04-update-homebrew.yml # Homebrew Cask 更新
 ├── config/
 │   └── glossary.yaml       # 翻译术语表
 ├── i18n/                   # 翻译文件（zh-CN, ja, ko 等）

@@ -14,10 +14,27 @@
 
 | プラットフォーム | ファイル | インストール方法 |
 |-----------------|---------|----------------|
-| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | DMG を開いて Applications にドラッグ |
+| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg`（[詳細](#macos-インストール)） |
 | Windows (x64) | `zed-globalization-zh-cn-windows-x86_64.zip` | 解凍して `zed.exe` を実行 |
 | Linux (x64) | `zed-globalization-zh-cn-linux-x86_64.tar.gz` | `/usr/local` に解凍 |
 | Linux (x64 deb) | `zed-globalization-zh-cn-linux-x86_64.deb` | `sudo dpkg -i *.deb` |
+
+### macOS インストール
+
+**Homebrew（推奨）：**
+
+```bash
+brew tap x6nux/zedg
+brew install --cask zedg
+```
+
+**DMG 手動インストール：**
+
+Releases から DMG をダウンロードし、ZedG を Applications にドラッグします。Apple 署名されていないため、初回起動時に「アプリが壊れています」と表示されます。以下のコマンドで解決できます：
+
+```bash
+sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
+```
 
 **Windows Scoop：**
 
@@ -39,13 +56,12 @@ scoop install zed-globalization
 ## 自動化パイプライン
 
 ```
-03-scan (毎日定時)      Zed の新バージョンを検出、翻訳対象文字列を抽出
+01-translate (定時/手動)   Zed の新バージョンを検出、文字列を抽出・翻訳
        |
-04-translate            AI 並列翻訳、i18n ブランチにプッシュ
+02-build                   3プラットフォームコンパイル + patch_agent_env、Release を作成
        |
-01-build                3プラットフォームコンパイル、Release を作成
-       |
-02-update-scoop         Scoop Manifest を更新
+       ├── 03-update-scoop      Scoop Manifest を更新
+       └── 04-update-homebrew   Homebrew Cask を更新
 ```
 
 ## ローカル使用
@@ -109,10 +125,10 @@ OpenAI 互換の任意の API に対応。優先度：CLI オプション > 環�
 ```
 zed-globalization/
 ├── .github/workflows/
-│   ├── 01-build.yml        # マルチプラットフォームビルド + リリース
-│   ├── 02-update-scoop.yml # Scoop Manifest 更新
-│   ├── 03-scan.yml         # 定時スキャン + 文字列抽出
-│   └── 04-translate.yml    # AI 翻訳
+│   ├── 01-translate.yml        # 定時スキャン + AI 翻訳
+│   ├── 02-build.yml            # マルチプラットフォームビルド + リリース
+│   ├── 03-update-scoop.yml    # Scoop Manifest 更新
+│   └── 04-update-homebrew.yml # Homebrew Cask 更新
 ├── config/
 │   └── glossary.yaml       # 翻訳用語集
 ├── i18n/                   # 翻訳ファイル（zh-CN, ja, ko など）
