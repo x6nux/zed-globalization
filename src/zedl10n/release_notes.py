@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 from pathlib import Path
 
@@ -19,11 +20,85 @@ _SYSTEM_PROMPT = """你是一个专业的技术文档翻译员。请将以下 Ze
 4. 保持简洁专业的技术文档风格
 5. 直接输出翻译结果，不要添加说明或注释"""
 
+_LANG_NAMES: dict[str, str] = {
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語",
+    "ko": "한국어",
+}
+
+
+def _count_translation_keys(translation_file: str) -> int:
+    """统计翻译 JSON 文件中的翻译键总数"""
+    p = Path(translation_file)
+    if not p.exists():
+        return 0
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        return sum(len(v) for v in data.values() if isinstance(v, dict))
+    except Exception as e:
+        log.warning("读取翻译文件失败: %s", e)
+        return 0
+
+
+def _build_project_header(
+    version: str, lang: str, key_count: int,
+) -> str:
+    """生成项目说明头部"""
+    lang_name = _LANG_NAMES.get(lang, lang)
+    lang_lower = lang.lower()
+
+    lines = [
+        f"## ZedG {version}",
+        "",
+        f"> [Zed](https://zed.dev) 编辑器的{lang_name}本地化构建版本，"
+        "由 [zed-globalization](https://github.com/x6nux/zed-globalization) "
+        "自动翻译并编译。",
+        "",
+        f"**目标语言**: {lang_name} (`{lang}`)",
+        "",
+        f"**翻译键数**: {key_count:,}" if key_count else "",
+        "",
+        "**本补丁做了什么**：通过 AI 自动提取 Zed 源码中的用户可见字符串，"
+        f"翻译为{lang_name}后直接替换源码并重新编译，"
+        "无需运行时 i18n 框架，零性能开销。",
+        "",
+        "### 安装方式",
+        "",
+        "**macOS (Apple Silicon)**",
+        "```bash",
+        f"# 下载 DMG 并安装",
+        f"hdiutil attach zedg-{lang_lower}-macos-aarch64-{version}.dmg",
+        'cp -R "/Volumes/ZedG/ZedG.app" /Applications/',
+        "hdiutil detach /Volumes/ZedG",
+        "",
+        "# 解除 macOS 隔离属性（未签名应用必须执行）",
+        "xattr -cr /Applications/ZedG.app",
+        "```",
+        "",
+        "**Linux (x86_64)**",
+        "```bash",
+        f"# deb 包安装",
+        f"sudo dpkg -i zedg-{lang_lower}-linux-x86_64-{version}.deb",
+        "",
+        f"# 或解压 tar.gz",
+        f"sudo tar -xzf zedg-{lang_lower}-linux-x86_64-{version}.tar.gz -C /",
+        "```",
+        "",
+        "**Windows (x86_64)**",
+        "```bash",
+        f"# 解压 zip 后运行 ZedG.exe",
+        "```",
+        "",
+        "---",
+        "",
+    ]
+    return "\n".join(line for line in lines if line is not None)
+
 
 def fetch_release_notes(version: str) -> str:
     """从 GitHub API 获取 Zed 指定版本的 Release Notes"""
     import urllib.request
-    import json
 
     urls = [
         f"https://api.github.com/repos/zed-industries/zed/releases/tags/{version}",
@@ -73,14 +148,23 @@ def translate_notes(
 
 
 def generate_release_body(
-    version: str, lang: str, ai_cfg: AIConfig, output: str,
+    version: str,
+    lang: str,
+    ai_cfg: AIConfig,
+    output: str,
+    translation_file: str = "",
 ) -> None:
-    """获取、翻译并保存 Release Notes"""
-    notes = fetch_release_notes(version)
+    """获取、翻译并保存 Release Notes（含项目说明头部）"""
+    key_count = (
+        _count_translation_keys(translation_file) if translation_file else 0
+    )
+    header = _build_project_header(version, lang, key_count)
 
-    parts: list[str] = [f"## ZedG {version} 更新内容\n"]
+    notes = fetch_release_notes(version)
+    parts: list[str] = [header]
 
     if notes:
+        parts.append("## Zed 官方更新日志\n")
         translated = translate_notes(notes, lang, ai_cfg)
         if translated:
             parts.append(translated)
@@ -105,4 +189,7 @@ def run(args: argparse.Namespace) -> None:
         model=args.model, concurrency=args.concurrency,
     )
     ai_cfg.validate()
-    generate_release_body(args.version, args.lang, ai_cfg, args.output)
+    translation_file = getattr(args, "translation_file", "") or ""
+    generate_release_body(
+        args.version, args.lang, ai_cfg, args.output, translation_file,
+    )

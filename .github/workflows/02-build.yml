@@ -796,6 +796,7 @@ jobs:
     if: ${{ needs.versioning.outputs.should_release == 'true' }}
     env:
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
+      TARGET_LANG: ${{ needs.versioning.outputs.lang }}
       BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
 
     steps:
@@ -815,6 +816,16 @@ jobs:
           cd release-dist
           sha256sum * > sha256sums.txt
 
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 从 i18n 分支获取翻译文件
+        run: |
+          git fetch origin i18n
+          mkdir -p i18n
+          git checkout origin/i18n -- "i18n/${TARGET_LANG}.json" 2>/dev/null \
+            || echo '{}' > "i18n/${TARGET_LANG}.json"
+
       - name: 获取并翻译 Release Notes
         env:
           AI_BASE_URL: ${{ secrets.AI_BASE_URL }}
@@ -824,10 +835,11 @@ jobs:
           pip install ".[ai]" -q
           zedl10n release-notes \
             --version "$BUILD_VERSION" \
-            --lang "${{ needs.versioning.outputs.lang }}" \
+            --lang "$TARGET_LANG" \
+            --translation-file "i18n/${TARGET_LANG}.json" \
             --output /tmp/release_body.md
           echo "--- Release body preview ---"
-          head -20 /tmp/release_body.md
+          head -30 /tmp/release_body.md
 
       - name: 发布 Release
         uses: softprops/action-gh-release@v2

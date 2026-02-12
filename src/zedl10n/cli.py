@@ -155,6 +155,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--output", default="/tmp/release_body.md",
         help="输出文件路径",
     )
+    p_rn.add_argument(
+        "--translation-file", default="",
+        help="翻译 JSON 文件路径（用于统计翻译键数）",
+    )
     _add_ai_args(p_rn)
 
     return parser
