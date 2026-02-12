@@ -1,10 +1,12 @@
-# Zed Globalization
+# Zed Globalization — Zed 编辑器汉化版 / 中文版 / 多语言版
 
 [![GitHub stars][stars-image]][stars-url]
 [![Github Downloads][download-image]][download-url]
 [![license][license-image]][license-url]
 
-[Zed 编辑器](https://github.com/zed-industries/zed) 多语言本地化工具链，AI 驱动的全自动翻译与构建流水线。
+[Zed 编辑器](https://github.com/zed-industries/zed) 汉化版（中文版），支持简体中文、繁体中文、日语、韩语等多语言。AI 驱动的全自动翻译与构建流水线，开箱即用。
+
+> **Zed 汉化版** | Zed 中文版 | Zed Chinese | Zed Localized | Zed 多语言 | Zed 国际化 | Zed i18n | Zed l10n
 
 ## 下载安装
 
@@ -174,3 +176,16 @@ zed-globalization/
 [download-image]: https://img.shields.io/github/downloads/x6nux/zed-globalization/total?style=flat-square&logo=github
 [license-url]: https://github.com/x6nux/zed-globalization/blob/main/LICENSE
 [license-image]: https://img.shields.io/github/license/x6nux/zed-globalization?style=flat-square
+
+---
+
+<details>
+<summary>关键词 / Keywords</summary>
+
+Zed 汉化版, Zed 中文版, Zed 编辑器汉化, Zed 编辑器中文版, Zed 编辑器中文, Zed 中文汉化,
+Zed 多语言版本, Zed 国际化, Zed 本地化, Zed 翻译, Zed 简体中文, Zed 繁体中文,
+Zed Chinese, Zed Japanese, Zed Korean, Zed Localization, Zed Globalization,
+Zed i18n, Zed l10n, Zed Translation, Zed Editor Chinese, Zed Editor Localized,
+Zed 代替 VSCode, Zed 代替 Cursor, Rust 编辑器中文版, 高性能编辑器汉化
+
+</details>

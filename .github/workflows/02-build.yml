@@ -166,11 +166,21 @@ jobs:
           git diff --cached --binary > ../l10n.patch
           echo "补丁大小: $(du -h ../l10n.patch | cut -f1)"
 
-      - name: 上传补丁文件
+      - name: 打包翻译后源码
+        run: |
+          tar -czf "l10n-source.tar.gz" \
+            --exclude='.git' \
+            --exclude='target' \
+            -C zed .
+          echo "源码包大小: $(du -h l10n-source.tar.gz | cut -f1)"
+
+      - name: 上传补丁与源码包
         uses: actions/upload-artifact@v4
         with:
           name: l10n-patch
-          path: l10n.patch
+          path: |
+            l10n.patch
+            l10n-source.tar.gz
           retention-days: 1
 
   # ===========================================================================
@@ -812,6 +822,8 @@ jobs:
           mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.tar.gz" release-dist/ || echo "No Linux tar artifact"
           mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb" release-dist/ || echo "No Linux deb artifact"
           mv "artifacts/zed-macos/zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" release-dist/ || echo "No macOS artifact"
+          mv "artifacts/l10n-patch/l10n.patch" "release-dist/zedg-${LANG_LOWER}-l10n-${BUILD_VERSION}.patch" || echo "No l10n patch"
+          mv "artifacts/l10n-patch/l10n-source.tar.gz" "release-dist/zedg-${LANG_LOWER}-source-${BUILD_VERSION}.tar.gz" || echo "No l10n source"
 
           cd release-dist
           sha256sum * > sha256sums.txt
