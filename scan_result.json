@@ -294,7 +294,6 @@
     "crates/collab_ui/src/notifications.rs",
     "crates/collab_ui/src/notifications/incoming_call_notification.rs",
     "crates/collab_ui/src/notifications/project_shared_notification.rs",
-    "crates/collab_ui/src/notifications/stories.rs",
     "crates/collab_ui/src/panel_settings.rs",
     "crates/collections/src/collections.rs",
     "crates/command_palette/src/command_palette.rs",
