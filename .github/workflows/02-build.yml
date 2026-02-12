@@ -26,6 +26,7 @@ on:
         default: zh-CN
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: build
