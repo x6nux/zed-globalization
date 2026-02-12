@@ -42,4 +42,6 @@ zed/
 string.json
 string_context.json
 scan_files.json
+scan_result.json
+config/do_not_translate.json
 i18n/

@@ -1,8 +1,8 @@
-name: 04 更新 Scoop Manifest
+name: 03 更新 Scoop Manifest
 
 on:
   workflow_run:
-    workflows: ["03 构建发行"]
+    workflows: ["02 构建发行"]
     types: [completed]
 
   release:
@@ -84,8 +84,8 @@ jobs:
                       "hash": "$SHA256"
                   }
               },
-              "bin": "zed.exe",
-              "shortcuts": [["zed.exe", "Zed"]],
+              "bin": "ZedG.exe",
+              "shortcuts": [["ZedG.exe", "ZedG"]],
               "checkver": {
                   "github": "https://github.com/${{ github.repository }}"
               },
