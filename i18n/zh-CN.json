@@ -15495,7 +15495,8 @@
         "Globs to match files that will be considered \\\"hidden\\\" and can be hidden from the project panel.": "用于匹配将被视为“隐藏”并可以从项目面板中隐藏的文件的 Glob 模式。",
         "Whether to use additional LSP queries to format (and amend) code after every \\\"trigger\\\" symbol input, defined by LSP server capabilities": "是否在每次输入由语言服务器功能定义的“触发”符号后,使用额外的 LSP 查询来格式化(并修正)代码",
         "Visible character used to render space characters when show_whitespaces is enabled (default: \\\"•\\\")": "当启用 show_whitespaces 时用于渲染空格字符的可见字符(默认值:“•”)",
-        "Visible character used to render tab characters when show_whitespaces is enabled (default: \\\"→\\\")": "当启用 show_whitespaces 时用于渲染制表符字符的可见字符(默认值:“→”)"
+        "Visible character used to render tab characters when show_whitespaces is enabled (default: \\\"→\\\")": "当启用 show_whitespaces 时用于渲染制表符字符的可见字符(默认值:“→”)",
+        "Whether to use additional LSP queries to format (and amend) the code after every \\\"trigger\\\" symbol input, defined by LSP server capabilities": "是否在每次输入由 LSP 服务器能力定义的“触发”符号后,使用额外的 LSP 查询来格式化(并修正)代码"
     },
     "zed/crates/settings_ui/src/pages/edit_prediction_provider_setup.rs": {
         "http://localhost:11434": "",
@@ -22355,7 +22356,29 @@
         "Job rollback failed, the app might be left in an inconsistent state: ({:?})": "任务回滚失败,应用可能处于不一致状态: ({:?})",
         "Autoupdate failed, rollback successful": "自动更新失败,回滚成功",
         "doesn't run in the main binary": "",
-        "Update completed successfully": "更新成功完成"
+        "Update completed successfully": "更新成功完成",
+        "old\\\\Zed.exe": "",
+        "old\\\\bin": "",
+        "bin\\\\Zed.exe": "",
+        "old\\\\bin\\\\Zed.exe": "",
+        "bin\\\\zed": "",
+        "old\\\\bin\\\\zed": "",
+        "old\\\\OpenConsole.exe": "",
+        "old\\\\x64": "",
+        "old\\\\arm64": "",
+        "x64\\\\OpenConsole.exe": "",
+        "old\\\\x64\\\\OpenConsole.exe": "",
+        "arm64\\\\OpenConsole.exe": "",
+        "old\\\\arm64\\\\OpenConsole.exe": "",
+        "old\\\\conpty.dll": "",
+        "install\\\\Zed.exe": "",
+        "install\\\\bin\\\\Zed.exe": "",
+        "install\\\\bin\\\\zed": "",
+        "install\\\\x64": "",
+        "install\\\\arm64": "",
+        "install\\\\x64\\\\OpenConsole.exe": "",
+        "install\\\\arm64\\\\OpenConsole.exe": "",
+        "install\\\\conpty.dll": ""
     },
     "zed/crates/aws_http_client/src/aws_http_client.rs": {
         "AwsHttpConnector": "",
@@ -33812,7 +33835,9 @@
         "Didn't find an action named \"{name}\"": "未找到名为 \"{name}\" 的操作",
         "Error while building action \"{name}\": {error}": "构建操作 \"{name}\" 时出错:{error}",
         "no action type registered for {type_id:?}": "没有为 {type_id:?} 注册操作类型",
-        "All actions in all_names should be registered": "all_names 中的所有操作都应被注册"
+        "All actions in all_names should be registered": "all_names 中的所有操作都应被注册",
+        "Didn't find an action named \\\"{name}\\\"": "未找到名为 \"{name}\" 的操作",
+        "Error while building action \\\"{name}\\\": {error}": "构建操作 \"{name}\" 时出错: {error}"
     },
     "zed/crates/gpui/src/app/async_context.rs": {
         "app was released before async operation completed": "异步操作完成前 app 已被释放",
@@ -40999,7 +41024,7 @@
         "Attempting to resolve code actions {:?}": "",
         "Failed to resolve code action {:?} with language server {}": "",
         "No code actions were resolved, continuing": "",
-        "code action '{}' with title \"{}\" on server {}": "代码操作 '{}',标题为 \"{}\",位于服务器 {}",
+        "code action '{}' with title \"{}\" on server {}": "服务器 {} 上的代码操作 '{}',标题为 \"{}\"",
         "Executing {}": "",
         "Failed to resolve {}. Error: {}": "",
         "No changes for code action. Skipping {}": "",
@@ -54711,7 +54736,7 @@
         "✓ tool_permissions_settings: PASSED": "✓ tool_permissions_settings: 通过",
         "✓ tool_permissions_settings: Baselines updated": "✓ tool_permissions_settings: 基准已更新",
         "✗ tool_permissions_settings: FAILED - {}": "✗ tool_permissions_settings: 失败 - {}",
-        "\n--- Test 8: settings_ui_subpage_auto_open (2 variants) ---": "\n--- 测试 8: settings_ui_subpage_auto_open (2 种变体) ---",
+        "\n--- Test 8: settings_ui_subpage_auto_open (2 variants) ---": "\n--- 测试 8: settings_ui_subpage_auto_open (2 个变体) ---",
         "Configure Tool Rules": "配置工具规则",
         "Failed to open workspace window for settings test": "为设置测试打开工作区窗口失败",
         "agent.tool_permissions": "",
