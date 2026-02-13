@@ -73,7 +73,7 @@ def _build_project_header(
         "```",
         "",
         "DMG 手动安装：从上方下载 DMG，打开后将 ZedG 拖入 Applications。"
-        "首次打开如提示"应用已损坏"，执行：",
+        "首次打开如提示「应用已损坏」，执行：",
         "```bash",
         "sudo xattr -rd com.apple.quarantine /Applications/ZedG.app",
         "```",
