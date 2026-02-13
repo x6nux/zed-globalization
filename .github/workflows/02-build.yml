@@ -40,7 +40,7 @@ env:
   RUSTC_WRAPPER: "sccache"
   CARGO_INCREMENTAL: "0"
   SCCACHE_RECACHE_THIRD_PARTY_DEPS: "1"
-  SCCACHE_CACHE_SIZE: "3G"
+  SCCACHE_CACHE_SIZE: "10G"
   SCCACHE_IDLE_TIMEOUT: "0"
 
 jobs:
@@ -482,8 +482,8 @@ jobs:
           echo "========================================="
           sccache --show-stats
           echo "-----------------------------------------"
-          HITS=$(sccache --show-stats 2>&1 | grep -oP 'Cache hits\s+\K\d+' | head -1)
-          MISSES=$(sccache --show-stats 2>&1 | grep -oP 'Cache misses\s+\K\d+' | head -1)
+          HITS=$(sccache --show-stats 2>&1 | awk '/^Cache hits /{print $NF}' | head -1)
+          MISSES=$(sccache --show-stats 2>&1 | awk '/^Cache misses /{print $NF}' | head -1)
           HITS=${HITS:-0}; MISSES=${MISSES:-0}
           TOTAL=$((HITS + MISSES))
           if [ "$TOTAL" -gt 0 ]; then
@@ -759,8 +759,8 @@ jobs:
           echo "========================================="
           sccache --show-stats
           echo "-----------------------------------------"
-          HITS=$(sccache --show-stats 2>&1 | grep -oP 'Cache hits\s+\K\d+' | head -1)
-          MISSES=$(sccache --show-stats 2>&1 | grep -oP 'Cache misses\s+\K\d+' | head -1)
+          HITS=$(sccache --show-stats 2>&1 | awk '/^Cache hits /{print $NF}' | head -1)
+          MISSES=$(sccache --show-stats 2>&1 | awk '/^Cache misses /{print $NF}' | head -1)
           HITS=${HITS:-0}; MISSES=${MISSES:-0}
           TOTAL=$((HITS + MISSES))
           if [ "$TOTAL" -gt 0 ]; then
@@ -862,3 +862,12 @@ jobs:
           files: release-dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 触发 Scoop 和 Homebrew 更新
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.versioning.outputs.version }}"
+          echo "触发下游更新, 版本: $VERSION"
+          gh workflow run 03-update-scoop.yml -f version_tag="$VERSION" || echo "⚠ 触发 Scoop 更新失败"
+          gh workflow run 04-update-homebrew.yml -f version_tag="$VERSION" || echo "⚠ 触发 Homebrew 更新失败"

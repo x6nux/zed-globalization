@@ -24,9 +24,26 @@
 **Homebrew（推荐）：**
 
 ```bash
+# 首次安装
 brew tap x6nux/zedg
 brew install --cask zedg
+
+# 手动更新
+brew update && brew upgrade --cask zedg
 ```
+
+> **自动更新（可选）：** 启用后 Homebrew 会每 12 小时自动检查并升级**所有**已安装的 formulae 和 cask（不支持仅指定单个包）。
+> ```bash
+> # 启用
+> brew tap homebrew/autoupdate
+> brew autoupdate start 43200 --upgrade
+>
+> # 关闭
+> brew autoupdate stop
+>
+> # 查看状态
+> brew autoupdate status
+> ```
 
 **DMG 手动安装：**
 
@@ -39,9 +56,22 @@ sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
 **Windows Scoop 安装：**
 
 ```bash
+# 首次安装
 scoop bucket add zed-globalization https://github.com/x6nux/zed-globalization -b scoop
 scoop install zed-globalization
+
+# 手动更新
+scoop update zed-globalization
 ```
+
+> **自动更新（可选）：** 通过 Windows 计划任务每天定时更新（需要管理员权限）。
+> ```powershell
+> # 启用（每天中午 12:00 自动更新 ZedG）
+> schtasks /create /tn "ZedGUpdate" /tr "powershell -Command 'scoop update zed-globalization'" /sc daily /st 12:00
+>
+> # 关闭
+> schtasks /delete /tn "ZedGUpdate" /f
+> ```
 
 ## 特性
 
