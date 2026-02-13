@@ -15469,7 +15469,7 @@
         "Files or globs of files that will be excluded by Zed entirely. They will be skipped during file scans, file searches, and not be displayed in the project file tree. Takes precedence over \\\"File Scan Inclusions\\\"": "将被 Zed 完全排除的文件或文件 glob 模式。它们将在文件扫描、文件搜索期间被跳过,并且不会显示在项目文件树中。优先级高于“文件扫描包含项”",
         "Files or globs of files that will be included by Zed, even when ignored by git. This is useful for files that are not tracked by git, but are still important to your project. Note that globs that are overly broad can slow down Zed's file scanning. \\\"File Scan Exclusions\\\" takes precedence over these inclusions": "将被 Zed 包含的文件或文件 glob 模式,即使被 git 忽略。这对于未被 git 跟踪但对项目仍然重要的文件很有用。请注意,过于宽泛的 glob 模式可能会减慢 Zed 的文件扫描速度。“文件扫描排除项”优先于这些包含项",
         "Globs to match files that will be considered \\\"hidden\\\" and can be hidden from the project panel.": "用于匹配将被视为“隐藏”并可以从项目面板中隐藏的文件的 Glob 模式。",
-        "Whether to use additional LSP queries to format (and amend) code after every \\\"trigger\\\" symbol input, defined by LSP server capabilities": "是否使用额外的 LSP 查询在每次输入由 LSP 服务器功能定义的“触发”符号后格式化(并修正)代码",
+        "Whether to use additional LSP queries to format (and amend) code after every \\\"trigger\\\" symbol input, defined by LSP server capabilities": "是否在每次输入由语言服务器功能定义的“触发”符号后,使用额外的 LSP 查询来格式化(并修正)代码",
         "Visible character used to render space characters when show_whitespaces is enabled (default: \\\"•\\\")": "当启用 show_whitespaces 时用于渲染空格字符的可见字符(默认值:“•”)",
         "Visible character used to render tab characters when show_whitespaces is enabled (default: \\\"→\\\")": "当启用 show_whitespaces 时用于渲染制表符字符的可见字符(默认值:“→”)"
     },
@@ -20742,7 +20742,8 @@
         "^{}\\b": "",
         "^cargo\\b": "",
         "^npm\\b": "",
-        "^my_script\\b": ""
+        "^my_script\\b": "",
+        "^git\\\\-lfs\\\\b": ""
     },
     "zed/crates/agent/src/templates.rs": {
         "src/templates": "",
@@ -40868,7 +40869,7 @@
         "Attempting to resolve code actions {:?}": "",
         "Failed to resolve code action {:?} with language server {}": "",
         "No code actions were resolved, continuing": "",
-        "code action '{}' with title \"{}\" on server {}": "",
+        "code action '{}' with title \"{}\" on server {}": "代码操作 '{}',标题为 \"{}\",位于服务器 {}",
         "Executing {}": "",
         "Failed to resolve {}. Error: {}": "",
         "No changes for code action. Skipping {}": "",
@@ -51057,7 +51058,24 @@
         "\\\\server\\share\\path\\file.txt": "",
         "\\\\server\\share": "",
         "C:\\Users\\user\\file with spaces.txt": "",
-        "C:\\special#chars?.txt": ""
+        "C:\\special#chars?.txt": "",
+        "C:\\\\Users\\\\zed": "",
+        "\\\\": "",
+        "crates\\\\utils\\\\paths.rs": "",
+        "C:\\\\Users\\\\someone\\\\test_file.rs": "",
+        "crates\\\\utils\\\\paths.rs:101": "",
+        "\\\\\\\\?\\\\C:\\\\Users\\\\someone\\\\test_file.rs:1:20": "",
+        "\\\\\\\\?\\\\C:\\\\Users\\\\someone\\\\test_file.rs": "",
+        "C:\\\\Users\\\\someone\\\\test_file.rs(1902,13)": "",
+        "\\\\\\\\?\\\\C:\\\\Users\\\\someone\\\\test_file.rs:1902:13:": "",
+        "\\\\\\\\?\\\\C:\\\\Users\\\\someone\\\\test_file.rs:1902:13:15:": "",
+        "\\\\\\\\?\\\\C:\\\\Users\\\\someone\\\\test_file.rs:1902": "",
+        "\\\\\\\\?\\\\C:\\\\Users\\\\someone\\\\test_file.rs:1902:::15:": "",
+        "\\\\\\\\?\\\\C:\\\\Users\\\\someone\\\\test_file.rs(1902,13):": "",
+        "\\\\\\\\?\\\\C:\\\\Users\\\\someone\\\\test_file.rs(1902):": "",
+        "C:\\\\Users\\\\someone\\\\test_file.rs:1902:13:": "",
+        "C:\\\\Users\\\\someone\\\\test_file.rs(1902,13):": "",
+        "C:\\\\Users\\\\someone\\\\test_file.rs(1902):": ""
     },
     "zed/crates/util/src/process.rs": {
         "failed to spawn command {command:?}": "启动命令 {command:?} 失败"
@@ -54882,7 +54900,7 @@
         "no": "",
         "none": "",
         "disabled": "",
-        "Invalid log level \"{level_str}\", to disable logging set to \"off\". Defaulting to \"off\".": "无效的日志级别 \"{level_str}\",要禁用日志请设置为 \"off\"。默认为 \"off\"。",
+        "Invalid log level \"{level_str}\", to disable logging set to \"off\". Defaulting to \"off\".": "无效的日志级别 \"{level_str}\",如要禁用日志请设置为 \"off\"。默认为 \"off\"。",
         "Invalid log level \"{level_str}\", ignoring": "无效的日志级别 \"{level_str}\",已忽略",
         "Invalid scope key, too many nested scopes: '{scope_str}'. Max depth is {SCOPE_DEPTH_MAX}": "无效的作用域键,嵌套作用域过多:'{scope_str}'。最大深度为 {SCOPE_DEPTH_MAX}",
         "::": "",
