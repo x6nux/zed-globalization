@@ -53,6 +53,7 @@ jobs:
       version: ${{ steps.set_vars.outputs.v }}
       upstream_version: ${{ steps.set_vars.outputs.upstream_v }}
       should_release: ${{ steps.set_vars.outputs.r }}
+      is_prerelease: ${{ steps.set_vars.outputs.is_prerelease }}
       lang: ${{ steps.set_vars.outputs.lang }}
       lang_lower: ${{ steps.set_vars.outputs.lang_lower }}
     steps:
@@ -67,6 +68,8 @@ jobs:
              BASE_VER="${{ github.event.client_payload.version }}"
              LANG="${{ github.event.client_payload.lang }}"
              LANG="${LANG:-zh-CN}"
+             IS_PRERELEASE="${{ github.event.client_payload.is_prerelease }}"
+             IS_PRERELEASE="${IS_PRERELEASE:-false}"
              SHOULD_RELEASE="true"
 
           # === 2. 手动触发 (workflow_dispatch) ===
@@ -77,9 +80,13 @@ jobs:
              if [ -n "$INPUT_VER" ]; then
                 BASE_VER="$INPUT_VER"
                 echo "手动指定版本: $BASE_VER"
+                # 手动指定版本时，查询该版本是否为 pre-release
+                IS_PRERELEASE=$(curl -s "https://api.github.com/repos/zed-industries/zed/releases/tags/$INPUT_VER" | jq -r '.prerelease // false')
              else
-                BASE_VER=$(curl -s https://api.github.com/repos/zed-industries/zed/releases/latest | jq -r .tag_name)
-                echo "手动触发，自动获取最新: $BASE_VER"
+                LATEST_JSON=$(curl -s "https://api.github.com/repos/zed-industries/zed/releases?per_page=1")
+                BASE_VER=$(echo "$LATEST_JSON" | jq -r '.[0].tag_name')
+                IS_PRERELEASE=$(echo "$LATEST_JSON" | jq -r '.[0].prerelease')
+                echo "手动触发，自动获取最新: $BASE_VER (pre-release: $IS_PRERELEASE)"
              fi
              SHOULD_RELEASE="${{ inputs.release }}"
           fi
@@ -99,6 +106,7 @@ jobs:
           echo "v=$VER" >> $GITHUB_OUTPUT
           echo "upstream_v=$BASE_VER" >> $GITHUB_OUTPUT
           echo "r=$SHOULD_RELEASE" >> $GITHUB_OUTPUT
+          echo "is_prerelease=${IS_PRERELEASE:-false}" >> $GITHUB_OUTPUT
           echo "lang=$LANG" >> $GITHUB_OUTPUT
           # zh-CN → zh-cn, ja → ja
           LANG_LOWER=$(echo "$LANG" | tr '[:upper:]' '[:lower:]')
@@ -859,6 +867,7 @@ jobs:
           name: Zed Globalization ${{ needs.versioning.outputs.lang }} ${{ needs.versioning.outputs.version }}
           tag_name: ${{ needs.versioning.outputs.version }}
           body_path: /tmp/release_body.md
+          prerelease: ${{ needs.versioning.outputs.is_prerelease == 'true' }}
           files: release-dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

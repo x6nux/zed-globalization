@@ -2,7 +2,7 @@ name: 01 提取与翻译
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # 每 30 分钟轮询一次 Zed 新版本
+    - cron: "0 0,8,16 * * *" # 每日三次（UTC 0/8/16 点）检查 Zed 新版本
   workflow_dispatch:
     inputs:
       mode:
@@ -37,39 +37,83 @@ env:
   ZED_REPO: https://github.com/zed-industries/zed.git
 
 jobs:
-  # ====== 检测 Zed 是否发布新版本 ======
+  # ====== 检测 Zed 是否发布新版本（同时检查 Stable 和 Pre-release） ======
   check-version:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.check.outputs.version }}
-      local_version: ${{ steps.check.outputs.local_version }}
+      matrix: ${{ steps.check.outputs.matrix }}
       has_update: ${{ steps.check.outputs.has_update }}
     steps:
       - id: check
         run: |
-          UPSTREAM=$(curl -s https://api.github.com/repos/zed-industries/zed/releases/latest | jq -r .tag_name)
-          LOCAL=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
-          echo "Zed 官方最新: $UPSTREAM | 本地最新: $LOCAL"
-          echo "local_version=$LOCAL" >> $GITHUB_OUTPUT
+          # 获取上游最新 stable release
+          STABLE_TAG=$(curl -s "https://api.github.com/repos/zed-industries/zed/releases/latest" \
+            | jq -r '.tag_name // empty')
+          echo "上游 Stable: ${STABLE_TAG:-无}"
 
-          # 提取本地基础版本号（去掉重复构建后缀 .1 .2 等）
-          # v0.222.4.1 → v0.222.4, v0.222.4 → v0.222.4
-          LOCAL_BASE=$(echo "$LOCAL" | sed -E 's/^(v[0-9]+\.[0-9]+\.[0-9]+)\.[0-9]+$/\1/')
-          echo "本地基础版本: $LOCAL_BASE"
+          # 获取上游最新 pre-release
+          PRE_TAG=$(curl -s "https://api.github.com/repos/zed-industries/zed/releases" \
+            | jq -r '[.[] | select(.prerelease==true and .draft==false)][0].tag_name // empty')
+          echo "上游 Pre-release: ${PRE_TAG:-无}"
 
-          # 手动触发时始终执行
+          # 获取本地所有 release tag（最近 30 个，用于去重比对）
+          LOCAL_TAGS=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases?per_page=30" \
+            | jq -r '.[].tag_name // empty')
+          echo "本地最近 tags:"
+          echo "$LOCAL_TAGS" | head -5
+
+          # 检查某个上游版本是否已在本地构建过
+          is_built() {
+            local upstream="$1"
+            while IFS= read -r tag; do
+              [ -z "$tag" ] && continue
+              # 去掉我们的重复构建后缀: v0.222.4.1 → v0.222.4, v0.222.5-pre.1 → v0.222.5-pre
+              local base=$(echo "$tag" | sed -E 's/^(v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9._-]+)?)\.[0-9]+$/\1/')
+              if [ "$base" == "$upstream" ]; then
+                return 0
+              fi
+            done <<< "$LOCAL_TAGS"
+            return 1
+          }
+
+          INCLUDES="[]"
+
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "手动触发，执行提取与翻译"
-            echo "version=$UPSTREAM" >> $GITHUB_OUTPUT
-            echo "has_update=true" >> $GITHUB_OUTPUT
-
-          elif [ "$UPSTREAM" != "null" ] && [ "$UPSTREAM" != "$LOCAL_BASE" ]; then
-            echo "发现新版本: $UPSTREAM (本地基础版本: $LOCAL_BASE)"
-            echo "version=$UPSTREAM" >> $GITHUB_OUTPUT
-            echo "has_update=true" >> $GITHUB_OUTPUT
-
+            # 手动触发：始终处理最新版本（含 pre-release）
+            LATEST_JSON=$(curl -s "https://api.github.com/repos/zed-industries/zed/releases?per_page=1")
+            V=$(echo "$LATEST_JSON" | jq -r '.[0].tag_name')
+            P=$(echo "$LATEST_JSON" | jq -r '.[0].prerelease')
+            INCLUDES=$(echo "$INCLUDES" | jq -c --arg v "$V" --arg p "$P" '. + [{"version": $v, "is_prerelease": $p}]')
+            echo "手动触发，处理版本: $V (pre-release: $P)"
           else
-            echo "版本一致 ($UPSTREAM = $LOCAL_BASE)，跳过"
+            # 定时触发：分别检查 stable 和 pre-release
+            if [ -n "$STABLE_TAG" ] && [ "$STABLE_TAG" != "null" ]; then
+              if ! is_built "$STABLE_TAG"; then
+                INCLUDES=$(echo "$INCLUDES" | jq -c --arg v "$STABLE_TAG" '. + [{"version": $v, "is_prerelease": "false"}]')
+                echo "发现新 Stable: $STABLE_TAG"
+              else
+                echo "Stable $STABLE_TAG 已构建，跳过"
+              fi
+            fi
+
+            if [ -n "$PRE_TAG" ] && [ "$PRE_TAG" != "null" ] && [ "$PRE_TAG" != "$STABLE_TAG" ]; then
+              if ! is_built "$PRE_TAG"; then
+                INCLUDES=$(echo "$INCLUDES" | jq -c --arg v "$PRE_TAG" '. + [{"version": $v, "is_prerelease": "true"}]')
+                echo "发现新 Pre-release: $PRE_TAG"
+              else
+                echo "Pre-release $PRE_TAG 已构建，跳过"
+              fi
+            fi
+          fi
+
+          COUNT=$(echo "$INCLUDES" | jq length)
+          echo "需处理版本数: $COUNT"
+
+          if [ "$COUNT" -gt 0 ]; then
+            echo "matrix={\"include\":$(echo "$INCLUDES" | jq -c .)}" >> $GITHUB_OUTPUT
+            echo "has_update=true" >> $GITHUB_OUTPUT
+          else
+            echo 'matrix={"include":[]}' >> $GITHUB_OUTPUT
             echo "has_update=false" >> $GITHUB_OUTPUT
           fi
 
@@ -78,6 +122,9 @@ jobs:
     needs: check-version
     if: needs.check-version.outputs.has_update == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.check-version.outputs.matrix) }}
+      max-parallel: 1 # 串行执行，避免 i18n 分支推送冲突
     steps:
       - uses: actions/checkout@v4
 
@@ -106,9 +153,9 @@ jobs:
           echo "目标语言: $TARGET_LANG"
 
           # === 版本号 ===
-          NEW_VER="${{ needs.check-version.outputs.version }}"
+          NEW_VER="${{ matrix.version }}"
           echo "VERSION=$NEW_VER" >> $GITHUB_OUTPUT
-          echo "构建版本: $NEW_VER"
+          echo "构建版本: $NEW_VER (pre-release: ${{ matrix.is_prerelease }})"
 
           # === 提取模式 ===
           INPUT_MODE="${{ inputs.mode }}"
@@ -320,4 +367,5 @@ jobs:
           gh api repos/${{ github.repository }}/dispatches \
             -f event_type=build-ready \
             -f "client_payload[version]=${{ steps.params.outputs.VERSION }}" \
-            -f "client_payload[lang]=$LANG_VALUE"
+            -f "client_payload[lang]=$LANG_VALUE" \
+            -f "client_payload[is_prerelease]=${{ matrix.is_prerelease }}"
