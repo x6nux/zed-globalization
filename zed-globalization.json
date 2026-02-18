@@ -1,12 +1,12 @@
 {
-    "version": "0.223.5",
+    "version": "0.224.4-pre",
     "description": "Zed Editor (Localized / 汉化版)",
     "homepage": "https://github.com/x6nux/zed-globalization",
     "license": "GPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/x6nux/zed-globalization/releases/download/v0.223.5/zedg-zh-cn-windows-x86_64-v0.223.5.zip",
-            "hash": "d27fe714dea3f86cf76e52be04925792fcd61bb0691fd579a74b4197ab053f3e"
+            "url": "https://github.com/x6nux/zed-globalization/releases/download/v0.224.4-pre/zedg-zh-cn-windows-x86_64-v0.224.4-pre.zip",
+            "hash": "1c5ad6b3ef604f12a4c6bf132197c26fc2b1f216587695434a522805145466e1"
         }
     },
     "bin": "ZedG.exe",
