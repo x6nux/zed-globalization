@@ -11661,6 +11661,7 @@
         "😀->hap...->cool": ""
     },
     "zed/crates/debugger_ui/src/stack_trace_view.rs": {
+        "Stack Trace View Deployed": "",
         "Stack Frame Viewer": "",
         "Stack Frames": ""
     },
