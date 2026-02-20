@@ -1,20 +1,62 @@
 {
   "description": "Strings that must never be translated - they are used as program identifiers, not user-facing text",
   "global_entries": [
-    {"original": "Content-Type", "reason": "http_header"},
-    {"original": "Content-Length", "reason": "http_header"},
-    {"original": "Content-Disposition", "reason": "http_header"},
-    {"original": "Authorization", "reason": "http_header"},
-    {"original": "Accept", "reason": "http_header"},
-    {"original": "Accept-Encoding", "reason": "http_header"},
-    {"original": "User-Agent", "reason": "http_header"},
-    {"original": "Cache-Control", "reason": "http_header"},
-    {"original": "application/json", "reason": "mime_type"},
-    {"original": "application/xml", "reason": "mime_type"},
-    {"original": "application/octet-stream", "reason": "mime_type"},
-    {"original": "text/plain", "reason": "mime_type"},
-    {"original": "text/html", "reason": "mime_type"},
-    {"original": "multipart/form-data", "reason": "mime_type"}
+    {
+      "original": "true",
+      "reason": "boolean"
+    },
+    {
+      "original": "false",
+      "reason": "boolean"
+    },
+    {
+      "original": "null",
+      "reason": "null_value"
+    },
+    {
+      "original": "ok",
+      "reason": "status"
+    },
+    {
+      "original": "error",
+      "reason": "status"
+    },
+    {
+      "original": "none",
+      "reason": "option_value"
+    },
+    {
+      "original": "default",
+      "reason": "keyword"
+    },
+    {
+      "original": "auto",
+      "reason": "keyword"
+    },
+    {
+      "original": "on",
+      "reason": "toggle"
+    },
+    {
+      "original": "off",
+      "reason": "toggle"
+    },
+    {
+      "original": "yes",
+      "reason": "toggle"
+    },
+    {
+      "original": "no",
+      "reason": "toggle"
+    },
+    {
+      "original": "enabled",
+      "reason": "toggle"
+    },
+    {
+      "original": "disabled",
+      "reason": "toggle"
+    }
   ],
   "entries": [
     {
@@ -28763,111 +28805,6 @@
       "reason": "pattern:test"
     },
     {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "0/0",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Close Search Bar",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Collapse All",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Collapse All Files",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Collapse All Search Results",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Expand All",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Expand All Files",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Expand All Search Results",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Replace All Matches",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Replace Next Match",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Replace Next Match ",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Replace with…",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Search…",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Select All Matches",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Select Next Match",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Select Previous Match",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Side by Side",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Stacked",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Toggle Replace",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "Toggle Search Selection",
-      "reason": "critical_file"
-    },
-    {
-      "file": "zed/crates/search/src/buffer_search.rs",
-      "original": "{}/{}",
-      "reason": "critical_file"
-    },
-    {
       "file": "zed/crates/settings/src/base_keymap_setting.rs",
       "original": "None",
       "reason": "serialization"
@@ -34471,64 +34408,6 @@
       "file": "zed/crates/ztracing/src/lib.rs",
       "original": "setup tracy layer",
       "reason": "test_assertion"
-    }
-  ],
-  "global_entries": [
-    {
-      "original": "true",
-      "reason": "boolean"
-    },
-    {
-      "original": "false",
-      "reason": "boolean"
-    },
-    {
-      "original": "null",
-      "reason": "null_value"
-    },
-    {
-      "original": "ok",
-      "reason": "status"
-    },
-    {
-      "original": "error",
-      "reason": "status"
-    },
-    {
-      "original": "none",
-      "reason": "option_value"
-    },
-    {
-      "original": "default",
-      "reason": "keyword"
-    },
-    {
-      "original": "auto",
-      "reason": "keyword"
-    },
-    {
-      "original": "on",
-      "reason": "toggle"
-    },
-    {
-      "original": "off",
-      "reason": "toggle"
-    },
-    {
-      "original": "yes",
-      "reason": "toggle"
-    },
-    {
-      "original": "no",
-      "reason": "toggle"
-    },
-    {
-      "original": "enabled",
-      "reason": "toggle"
-    },
-    {
-      "original": "disabled",
-      "reason": "toggle"
     }
   ]
 }
