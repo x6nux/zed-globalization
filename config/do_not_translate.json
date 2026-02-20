@@ -18900,21 +18900,6 @@
       "reason": "match_arm"
     },
     {
-      "file": "zed/crates/git_ui/src/git_picker.rs",
-      "original": "Branches",
-      "reason": "serialization"
-    },
-    {
-      "file": "zed/crates/git_ui/src/git_picker.rs",
-      "original": "Stash",
-      "reason": "serialization"
-    },
-    {
-      "file": "zed/crates/git_ui/src/git_picker.rs",
-      "original": "Worktrees",
-      "reason": "serialization"
-    },
-    {
       "file": "zed/crates/git_ui/src/git_ui.rs",
       "original": "Operation was canceled",
       "reason": "api_identifier"
