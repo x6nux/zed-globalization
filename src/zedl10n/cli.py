@@ -141,6 +141,20 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     _add_ai_args(p_pipe)
 
+    # --- consistency ---
+    p_con = sub.add_parser(
+        "consistency", help="翻译一致性检查与修复",
+    )
+    p_con.add_argument(
+        "--input", required=True, help="翻译 JSON 文件路径",
+    )
+    p_con.add_argument(
+        "--glossary", default="config/glossary.yaml", help="术语表路径",
+    )
+    p_con.add_argument(
+        "--fix", action="store_true", help="自动修复并覆盖写入",
+    )
+
     # --- release-notes ---
     p_rn = sub.add_parser(
         "release-notes", help="获取并翻译 Zed Release Notes",
@@ -192,6 +206,10 @@ def main() -> None:
         run(args)
     elif args.command == "convert":
         from .convert import run
+
+        run(args)
+    elif args.command == "consistency":
+        from .consistency import run
 
         run(args)
     elif args.command == "pipeline":

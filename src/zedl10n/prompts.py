@@ -36,6 +36,14 @@ SYSTEM_PROMPT_TEMPLATE = """你是一个专业的软件界面翻译专家，正�
    命名/索引占位符（如 {{name}}, {{0}}）不受顺序限制，可以根据译文需要调整位置。
 4. 严禁将 ASCII 标点替换为中文标点。逗号保持 ","，不要变为 "、" 或 "，"；分号保持 ";"，不要变为 "；"
 
+翻译风格:
+1. 参考 VS Code、JetBrains 等成熟中文产品的界面翻译风格
+2. UI 按钮/菜单使用动词优先的简短表述（如"打开文件"而非"文件打开操作"）
+3. 提示信息保持简洁，避免冗余修饰词（如"请"、"您"等敬语）
+4. 错误消息使用陈述语气（如"无法连接服务器"而非"服务器连接失败了"）
+5. 同一英文术语在不同位置必须使用完全相同的中文译文，保持全局一致性
+6. 优先使用常见的中文计算机术语，避免生造词汇
+
 {glossary_section}
 
 输入格式: JSON 对象 {{"原文": ""}}
@@ -187,4 +195,55 @@ def build_fix_prompt(
     lines.append("请重新翻译以上条目，确保占位符与原文完全一致。")
     lines.append("特别注意：匿名占位符（{}, {:?} 等）的出现顺序必须与原文一致。")
     lines.append("只返回 JSON 对象，不要添加任何解释文字或 markdown 标记。")
+    return "\n".join(lines)
+
+
+def build_consistency_fix_prompt(
+    inconsistent: list[dict],
+    glossary_violations: list[dict],
+    keep_original_violations: list[dict],
+) -> str:
+    """构建一致性修复 prompt，让 AI 选择/修正译文。
+
+    参数格式:
+    - inconsistent: [{"original": str, "variants": {"译文A": 次数, ...}}]
+    - glossary_violations: [{"original": str, "translated": str,
+                             "term_en": str, "term_zh": str}]
+    - keep_original_violations: [{"original": str, "translated": str,
+                                  "word": str}]
+    """
+    lines = ["以下翻译存在一致性问题，请逐条修正。"]
+    lines.append("")
+
+    if inconsistent:
+        lines.append("## 跨文件译文不一致")
+        lines.append("同一原文在不同位置有多种翻译，请选择最准确的（或重新翻译）：")
+        for item in inconsistent:
+            lines.append(f'- 原文: "{item["original"]}"')
+            for variant, count in item["variants"].items():
+                lines.append(f'  - "{variant}" (出现 {count} 次)')
+        lines.append("")
+
+    if glossary_violations:
+        lines.append("## 术语表违反")
+        lines.append("以下译文未正确使用术语表规定的译法，请修正：")
+        for item in glossary_violations:
+            lines.append(f'- 原文: "{item["original"]}"')
+            lines.append(f'  当前译文: "{item["translated"]}"')
+            lines.append(
+                f'  术语: "{item["term_en"]}" 应翻译为 "{item["term_zh"]}"'
+            )
+        lines.append("")
+
+    if keep_original_violations:
+        lines.append("## 专有名词被错误翻译")
+        lines.append("以下译文中的专有名词应保留英文原文：")
+        for item in keep_original_violations:
+            lines.append(f'- 原文: "{item["original"]}"')
+            lines.append(f'  当前译文: "{item["translated"]}"')
+            lines.append(f'  应保留: "{item["word"]}"')
+        lines.append("")
+
+    lines.append("请返回修正后的 JSON 对象: {\"原文\": \"修正后的译文\"}")
+    lines.append("只返回 JSON，不要添加任何解释文字或 markdown 标记。")
     return "\n".join(lines)

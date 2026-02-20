@@ -8,13 +8,14 @@ import logging
 import random
 from pathlib import Path
 
+from .batch import split_batch
 from .prompts import (
     SYSTEM_PROMPT_TEMPLATE,
     XML_FALLBACK_INSTRUCTION,
+    build_consistency_fix_prompt,
     build_fix_prompt,
     build_numbered_instruction,
     build_user_prompt,
-    estimate_tokens,
     validate_placeholders,
 )
 from .utils import (
@@ -130,12 +131,7 @@ async def _translate_batch(
 ) -> dict[str, str]:
     """翻译一批字符串，含占位符校验和自动重试"""
     result = await _fetch_translation(
-        client,
-        model,
-        file_path,
-        strings,
-        file_content,
-        system_prompt,
+        client, model, file_path, strings, file_content, system_prompt,
     )
     if not result:
         return result
@@ -147,9 +143,7 @@ async def _translate_batch(
             return result
         log.debug(
             "占位符不匹配 %d 条，重试修正 (%d/2): %s",
-            len(errors),
-            retry + 1,
-            file_path,
+            len(errors), retry + 1, file_path,
         )
         fix_prompt = build_fix_prompt(errors, result)
         try:
@@ -168,169 +162,11 @@ async def _translate_batch(
     for original, (src_ph, dst_ph) in final_errors.items():
         log.warning(
             "占位符校验失败，丢弃译文: %r (原文占位符=%s, 译文占位符=%s) [%s]",
-            original,
-            src_ph,
-            dst_ph,
-            file_path,
+            original, src_ph, dst_ph, file_path,
         )
         result[original] = ""
 
     return result
-
-
-MAX_INPUT_TOKENS = 50_000
-
-
-def _estimate_request_tokens(
-    system_prompt: str,
-    file_path: str,
-    strings: dict[str, str],
-    file_content: str,
-) -> int:
-    """估算完整请求（system + user prompt）的 token 数"""
-    user_prompt = build_user_prompt(file_path, strings, file_content)
-    return estimate_tokens(system_prompt) + estimate_tokens(user_prompt)
-
-
-def _truncate_file_content(
-    file_content: str,
-    strings: dict[str, str],
-    system_prompt: str,
-    max_tokens: int,
-) -> str:
-    """当源文件过大时，保留字符串附近上下文并截断其余部分"""
-    budget = max_tokens - estimate_tokens(system_prompt) - 5000
-    if budget <= 0:
-        return ""
-    if estimate_tokens(file_content) <= budget:
-        return file_content
-
-    # 找到每个字符串在文件中的行号（匹配带引号的字面量）
-    lines = file_content.split("\n")
-    hit_lines: set[int] = set()
-    for s in strings:
-        quoted = f'"{s}"'
-        for i, line in enumerate(lines):
-            if quoted in line:
-                hit_lines.add(i)
-
-    if not hit_lines:
-        # 没找到匹配，按比例从头截断
-        ratio = budget / estimate_tokens(file_content)
-        cut = int(len(file_content) * ratio)
-        return file_content[:cut] + "\n... (文件过大，已截断)"
-
-    # 从大窗口开始尝试，逐步缩小直到满足 budget
-    for ctx_lines in (80, 40, 20, 10):
-        kept = _build_context_regions(lines, hit_lines, ctx_lines)
-        if estimate_tokens(kept) <= budget:
-            log.debug(
-                "源文件过大，保留 %d 处字符串附近 ±%d 行上下文",
-                len(hit_lines),
-                ctx_lines,
-            )
-            return kept
-
-    # 最小窗口仍超限，用最小窗口的结果再按比例截断
-    kept = _build_context_regions(lines, hit_lines, 5)
-    if estimate_tokens(kept) > budget:
-        ratio = budget / estimate_tokens(kept)
-        cut = int(len(kept) * ratio)
-        kept = kept[:cut] + "\n... (已截断)"
-    return kept
-
-
-def _build_context_regions(
-    lines: list[str],
-    hit_lines: set[int],
-    ctx: int,
-) -> str:
-    """围绕命中行构建上下文区域，合并重叠区间"""
-    total = len(lines)
-    # 构建区间 [start, end)
-    intervals: list[tuple[int, int]] = []
-    for ln in sorted(hit_lines):
-        intervals.append((max(0, ln - ctx), min(total, ln + ctx + 1)))
-
-    # 合并重叠区间
-    merged: list[tuple[int, int]] = []
-    for start, end in intervals:
-        if merged and start <= merged[-1][1]:
-            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
-        else:
-            merged.append((start, end))
-
-    # 拼接各区域
-    parts: list[str] = []
-    for i, (start, end) in enumerate(merged):
-        if i == 0 and start > 0:
-            parts.append(f"// ... (省略第 1-{start} 行)")
-        elif i > 0:
-            prev_end = merged[i - 1][1]
-            parts.append(f"// ... (省略第 {prev_end + 1}-{start} 行)")
-        parts.append("\n".join(lines[start:end]))
-    if merged[-1][1] < total:
-        parts.append(f"// ... (省略第 {merged[-1][1] + 1}-{total} 行)")
-
-    return "\n".join(parts)
-
-
-def _split_batch(
-    strings: dict[str, str],
-    system_prompt: str,
-    file_path: str,
-    file_content: str,
-    max_tokens: int = MAX_INPUT_TOKENS,
-) -> tuple[list[dict[str, str]], str]:
-    """根据 token 预算将字符串拆分为多批。
-
-    如果源文件过大，自动截断。返回 (批次列表, 实际使用的 file_content)。
-    """
-    # 源文件过大时智能截断（保留字符串附近上下文）
-    content = _truncate_file_content(
-        file_content,
-        strings,
-        system_prompt,
-        max_tokens,
-    )
-
-    items = list(strings.items())
-    # 先尝试全部放一批
-    total = _estimate_request_tokens(
-        system_prompt,
-        file_path,
-        dict(items),
-        content,
-    )
-    if total <= max_tokens:
-        return [dict(items)], content
-
-    # 超限：估算每条字符串的平均 token 开销，计算初始批容量
-    overhead = _estimate_request_tokens(
-        system_prompt,
-        file_path,
-        {},
-        content,
-    )
-    per_string = max(1, (total - overhead) // len(items))
-    capacity = max(10, (max_tokens - overhead) // per_string)
-
-    # 验证并缩减直到满足限制
-    while capacity >= 10:
-        test_batch = dict(items[:capacity])
-        tokens = _estimate_request_tokens(
-            system_prompt,
-            file_path,
-            test_batch,
-            content,
-        )
-        if tokens <= max_tokens:
-            break
-        capacity = int(capacity * 0.8)
-    capacity = max(10, capacity)
-
-    batches = [dict(items[i : i + capacity]) for i in range(0, len(items), capacity)]
-    return batches, content
 
 
 def _read_source_file(file_path: str, source_root: str) -> str:
@@ -339,7 +175,6 @@ def _read_source_file(file_path: str, source_root: str) -> str:
         return ""
     root = Path(source_root)
     candidates = [root / file_path]
-    # 如果 file_path 以 "zed/" 开头，也尝试去掉前缀
     if file_path.startswith("zed/"):
         candidates.append(root / file_path[4:])
     for p in candidates:
@@ -349,6 +184,58 @@ def _read_source_file(file_path: str, source_root: str) -> str:
             except Exception:
                 return ""
     return ""
+
+
+async def _ai_fix_consistency(
+    client: object,
+    model: str,
+    system_prompt: str,
+    result: TranslationDict,
+    glossary_path: str,
+) -> tuple[TranslationDict, list[str]]:
+    """用 AI 修复一致性问题，返回 (修复后结果, 修复日志)"""
+    from .consistency import build_issues_for_ai, check_consistency
+
+    issues = check_consistency(result, glossary_path)
+    if not issues:
+        return result, []
+
+    log.info("一致性检查发现 %d 个问题，调用 AI 修复", len(issues))
+    incon, glossary_v, keep_v = build_issues_for_ai(issues, result)
+    if not incon and not glossary_v and not keep_v:
+        return result, []
+
+    user_prompt = build_consistency_fix_prompt(incon, glossary_v, keep_v)
+
+    fix_log: list[str] = []
+    try:
+        raw = await _call_ai(client, model, system_prompt, user_prompt)
+        fixed = parse_json_response(raw)
+    except Exception as e:
+        log.warning("AI 一致性修复请求失败: %s", e)
+        return result, fix_log
+
+    if not fixed:
+        log.warning("AI 一致性修复返回为空")
+        return result, fix_log
+
+    # 将 AI 修正结果应用到所有文件
+    for original, new_translation in fixed.items():
+        if not new_translation:
+            continue
+        applied = 0
+        for pairs in result.values():
+            if original in pairs and pairs[original]:
+                if pairs[original] != new_translation:
+                    pairs[original] = new_translation
+                    applied += 1
+        if applied:
+            fix_log.append(
+                f'AI 修复: "{original}" → "{new_translation}" '
+                f"(更新 {applied} 处)",
+            )
+
+    return result, fix_log
 
 
 async def _translate_async(
@@ -385,11 +272,8 @@ async def _translate_async(
         if not to_translate:
             continue
         raw_content = _read_source_file(file_path, source_root)
-        batches, file_content = _split_batch(
-            to_translate,
-            system_prompt,
-            file_path,
-            raw_content,
+        batches, file_content = split_batch(
+            to_translate, system_prompt, file_path, raw_content,
         )
         for batch in batches:
 
@@ -400,12 +284,7 @@ async def _translate_async(
             ) -> tuple[str, dict[str, str]]:
                 async with semaphore:
                     return fp, await _translate_batch(
-                        client,
-                        ai_cfg.model,
-                        fp,
-                        b,
-                        fc,
-                        system_prompt,
+                        client, ai_cfg.model, fp, b, fc, system_prompt,
                     )
 
             tasks.append(asyncio.create_task(do_batch()))
@@ -423,6 +302,16 @@ async def _translate_async(
             fail_count += 1
         pbar.update(extra=f"失败 {fail_count}")
     pbar.finish()
+
+    # AI 一致性修复（最多 2 轮）
+    for fix_round in range(2):
+        result, ai_fix_log = await _ai_fix_consistency(
+            client, ai_cfg.model, system_prompt, result, glossary_path,
+        )
+        for msg in ai_fix_log:
+            log.info("一致性修复 (第 %d 轮): %s", fix_round + 1, msg)
+        if not ai_fix_log:
+            break
 
     return result
 
@@ -447,13 +336,8 @@ def translate_all(
 
     result = asyncio.run(
         _translate_async(
-            all_strings,
-            existing,
-            mode,
-            lang,
-            glossary_path,
-            ai_cfg,
-            source_root,
+            all_strings, existing, mode, lang,
+            glossary_path, ai_cfg, source_root,
         )
     )
     # 全角 ASCII 符号统一转半角，避免破坏 Rust 源码语法
@@ -461,6 +345,14 @@ def translate_all(
         for s, t in result[fp].items():
             if t:
                 result[fp][s] = normalize_fullwidth(t)
+
+    # 规则兜底：AI 修复后仍有问题的，用规则强制统一
+    from .consistency import fix_consistency
+
+    result, fix_log = fix_consistency(result, glossary_path)
+    for msg in fix_log:
+        log.info("规则兜底修复: %s", msg)
+
     save_json(result, output_path)
     log.info("翻译结果已保存: %s", output_path)
 
