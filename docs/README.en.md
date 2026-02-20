@@ -14,18 +14,25 @@ Get the pre-built binaries from [Releases](https://github.com/x6nux/zed-globaliz
 
 | Platform | File | Installation |
 |----------|------|-------------|
-| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg` ([more](#macos-installation)) |
-| Windows (x64) | `zed-globalization-zh-cn-windows-x86_64.zip` | Extract and run `zed.exe` |
+| macOS (Apple Silicon) | `zedg-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg` ([more](#macos-installation)) |
+| Windows (x64) | `zedg-zh-cn-windows-x86_64.zip` | `scoop install zedg` ([more](#windows-scoop)) |
 | Linux (x64) | `zed-globalization-zh-cn-linux-x86_64.tar.gz` | Extract to `/usr/local` |
 | Linux (x64 deb) | `zed-globalization-zh-cn-linux-x86_64.deb` | `sudo dpkg -i *.deb` |
 
 ### macOS Installation
 
-**Homebrew (Recommended):**
+**Stable (Recommended):**
 
 ```bash
 brew tap x6nux/zedg
 brew install --cask zedg
+```
+
+**Preview (Pre-release):**
+
+```bash
+brew tap x6nux/zedg
+brew install --cask zedg-preview
 ```
 
 **DMG Manual Install:**
@@ -38,9 +45,18 @@ sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
 
 **Windows Scoop:**
 
+Stable:
+
 ```bash
-scoop bucket add zed-globalization https://github.com/x6nux/zed-globalization -b scoop
-scoop install zed-globalization
+scoop bucket add zedg https://github.com/x6nux/zed-globalization -b scoop
+scoop install zedg
+```
+
+Preview (Pre-release):
+
+```bash
+scoop bucket add zedg https://github.com/x6nux/zed-globalization -b scoop
+scoop install zedg-preview
 ```
 
 ## Features

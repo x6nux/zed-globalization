@@ -877,6 +877,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VERSION="${{ needs.versioning.outputs.version }}"
-          echo "触发下游更新, 版本: $VERSION"
-          gh workflow run 03-update-scoop.yml -f version_tag="$VERSION" || echo "⚠ 触发 Scoop 更新失败"
-          gh workflow run 04-update-homebrew.yml -f version_tag="$VERSION" || echo "⚠ 触发 Homebrew 更新失败"
+          IS_PRE="${{ needs.versioning.outputs.is_prerelease }}"
+          echo "触发下游更新, 版本: $VERSION, pre-release: $IS_PRE"
+          gh workflow run 03-update-scoop.yml -f version_tag="$VERSION" -f is_prerelease="$IS_PRE" || echo "⚠ 触发 Scoop 更新失败"
+          gh workflow run 04-update-homebrew.yml -f version_tag="$VERSION" -f is_prerelease="$IS_PRE" || echo "⚠ 触发 Homebrew 更新失败"

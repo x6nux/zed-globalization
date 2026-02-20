@@ -9,22 +9,35 @@ import random
 from pathlib import Path
 
 from .prompts import (
-    SYSTEM_PROMPT_TEMPLATE, XML_FALLBACK_INSTRUCTION,
-    build_fix_prompt, build_numbered_instruction,
-    build_user_prompt, estimate_tokens, validate_placeholders,
+    SYSTEM_PROMPT_TEMPLATE,
+    XML_FALLBACK_INSTRUCTION,
+    build_fix_prompt,
+    build_numbered_instruction,
+    build_user_prompt,
+    estimate_tokens,
+    validate_placeholders,
 )
 from .utils import (
-    AIConfig, ProgressBar, TranslationDict,
-    build_glossary_section, load_json, normalize_fullwidth,
-    parse_json_response, parse_numbered_response,
-    parse_xml_response, save_json,
+    AIConfig,
+    ProgressBar,
+    TranslationDict,
+    build_glossary_section,
+    load_json,
+    normalize_fullwidth,
+    parse_json_response,
+    parse_numbered_response,
+    parse_xml_response,
+    save_json,
 )
 
 log = logging.getLogger(__name__)
 
 
 async def _call_ai(
-    client: object, model: str, system_prompt: str, user_prompt: str,
+    client: object,
+    model: str,
+    system_prompt: str,
+    user_prompt: str,
 ) -> str:
     """调用 AI API，内置网络错误重试"""
     for attempt in range(5):
@@ -42,7 +55,7 @@ async def _call_ai(
             return (response.choices[0].message.content or "").strip()
         except Exception as e:
             if attempt < 4:
-                delay = (2 ** attempt) * 3 + random.uniform(0, 2)
+                delay = (2**attempt) * 3 + random.uniform(0, 2)
                 log.debug("网络错误，等待 %.1fs 重试 (%d/5)", delay, attempt + 1)
                 await asyncio.sleep(delay)
                 continue
@@ -100,7 +113,9 @@ async def _fetch_translation(
             return {}
 
     log.warning(
-        "[FAILED] JSON+XML+编号 均失败: %s (%d 条)", file_path, len(strings),
+        "[FAILED] JSON+XML+编号 均失败: %s (%d 条)",
+        file_path,
+        len(strings),
     )
     return {}
 
@@ -115,7 +130,12 @@ async def _translate_batch(
 ) -> dict[str, str]:
     """翻译一批字符串，含占位符校验和自动重试"""
     result = await _fetch_translation(
-        client, model, file_path, strings, file_content, system_prompt,
+        client,
+        model,
+        file_path,
+        strings,
+        file_content,
+        system_prompt,
     )
     if not result:
         return result
@@ -127,7 +147,9 @@ async def _translate_batch(
             return result
         log.debug(
             "占位符不匹配 %d 条，重试修正 (%d/2): %s",
-            len(errors), retry + 1, file_path,
+            len(errors),
+            retry + 1,
+            file_path,
         )
         fix_prompt = build_fix_prompt(errors, result)
         try:
@@ -146,19 +168,24 @@ async def _translate_batch(
     for original, (src_ph, dst_ph) in final_errors.items():
         log.warning(
             "占位符校验失败，丢弃译文: %r (原文占位符=%s, 译文占位符=%s) [%s]",
-            original, src_ph, dst_ph, file_path,
+            original,
+            src_ph,
+            dst_ph,
+            file_path,
         )
         result[original] = ""
 
     return result
 
 
-MAX_INPUT_TOKENS = 140_000
+MAX_INPUT_TOKENS = 50_000
 
 
 def _estimate_request_tokens(
-    system_prompt: str, file_path: str,
-    strings: dict[str, str], file_content: str,
+    system_prompt: str,
+    file_path: str,
+    strings: dict[str, str],
+    file_content: str,
 ) -> int:
     """估算完整请求（system + user prompt）的 token 数"""
     user_prompt = build_user_prompt(file_path, strings, file_content)
@@ -166,8 +193,10 @@ def _estimate_request_tokens(
 
 
 def _truncate_file_content(
-    file_content: str, strings: dict[str, str],
-    system_prompt: str, max_tokens: int,
+    file_content: str,
+    strings: dict[str, str],
+    system_prompt: str,
+    max_tokens: int,
 ) -> str:
     """当源文件过大时，保留字符串附近上下文并截断其余部分"""
     budget = max_tokens - estimate_tokens(system_prompt) - 5000
@@ -197,7 +226,8 @@ def _truncate_file_content(
         if estimate_tokens(kept) <= budget:
             log.debug(
                 "源文件过大，保留 %d 处字符串附近 ±%d 行上下文",
-                len(hit_lines), ctx_lines,
+                len(hit_lines),
+                ctx_lines,
             )
             return kept
 
@@ -211,7 +241,9 @@ def _truncate_file_content(
 
 
 def _build_context_regions(
-    lines: list[str], hit_lines: set[int], ctx: int,
+    lines: list[str],
+    hit_lines: set[int],
+    ctx: int,
 ) -> str:
     """围绕命中行构建上下文区域，合并重叠区间"""
     total = len(lines)
@@ -235,10 +267,10 @@ def _build_context_regions(
             parts.append(f"// ... (省略第 1-{start} 行)")
         elif i > 0:
             prev_end = merged[i - 1][1]
-            parts.append(f"// ... (省略第 {prev_end+1}-{start} 行)")
+            parts.append(f"// ... (省略第 {prev_end + 1}-{start} 行)")
         parts.append("\n".join(lines[start:end]))
     if merged[-1][1] < total:
-        parts.append(f"// ... (省略第 {merged[-1][1]+1}-{total} 行)")
+        parts.append(f"// ... (省略第 {merged[-1][1] + 1}-{total} 行)")
 
     return "\n".join(parts)
 
@@ -256,20 +288,29 @@ def _split_batch(
     """
     # 源文件过大时智能截断（保留字符串附近上下文）
     content = _truncate_file_content(
-        file_content, strings, system_prompt, max_tokens,
+        file_content,
+        strings,
+        system_prompt,
+        max_tokens,
     )
 
     items = list(strings.items())
     # 先尝试全部放一批
     total = _estimate_request_tokens(
-        system_prompt, file_path, dict(items), content,
+        system_prompt,
+        file_path,
+        dict(items),
+        content,
     )
     if total <= max_tokens:
         return [dict(items)], content
 
     # 超限：估算每条字符串的平均 token 开销，计算初始批容量
     overhead = _estimate_request_tokens(
-        system_prompt, file_path, {}, content,
+        system_prompt,
+        file_path,
+        {},
+        content,
     )
     per_string = max(1, (total - overhead) // len(items))
     capacity = max(10, (max_tokens - overhead) // per_string)
@@ -278,17 +319,17 @@ def _split_batch(
     while capacity >= 10:
         test_batch = dict(items[:capacity])
         tokens = _estimate_request_tokens(
-            system_prompt, file_path, test_batch, content,
+            system_prompt,
+            file_path,
+            test_batch,
+            content,
         )
         if tokens <= max_tokens:
             break
         capacity = int(capacity * 0.8)
     capacity = max(10, capacity)
 
-    batches = [
-        dict(items[i : i + capacity])
-        for i in range(0, len(items), capacity)
-    ]
+    batches = [dict(items[i : i + capacity]) for i in range(0, len(items), capacity)]
     return batches, content
 
 
@@ -327,7 +368,8 @@ async def _translate_async(
 
     glossary_section = build_glossary_section(glossary_path)
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(
-        lang=lang, glossary_section=glossary_section,
+        lang=lang,
+        glossary_section=glossary_section,
     )
 
     result: TranslationDict = {fp: dict(v) for fp, v in existing.items()}
@@ -344,16 +386,28 @@ async def _translate_async(
             continue
         raw_content = _read_source_file(file_path, source_root)
         batches, file_content = _split_batch(
-            to_translate, system_prompt, file_path, raw_content,
+            to_translate,
+            system_prompt,
+            file_path,
+            raw_content,
         )
         for batch in batches:
+
             async def do_batch(
-                fp: str = file_path, b: dict = batch, fc: str = file_content,
+                fp: str = file_path,
+                b: dict = batch,
+                fc: str = file_content,
             ) -> tuple[str, dict[str, str]]:
                 async with semaphore:
                     return fp, await _translate_batch(
-                        client, ai_cfg.model, fp, b, fc, system_prompt,
+                        client,
+                        ai_cfg.model,
+                        fp,
+                        b,
+                        fc,
+                        system_prompt,
                     )
+
             tasks.append(asyncio.create_task(do_batch()))
 
     total = len(tasks)
@@ -374,9 +428,13 @@ async def _translate_async(
 
 
 def translate_all(
-    strings_path: str, output_path: str, context_path: str = "",
-    glossary_path: str = "config/glossary.yaml", mode: str = "incremental",
-    lang: str = "zh-CN", ai_cfg: AIConfig | None = None,
+    strings_path: str,
+    output_path: str,
+    context_path: str = "",
+    glossary_path: str = "config/glossary.yaml",
+    mode: str = "incremental",
+    lang: str = "zh-CN",
+    ai_cfg: AIConfig | None = None,
     source_root: str = "",
 ) -> None:
     """同步入口"""
@@ -387,10 +445,17 @@ def translate_all(
     all_strings: TranslationDict = load_json(strings_path)
     existing = load_json(output_path) if Path(output_path).exists() else {}
 
-    result = asyncio.run(_translate_async(
-        all_strings, existing,
-        mode, lang, glossary_path, ai_cfg, source_root,
-    ))
+    result = asyncio.run(
+        _translate_async(
+            all_strings,
+            existing,
+            mode,
+            lang,
+            glossary_path,
+            ai_cfg,
+            source_root,
+        )
+    )
     # 全角 ASCII 符号统一转半角，避免破坏 Rust 源码语法
     for fp in result:
         for s, t in result[fp].items():
@@ -403,11 +468,18 @@ def translate_all(
 def run(args: argparse.Namespace) -> None:
     """CLI 入口"""
     ai_cfg = AIConfig(
-        base_url=args.base_url, api_key=args.api_key,
-        model=args.model, concurrency=args.concurrency,
+        base_url=args.base_url,
+        api_key=args.api_key,
+        model=args.model,
+        concurrency=args.concurrency,
     )
     translate_all(
-        args.input, args.output, args.context,
-        args.glossary, args.mode, args.lang, ai_cfg,
+        args.input,
+        args.output,
+        args.context,
+        args.glossary,
+        args.mode,
+        args.lang,
+        ai_cfg,
         source_root=getattr(args, "source_root", ""),
     )

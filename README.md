@@ -14,14 +14,14 @@
 
 | 平台 | 文件 | 安装方式 |
 |------|------|---------|
-| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg`（[更多方式](#macos-安装)） |
-| Windows (x64) | `zed-globalization-zh-cn-windows-x86_64.zip` | 解压后运行 `ZedG.exe` |
+| macOS (Apple Silicon) | `zedg-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg`（[更多方式](#macos-安装)） |
+| Windows (x64) | `zedg-zh-cn-windows-x86_64.zip` | `scoop install zedg`（[更多方式](#windows-scoop-安装)） |
 | Linux (x64) | `zed-globalization-zh-cn-linux-x86_64.tar.gz` | 解压到 `/usr/local` |
 | Linux (x64 deb) | `zed-globalization-zh-cn-linux-x86_64.deb` | `sudo dpkg -i *.deb` |
 
 ### macOS 安装
 
-**Homebrew（推荐）：**
+**稳定版（推荐）：**
 
 ```bash
 # 首次安装
@@ -30,6 +30,13 @@ brew install --cask zedg
 
 # 手动更新
 brew update && brew upgrade --cask zedg
+```
+
+**预览版（Pre-release）：**
+
+```bash
+brew tap x6nux/zedg
+brew install --cask zedg-preview
 ```
 
 > **自动更新（可选）：** 启用后 Homebrew 会每 12 小时自动检查并升级**所有**已安装的 formulae 和 cask（不支持仅指定单个包）。
@@ -53,21 +60,30 @@ brew update && brew upgrade --cask zedg
 sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
 ```
 
-**Windows Scoop 安装：**
+### Windows Scoop 安装
+
+**稳定版：**
 
 ```bash
 # 首次安装
-scoop bucket add zed-globalization https://github.com/x6nux/zed-globalization -b scoop
-scoop install zed-globalization
+scoop bucket add zedg https://github.com/x6nux/zed-globalization -b scoop
+scoop install zedg
 
 # 手动更新
-scoop update zed-globalization
+scoop update zedg
+```
+
+**预览版（Pre-release）：**
+
+```bash
+scoop bucket add zedg https://github.com/x6nux/zed-globalization -b scoop
+scoop install zedg-preview
 ```
 
 > **自动更新（可选）：** 通过 Windows 计划任务每天定时更新（需要管理员权限）。
 > ```powershell
 > # 启用（每天中午 12:00 自动更新 ZedG）
-> schtasks /create /tn "ZedGUpdate" /tr "powershell -Command 'scoop update zed-globalization'" /sc daily /st 12:00
+> schtasks /create /tn "ZedGUpdate" /tr "powershell -Command 'scoop update zedg'" /sc daily /st 12:00
 >
 > # 关闭
 > schtasks /delete /tn "ZedGUpdate" /f

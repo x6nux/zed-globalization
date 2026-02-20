@@ -14,6 +14,11 @@ on:
         description: "Release 版本号 (空则取最新)"
         required: false
         type: string
+      is_prerelease:
+        description: "是否为 Pre-release"
+        required: false
+        default: "false"
+        type: string
 
 permissions:
   contents: write
@@ -39,6 +44,18 @@ jobs:
             echo "自动获取最新: $TAG"
             echo "TARGET_TAG=$TAG" >> $GITHUB_ENV
           fi
+
+      - name: 判断是否为 Pre-release
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            IS_PRE="${{ inputs.is_prerelease }}"
+          elif [ "${{ github.event_name }}" = "release" ]; then
+            IS_PRE="${{ github.event.release.prerelease }}"
+          else
+            IS_PRE=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/tags/$TARGET_TAG" | jq -r '.prerelease // false')
+          fi
+          echo "IS_PRERELEASE=$IS_PRE" >> $GITHUB_ENV
+          echo "Pre-release: $IS_PRE"
 
       - name: 等待并获取 Windows 产物信息
         run: |
@@ -67,16 +84,20 @@ jobs:
           echo "SHA256=$HASH" >> $GITHUB_ENV
           rm zed-windows.zip
 
-      - name: 生成并推送 Manifest 到 scoop 分支
+      - name: 生成 Manifest
         run: |
           VERSION="$TARGET_TAG"
           CLEAN_VERSION="${VERSION#v}"
+          REPO="${{ github.repository }}"
 
-          cat > zed-globalization.json << MANIFEST
+          generate_manifest() {
+            local name="$1"
+            local out="$2"
+            cat > "$out" << MANIFEST
           {
               "version": "$CLEAN_VERSION",
-              "description": "Zed Editor (Localized / 汉化版)",
-              "homepage": "https://github.com/${{ github.repository }}",
+              "description": "Zed Editor (Localized / 汉化版)${3:+ - Preview}",
+              "homepage": "https://github.com/$REPO",
               "license": "GPL-3.0-only",
               "architecture": {
                   "64bit": {
@@ -87,19 +108,32 @@ jobs:
               "bin": "ZedG.exe",
               "shortcuts": [["ZedG.exe", "ZedG"]],
               "checkver": {
-                  "github": "https://github.com/${{ github.repository }}"
+                  "github": "https://github.com/$REPO"
               },
               "autoupdate": {
                   "architecture": {
                       "64bit": {
-                          "url": "https://github.com/${{ github.repository }}/releases/download/v\$version/zed-windows.zip"
+                          "url": "https://github.com/$REPO/releases/download/v\$version/zed-windows.zip"
                       }
                   }
               }
           }
           MANIFEST
+          }
 
-          # 推送到 scoop 分支
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            echo "生成预览版 Manifest"
+            generate_manifest "zedg-preview" "zedg-preview.json" "preview"
+          else
+            echo "生成稳定版 Manifest"
+            generate_manifest "zedg" "zedg.json"
+          fi
+
+      - name: 推送 Manifest 到 scoop 分支
+        run: |
+          VERSION="$TARGET_TAG"
+          CLEAN_VERSION="${VERSION#v}"
+
           git init /tmp/scoop-branch
           cd /tmp/scoop-branch
           git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
@@ -111,9 +145,45 @@ jobs:
             git checkout -b scoop
           fi
 
-          cp $GITHUB_WORKSPACE/zed-globalization.json .
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add zed-globalization.json
-          git diff --cached --quiet || git commit -m "chore(scoop): 更新到 $VERSION"
+
+          # 清理旧包名文件（从 zed-globalization 迁移到 zedg）
+          if [ -f zed-globalization.json ]; then
+            git rm zed-globalization.json
+          fi
+          if [ -f zed-globalization-preview.json ]; then
+            git rm zed-globalization-preview.json
+          fi
+
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            # Pre-release: 仅更新预览版
+            cp $GITHUB_WORKSPACE/zedg-preview.json .
+            git add zedg-preview.json
+            git diff --cached --quiet || git commit -m "chore(scoop): 预览版更新到 $VERSION"
+          else
+            # Stable release: 更新稳定版
+            cp $GITHUB_WORKSPACE/zedg.json .
+            git add zedg.json
+
+            # 如果稳定版比预览版更新，同步更新预览版
+            PREVIEW_VER=""
+            if [ -f zedg-preview.json ]; then
+              PREVIEW_VER=$(jq -r '.version' zedg-preview.json)
+            fi
+
+            if [ -z "$PREVIEW_VER" ] || \
+               [ "$(printf '%s\n' "$CLEAN_VERSION" "$PREVIEW_VER" | sort -V | tail -1)" = "$CLEAN_VERSION" ] && \
+               [ "$CLEAN_VERSION" != "$PREVIEW_VER" ]; then
+              echo "稳定版 ($CLEAN_VERSION) 比预览版 ($PREVIEW_VER) 更新，同步更新预览版"
+              cp $GITHUB_WORKSPACE/zedg.json zedg-preview.json
+              # 修正 description 字段
+              jq '.description = "Zed Editor (Localized / 汉化版) - Preview"' zedg-preview.json > /tmp/preview.json
+              mv /tmp/preview.json zedg-preview.json
+              git add zedg-preview.json
+            fi
+
+            git diff --cached --quiet || git commit -m "chore(scoop): 更新到 $VERSION"
+          fi
+
           git push origin scoop

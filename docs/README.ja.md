@@ -14,18 +14,25 @@
 
 | プラットフォーム | ファイル | インストール方法 |
 |-----------------|---------|----------------|
-| macOS (Apple Silicon) | `zed-globalization-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg`（[詳細](#macos-インストール)） |
-| Windows (x64) | `zed-globalization-zh-cn-windows-x86_64.zip` | 解凍して `zed.exe` を実行 |
+| macOS (Apple Silicon) | `zedg-zh-cn-macos-aarch64.dmg` | `brew tap x6nux/zedg && brew install --cask zedg`（[詳細](#macos-インストール)） |
+| Windows (x64) | `zedg-zh-cn-windows-x86_64.zip` | `scoop install zedg`（[詳細](#windows-scoop)） |
 | Linux (x64) | `zed-globalization-zh-cn-linux-x86_64.tar.gz` | `/usr/local` に解凍 |
 | Linux (x64 deb) | `zed-globalization-zh-cn-linux-x86_64.deb` | `sudo dpkg -i *.deb` |
 
 ### macOS インストール
 
-**Homebrew（推奨）：**
+**安定版（推奨）：**
 
 ```bash
 brew tap x6nux/zedg
 brew install --cask zedg
+```
+
+**プレビュー版（Pre-release）：**
+
+```bash
+brew tap x6nux/zedg
+brew install --cask zedg-preview
 ```
 
 **DMG 手動インストール：**
@@ -38,9 +45,18 @@ sudo xattr -rd com.apple.quarantine /Applications/ZedG.app
 
 **Windows Scoop：**
 
+安定版：
+
 ```bash
-scoop bucket add zed-globalization https://github.com/x6nux/zed-globalization -b scoop
-scoop install zed-globalization
+scoop bucket add zedg https://github.com/x6nux/zed-globalization -b scoop
+scoop install zedg
+```
+
+プレビュー版（Pre-release）：
+
+```bash
+scoop bucket add zedg https://github.com/x6nux/zed-globalization -b scoop
+scoop install zedg-preview
 ```
 
 ## 特徴

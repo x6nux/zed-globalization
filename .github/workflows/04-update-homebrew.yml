@@ -14,6 +14,11 @@ on:
         description: "Release 版本号 (空则取最新)"
         required: false
         type: string
+      is_prerelease:
+        description: "是否为 Pre-release"
+        required: false
+        default: "false"
+        type: string
 
 permissions:
   contents: read
@@ -42,6 +47,18 @@ jobs:
             echo "自动获取最新: $TAG"
             echo "TARGET_TAG=$TAG" >> $GITHUB_ENV
           fi
+
+      - name: 判断是否为 Pre-release
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            IS_PRE="${{ inputs.is_prerelease }}"
+          elif [ "${{ github.event_name }}" = "release" ]; then
+            IS_PRE="${{ github.event.release.prerelease }}"
+          else
+            IS_PRE=$(curl -s "https://api.github.com/repos/${{ github.repository }}/releases/tags/$TARGET_TAG" | jq -r '.prerelease // false')
+          fi
+          echo "IS_PRERELEASE=$IS_PRE" >> $GITHUB_ENV
+          echo "Pre-release: $IS_PRE"
 
       - name: 等待并获取 macOS 产物信息
         run: |
@@ -76,15 +93,19 @@ jobs:
           CLEAN_VERSION="${TARGET_TAG#v}"
           REPO="${{ github.repository }}"
 
-          mkdir -p Casks
-          cat > Casks/zedg.rb <<CASK
-          cask "zedg" do
+          generate_cask() {
+            local cask_name="$1"
+            local out_file="$2"
+            local desc_suffix="${3:+ - Preview}"
+            mkdir -p Casks
+            cat > "Casks/$out_file" <<CASK
+          cask "$cask_name" do
             version "$CLEAN_VERSION"
             sha256 "$SHA256"
 
             url "$ASSET_URL"
             name "ZedG"
-            desc "Zed Editor (Localized / 汉化版)"
+            desc "Zed Editor (Localized / 汉化版)$desc_suffix"
             homepage "https://github.com/$REPO"
 
             depends_on macos: ">= :ventura"
@@ -103,20 +124,81 @@ jobs:
             ]
           end
           CASK
+          }
+
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            echo "生成预览版 Cask"
+            generate_cask "zedg-preview" "zedg-preview.rb" "preview"
+          else
+            echo "生成稳定版 Cask"
+            generate_cask "zedg" "zedg.rb"
+          fi
 
       - name: 推送到 tap 仓库
         env:
           TAP_TOKEN: ${{ secrets.TAP_GITHUB_TOKEN }}
         run: |
           VERSION="$TARGET_TAG"
+          CLEAN_VERSION="${VERSION#v}"
 
           git clone "https://x-access-token:${TAP_TOKEN}@github.com/${TAP_REPO}.git" /tmp/tap
           cd /tmp/tap
 
           mkdir -p Casks
-          cp $GITHUB_WORKSPACE/Casks/zedg.rb Casks/
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Casks/zedg.rb
-          git diff --cached --quiet || git commit -m "chore: 更新到 $VERSION"
+
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            # Pre-release: 仅更新预览版
+            cp $GITHUB_WORKSPACE/Casks/zedg-preview.rb Casks/
+            git add Casks/zedg-preview.rb
+            git diff --cached --quiet || git commit -m "chore: 预览版更新到 $VERSION"
+          else
+            # Stable release: 更新稳定版
+            cp $GITHUB_WORKSPACE/Casks/zedg.rb Casks/
+            git add Casks/zedg.rb
+
+            # 如果稳定版比预览版更新，同步更新预览版
+            PREVIEW_VER=""
+            if [ -f Casks/zedg-preview.rb ]; then
+              PREVIEW_VER=$(grep -oP 'version "\K[^"]+' Casks/zedg-preview.rb || true)
+            fi
+
+            if [ -z "$PREVIEW_VER" ] || \
+               [ "$(printf '%s\n' "$CLEAN_VERSION" "$PREVIEW_VER" | sort -V | tail -1)" = "$CLEAN_VERSION" ] && \
+               [ "$CLEAN_VERSION" != "$PREVIEW_VER" ]; then
+              echo "稳定版 ($CLEAN_VERSION) 比预览版 ($PREVIEW_VER) 更新，同步更新预览版"
+              REPO="${{ github.repository }}"
+              cat > Casks/zedg-preview.rb <<CASK
+          cask "zedg-preview" do
+            version "$CLEAN_VERSION"
+            sha256 "$SHA256"
+
+            url "$ASSET_URL"
+            name "ZedG"
+            desc "Zed Editor (Localized / 汉化版) - Preview"
+            homepage "https://github.com/$REPO"
+
+            depends_on macos: ">= :ventura"
+
+            app "ZedG.app"
+
+            postflight do
+              system_command "/usr/bin/xattr",
+                             args: ["-rd", "com.apple.quarantine", "#{appdir}/ZedG.app"]
+            end
+
+            zap trash: [
+              "~/Library/Application Support/Zed",
+              "~/Library/Caches/dev.zed.ZedG",
+              "~/Library/Preferences/dev.zed.ZedG.plist",
+            ]
+          end
+          CASK
+              git add Casks/zedg-preview.rb
+            fi
+
+            git diff --cached --quiet || git commit -m "chore: 更新到 $VERSION"
+          fi
+
           git push origin main
