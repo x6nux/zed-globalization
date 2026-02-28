@@ -1,12 +1,16 @@
 {
-    "version": "0.226.2-pre",
+    "version": "0.225.10",
     "description": "Zed Editor (Localized / 汉化版) - Preview",
     "homepage": "https://github.com/x6nux/zed-globalization",
     "license": "GPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/x6nux/zed-globalization/releases/download/v0.226.2-pre/zedg-zh-cn-windows-aarch64-v0.226.2-pre.zip",
-            "hash": "3fd4c20e99920068b9beca26e49174d891d756b58b79495064386fc9bec04257"
+            "url": "https://github.com/x6nux/zed-globalization/releases/download/v0.225.10/zedg-zh-cn-windows-x86_64-v0.225.10.zip",
+            "hash": "6f96315761f9e60deec3d15cdde0e776eff4f80953f80ce5078d4529ed2ade90"
+        }    ,
+        "arm64": {
+            "url": "https://github.com/x6nux/zed-globalization/releases/download/v0.225.10/zedg-zh-cn-windows-aarch64-v0.225.10.zip",
+            "hash": "bb0f1d8cd9eb5aba56a0cf3661a1ded00e5e8b278bd88ab1a897ac8260c979a0"
         }
     },
     "bin": "ZedG.exe",
@@ -17,7 +21,18 @@
     "autoupdate": {
         "architecture": {
             "64bit": {
-                "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/zed-windows.zip"
+                "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/zedg-zh-cn-windows-x86_64-v$version.zip",
+                "hash": {
+                    "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/sha256sums.txt",
+                    "regex": "([a-f0-9]{64})\s+zedg-zh-cn-windows-x86_64-v$version\.zip"
+                }
+            }    ,
+            "arm64": {
+                "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/zedg-zh-cn-windows-aarch64-v$version.zip",
+                "hash": {
+                    "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/sha256sums.txt",
+                    "regex": "([a-f0-9]{64})\s+zedg-zh-cn-windows-aarch64-v$version\.zip"
+                }
             }
         }
     }
