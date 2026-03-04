@@ -14201,7 +14201,7 @@
         "Kernel issue on {channel} channel\\n\\n{err}": "内核通道 {channel} 出现问题\\n\\n{err}",
         "kernel: {error_detail}": "kernel: {error_detail}",
         "Copy Error": "复制错误",
-        "{channel} recv: {err}": "{channel} 接收: {err}",
+        "{channel} recv: {err}": "频道 {channel} 接收: {err}",
         "kernel: {}": "内核: {}",
         "recv task": "接收任务",
         "routing task": "路由任务",
