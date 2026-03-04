@@ -57508,123 +57508,129 @@
     "sequential forward append grew past depth 1": "顺序前向追加深度超过 1",
     "forward typing after split grew past depth 2": "分割后前向输入深度超过 2"
   },
-  "zed/crates/agent/src/tools/spawn_agent_tool.rs": {
+  "zed/crates/agent/src/tools/subagent_tool.rs": {
+    "context running out": "上下文即将耗尽",
     "Researching alternatives": "研究备选方案",
-    "Option::is_none": "",
-    "Failed to serialize spawn_agent output: {e}": "序列化 spawn_agent 输出失败: {e}",
-    "spawn_agent": "",
-    "Spawning agent": "正在生成智能体",
-    "Parent thread no longer exists": "父对话线程已不存在"
+    "Summarize what you found, listing the top 3 alternatives with pros/cons.": "总结你的发现,列出前 3 个备选方案及其优缺点。",
+    "'{s}'": "",
+    "The following tools do not exist: {}": "以下工具不存在:{}",
+    ", ": "",
+    "subagent": "",
+    "Subagent": "子代理",
+    "Parent thread no longer exists": "父对话线程已不存在",
+    "Subagent was cancelled by user": "子代理已被用户取消",
+    "/test": "",
+    "now": "",
+    "web_search": "",
+    "nonexistent_tool": "",
+    "'nonexistent_tool'": "",
+    "Expected error to mention the invalid tool name, got: {error_message}": "",
+    "fake_tool_a": "",
+    "fake_tool_b": "",
+    "'fake_tool_a'": "",
+    "'fake_tool_b'": "",
+    "Expected error to mention both invalid tool names, got: {error_message}": "",
+    "'now'": "",
+    "Expected error to not mention valid tool 'now', got: {error_message}": ""
   },
-  "zed/crates/agent_ui/src/ui/undo_reject_toast.rs": {
-    "Agent Changes Rejected": "Agent 更改已拒绝",
-    "Undo": "撤销"
+  "zed/crates/collab/src/db/queries/access_tokens.rs": {
+    "test-support": "",
+    "no such access token": "无此访问令牌"
   },
-  "zed/crates/etw_tracing/etw_tracing.rs": {
-    "windows": "",
-    "ETW trace saved to {display_path}": "ETW 追踪已保存至 {display_path}",
-    "Show in File Manager": "在文件管理器中显示",
-    "ETW recording timed out. Trace saved to {display_path}": "ETW 录制超时。追踪已保存至 {display_path}",
-    "ETW recording cancelled": "ETW 录制已取消",
-    "ETW recording ended unexpectedly": "ETW 录制意外结束",
-    "Failed to complete ETW recording: {error:#}": "无法完成 ETW 录制: {error:#}",
-    "No active ETW recording to stop": "没有可停止的活动 ETW 录制",
-    "Stopping ETW recording...": "正在停止 ETW 录制...",
-    "Failed to stop ETW recording: {error:#}": "无法停止 ETW 录制: {error:#}",
-    "No active ETW recording to cancel": "没有可取消的活动 ETW 录制",
-    "Cancelling ETW recording...": "正在取消 ETW 录制...",
-    "Failed to cancel ETW recording: {error:#}": "无法取消 ETW 录制: {error:#}",
-    "ETW recording is already in progress": "ETW 录制已在进行中",
-    "zed-trace.etl": "",
-    "Failed to pick save location: {error:#}": "无法选择保存位置: {error:#}",
-    "Failed to start ETW recording: {error:#}": "无法启动 ETW 录制: {error:#}",
-    "Receive status from subprocess": "从子进程接收状态",
-    "ETW recording started": "ETW 录制已开始",
-    "Zed": "",
-    "CPU.Verbose.Memory": "",
-    "GPU.Light.Memory": "",
-    "DiskIO.Light.Memory": "",
-    "FileIO.Light.Memory": "",
-    "ZedHeapProvider": "",
-    "Set": "",
-    "{pid}": "",
-    "Add": "",
-    "HeapCollector_WPRHeapCollector": "",
-    "<?xml version=": "",
-    " encoding=": "",
-    "1.0": "",
-    "Zed Industries": "",
-    "ZedHeap.Verbose.Memory": "",
-    "Heap.Verbose.Memory": "",
-    "ZedHeap": "",
-    "Verbose": "",
-    "Memory": "",
-    "Heap tracing": "",
-    "TraceMerge_Default": "",
-    "true": "",
-    "HRESULT: {hresult}": "HRESULT: {hresult}",
-    "Message": "",
-    "Description": "",
-    "Detail": "",
-    "\\n  {label}: {value}": "\\n  {label}: {value}",
-    "\\n  Parse error at line: {line}": "\\n  解析错误位于行: {line}",
-    ", column: {col}": ", 列: {col}",
-    "Element type": "",
-    "Element ID": "",
-    "Profile": "",
-    "Collector": "",
-    "Provider": "",
-    "Unknown": "",
-    "\\n  Object type: {name}": "\\n  对象类型: {name}",
-    "\\n  Inner HRESULT: {hr}": "\\n  内部 HRESULT: {hr}",
-    "\\n  Description: {desc}": "\\n  描述: {desc}",
-    "\\n  Caused by:": "\\n  原因:",
-    "\\n  IErrorInfo: {desc}": "\\n  IErrorInfo: {desc}",
-    "cast to IUnknown": "转换为 IUnknown",
-    "{context}": "{上下文}",
-    "WPRCCreateInstance failed": "WPRCCreateInstance 失败",
-    "Load built-in profile '{profile_name}'": "加载内置配置文件 '{profile_name}'",
-    "Add profile '{profile_name}' to collection": "将配置文件 '{profile_name}' 添加到集合",
-    "Load profile from XML string": "从 XML 字符串加载配置文件",
-    "Add ZedHeap profile to collection": "将 ZedHeap 配置文件添加到集合",
-    "COM initialization failed": "COM 初始化失败",
-    "Connect to parent socket": "连接到父套接字",
-    "{e:#}": "{e:#}",
-    "Start WPR recording": "开始 WPR 录制",
-    "Cancel WPR recording": "取消 WPR 录制",
-    "Stop WPR recording": "停止 WPR 录制",
-    "Failed to set socket receive timeout: setsockopt returned {ret}": "无法设置套接字接收超时: setsockopt 返回 {ret}",
-    "Failed to receive ETW command, treating as timed-out Save: {error:#}": "无法接收 ETW 命令,视为超时保存: {error:#}",
-    "zed-etw-{}.sock": "",
-    "Bind Unix socket for ETW IPC": "绑定用于 ETW IPC 的 Unix 套接字",
-    "Failed to get current exe path": "无法获取当前 exe 路径",
-    "--record-etw-trace --etw-zed-pid {} --etw-output \\\"{}\\\" --etw-socket \\\"{}\\\"": "",
-    "runas\\0": "",
-    "{}\\0": "",
-    "{args}\\0": "",
-    "ShellExecuteW failed to launch elevated process (code: {result_code})": "ShellExecuteW 无法启动提升权限的进程 (代码: {result_code})",
-    "Accept subprocess connection": "接受子进程连接",
-    "Wait for Started status": "等待已启动状态",
-    "Subprocess reported error during start: {message}": "子进程在启动期间报告错误: {message}",
-    "Unexpected status from subprocess: {other:?}": "来自子进程的意外状态: {other:?}",
+  "zed/crates/collab/src/db/tables/access_token.rs": {
+    "access_tokens": "",
+    "super::user::Entity": "",
+    "Column::UserId": "",
+    "super::user::Column::Id": ""
+  },
+  "zed/crates/component_preview/src/component_preview_example.rs": {
+    "preview": "",
+    "cmd-q": "",
+    "CARGO_PKG_VERSION": "",
+    "component_preview": "",
+    "Failed to create HTTP client": "无法创建 HTTP 客户端",
+    "Failed to create component preview": "创建组件预览失败",
+    "Failed to open component preview window": "无法打开组件预览窗口"
+  },
+  "zed/crates/edit_prediction_cli/src/sync_deployments.rs": {
+    "zeta-2": "",
+    "Edit Prediction Deployment": "",
+    "https://api.baseten.co/v1/models": "",
+    "Authorization": "",
+    "Api-Key {api_key}": "",
+    "Accept": "",
+    "application/json": "",
+    "failed to fetch baseten models": "获取 Baseten 模型失败",
+    "failed to read baseten models response": "读取 Baseten 模型响应失败",
+    "baseten models API http {}: {}": "Baseten 模型 API http {}: {}",
+    "failed to parse baseten models response": "解析 Baseten 模型响应失败",
+    "https://api.baseten.co/v1/models/{model_id}/deployments": "",
+    "failed to fetch baseten deployments": "获取 Baseten 部署失败",
+    "failed to read baseten deployments response": "读取 Baseten 部署响应失败",
+    "baseten deployments API http {}: {}": "Baseten 部署 API http {}: {}",
+    "failed to parse deployments response": "解析部署响应失败",
+    "none": "",
+    "unknown": "",
+    "async query response missing statementHandle": "异步查询响应缺少 statementHandle",
+    "query still running after {} poll attempts ({} seconds)": "查询在 {} 次轮询尝试({} 秒)后仍在运行",
+    "snowflake error: code={} message={}": "Snowflake 错误: code={} message={}",
+    "<no message>": "<无信息>",
+    "statement": "",
+    "timeout": "",
+    "database": "",
+    "EVENTS": "",
+    "schema": "",
+    "PUBLIC": "",
+    "warehouse": "",
+    "DBT": "",
+    "role": "",
+    "model_version_id": "",
+    "experiment_name": "",
+    "environment": "",
+    "model_id": "",
+    "status": "",
+    "created_at": "",
+    "failed to serialize event_properties": "序列化 event_properties 失败",
+    "1": "",
     "type": "",
-    "Serialize message": "序列化消息",
-    "{json}": "{json}",
-    "Write to socket": "写入套接字",
-    "Flush socket": "刷新套接字",
-    "Read from socket": "从套接字读取",
-    "Socket closed before a message was received": "套接字在收到消息前已关闭",
-    "Parse message": "解析消息"
+    "TEXT": "",
+    "value": "",
+    "2": "",
+    "bindings": "",
+    "3": "",
+    "version_id": "",
+    "experiment": "",
+    "  ": "",
+    "{:width$}": "",
+    "─": "",
+    "BASETEN_API_KEY": "",
+    "missing required environment variable BASETEN_API_KEY": "缺少必需的环境变量 BASETEN_API_KEY",
+    "EP_SNOWFLAKE_API_KEY": "",
+    "missing required environment variable EP_SNOWFLAKE_API_KEY": "缺少必需的环境变量 EP_SNOWFLAKE_API_KEY",
+    "EP_SNOWFLAKE_BASE_URL": "",
+    "missing required environment variable EP_SNOWFLAKE_BASE_URL (e.g. https://<account>.snowflakecomputing.com)": "缺少必需的环境变量 EP_SNOWFLAKE_BASE_URL (例如 https://<account>.snowflakecomputing.com)",
+    "EP_SNOWFLAKE_ROLE": "",
+    "model '{}' not found on baseten. Available: {:?}": "在 Baseten 上未找到模型 '{}'。可用模型: {:?}",
+    "Fetching existing deployments from Snowflake...": "正在从 Snowflake 获取现有部署...",
+    "failed to fetch existing deployments from Snowflake": "从 Snowflake 获取现有部署失败",
+    "Found {} existing deployment(s) in Snowflake.": "在 Snowflake 中发现 {} 个现有部署。",
+    "failed to fetch deployments for model '{}'": "获取模型 '{}' 的部署失败",
+    "No deployments found on Baseten.": "在 Baseten 上未找到部署。",
+    "Found {} deployment(s) on Baseten for model '{}'.": "在 Baseten 上为模型 '{}' 发现 {} 个部署。",
+    "Diff: {} insert(s), {} update(s), {} unchanged": "差异: {} 个插入, {} 个更新, {} 个未更改",
+    "  INSERT [{}/{}] {} -> {} (version_id={})": "  插入 [{}/{}] {} -> {} (version_id={})",
+    "failed to insert deployment '{}' (model_version_id={})": "插入部署 '{}' (model_version_id={}) 失败",
+    "update record missing from existing map": "现有映射中缺少更新记录",
+    "  UPDATE [{}/{}] version_id={}: environment '{}' -> '{}', experiment '{}' -> '{}'": "  更新 [{}/{}] version_id={}: environment '{}' -> '{}', experiment '{}' -> '{}'}",
+    "failed to update deployment '{}' (model_version_id={})": "更新部署 '{}' (model_version_id={}) 失败",
+    "All deployments up to date, no writes needed.": "所有部署均为最新,无需写入。"
   },
-  "zed/crates/gpui/src/platform/layer_shell.rs": {
-    "Compositor doesn't support zwlr_layer_shell_v1": "合成器不支持 zwlr_layer_shell_v1"
+  "zed/crates/gpui/src/platform/linux.rs": {
+    "wayland": "",
+    "x11": "",
+    "screen-capture": ""
   },
-  "zed/crates/gpui_linux/src/gpui_linux.rs": {
-    "linux": "",
-    "freebsd": ""
-  },
-  "zed/crates/gpui_linux/src/linux.rs": {},
-  "zed/crates/gpui_linux/src/linux/dispatcher.rs": {
+  "zed/crates/gpui/src/platform/linux/dispatcher.rs": {
     "Worker-{i}": "",
     "background thread {}: ran runnable. took: {:?}": "后台线程 {}: 已运行任务。耗时: {:?}",
     "Timer": "",
@@ -57636,19 +57642,20 @@
     "Failed to create a Ping.": "创建 Ping 失败。",
     "nightly_coverage": ""
   },
-  "zed/crates/gpui_linux/src/linux/headless/client.rs": {
+  "zed/crates/gpui/src/platform/linux/headless/client.rs": {
     "unknown": "",
+    "screen-capture": "",
     "Headless mode does not support screen capture.": "无头模式不支持屏幕捕获。",
     "neither DISPLAY nor WAYLAND_DISPLAY is set. You can run in headless mode": "未设置 DISPLAY 或 WAYLAND_DISPLAY。您可以在无头模式下运行",
     "headless": "",
     "App is already running": "应用程序已在运行"
   },
-  "zed/crates/gpui_linux/src/linux/platform.rs": {
+  "zed/crates/gpui/src/platform/linux/platform.rs": {
     "wayland": "",
     "x11": "",
     "zed-github-account": "",
     "Couldn't open file picker due to missing xdg-desktop-portal implementation.": "无法打开文件选择器,缺少 xdg-desktop-portal 实现。",
-    "gpui_linux was compiled without the screen-capture feature": "gpui_linux 编译时未包含屏幕捕获功能",
+    "screen-capture": "",
     "Failed to get app path: {:?}": "获取应用路径失败: {:?}",
     "Restarting process, using app path: {:?}": "正在重启进程,使用应用路径: {:?}",
     "We are restarting ourselves, using std command thus is fine": "",
@@ -57660,7 +57667,6 @@
     "hide is not implemented on Linux, ignoring the call": "",
     "hide_other_apps is not implemented on Linux, ignoring the call": "",
     "unhide_other_apps is not implemented on Linux, ignoring the call": "",
-    "screen-capture": "",
     "Open Folder": "打开文件夹",
     "Open File": "打开文件",
     "Save File": "保存文件",
@@ -57813,7 +57819,7 @@
     "/sys/dev/char/{major}:{minor}/device/device": "",
     "Compositor GPU hint: vendor={:#06x}, device={:#06x} (from dev {major}:{minor})": ""
   },
-  "zed/crates/gpui_linux/src/linux/text_system.rs": {
+  "zed/crates/gpui/src/platform/linux/text_system.rs": {
     "": "",
     "requested font family contains no font matching the other parameters": "请求的字体家族不包含与其他参数匹配的字体",
     "IBM Plex Sans": "",
@@ -57825,10 +57831,10 @@
     "Incorrect feature flag format": "特性标志格式不正确",
     "NotoColorEmoji": ""
   },
-  "zed/crates/gpui_linux/src/linux/wayland.rs": {
+  "zed/crates/gpui/src/platform/linux/wayland.rs": {
     "CursorStyle::None should be handled separately in the client": "CursorStyle::None 应在客户端中单独处理"
   },
-  "zed/crates/gpui_linux/src/linux/wayland/client.rs": {
+  "zed/crates/gpui/src/platform/linux/wayland/client.rs": {
     "unknown": "",
     "The pointer should always be valid when dispatching in wayland": "",
     "wl_seat below required version: {} < {}": "",
@@ -57840,12 +57846,12 @@
     "window is focused by pointer": "",
     "App is already running": "应用程序已在运行",
     "Wayland": "",
-    "activation token received with no pending activation": "",
-    "Received keymap format {:?}, expected XkbV1": "",
-    "Failed to create keymap": "",
+    "activation token received with no pending activation": "收到激活令牌但没有待处理的激活",
+    "Received keymap format {:?}, expected XkbV1": "接收到键盘映射格式 {:?},应为 XkbV1",
+    "Failed to create keymap": "创建键盘映射失败",
     "error reading drag and drop pipe: {err:?}": "读取拖放管道时出错: {err:?}"
   },
-  "zed/crates/gpui_linux/src/linux/wayland/clipboard.rs": {
+  "zed/crates/gpui/src/platform/linux/wayland/clipboard.rs": {
     "text/plain;charset=utf-8": "",
     "UTF8_STRING": "",
     "text/plain": "",
@@ -57856,29 +57862,32 @@
     "\\n": "",
     "pid/{}": ""
   },
-  "zed/crates/gpui_linux/src/linux/wayland/cursor.rs": {
+  "zed/crates/gpui/src/platform/linux/wayland/cursor.rs": {
     "Wayland: Failed to load cursor theme": "Wayland: 无法加载光标主题",
     "Wayland: Unable to load cursor themes": "Wayland: 无法加载光标主题",
     "wayland: Unable to fallback on default cursor icon '{}' for theme '{}'": "wayland: 无法回退到主题 '{}' 的默认光标图标 '{}'",
     "default": ""
   },
-  "zed/crates/gpui_linux/src/linux/wayland/display.rs": {
+  "zed/crates/gpui/src/platform/linux/wayland/display.rs": {
     "Wayland display does not have a name": "Wayland 显示器没有名称"
   },
-  "zed/crates/gpui_linux/src/linux/wayland/window.rs": {
+  "zed/crates/gpui/src/platform/linux/wayland/layer_shell.rs": {
+    "Compositor doesn't support zwlr_layer_shell_v1": "合成器不支持 zwlr_layer_shell_v1"
+  },
+  "zed/crates/gpui/src/platform/linux/wayland/window.rs": {
     "Unknown decoration mode": "未知的装饰模式",
     "Unknown decoration mode: {}": "未知的装饰模式: {}",
     "": "",
     "Server-side decorations requested, but the Wayland server does not support them. Falling back to client-side decorations.": "请求服务端装饰,但 Wayland 服务器不支持。回退到客户端装饰。"
   },
-  "zed/crates/gpui_linux/src/linux/x11/client.rs": {
+  "zed/crates/gpui/src/platform/linux/x11/client.rs": {
     "master devices": "",
     "GPUI_X11_SCALE_FACTOR": "",
-    "bug: xim connection not set": "bug: XIM 连接未设置",
-    "bug: xim handler not set": "bug: XIM 处理器未设置",
+    "bug: xim connection not set": "",
+    "bug: xim handler not set": "",
     "Failed to initialize event loop handling of foreground tasks: {err:?}": "初始化前台任务的事件循环处理失败: {err:?}",
-    "XInput XiQueryVersion failed": "XInput XiQueryVersion 失败",
-    "XInput version >= 2 required.": "需要 XInput 版本 >= 2。",
+    "XInput XiQueryVersion failed": "",
+    "XInput version >= 2 required.": "",
     "Failed to get XCB atoms": "获取 XCB 原子失败",
     "x11: compositor present: {}, gtk_frame_extents_supported: {}": "x11: 混成器存在: {}, gtk_frame_extents_supported: {}",
     "Failed to initialize XKB extension": "初始化 XKB 扩展失败",
@@ -57889,20 +57898,20 @@
     "Failed to initialize X11 event source: {err:?}": "初始化 X11 事件源失败: {err:?}",
     "Failed to initialize XDP event source: {err:?}": "初始化 XDP 事件源失败: {err:?}",
     "error while polling for X11 events: {err:?}": "轮询 X11 事件时出错: {err:?}",
-    "XIMClientError: {}": "XIMClientError: {}",
+    "XIMClientError: {}": "",
     "Failed to get window for IME positioning": "获取 IME 定位窗口失败",
-    "bug: xim handler not set in reset_ime": "bug: reset_ime 中 XIM 处理器未设置",
+    "bug: xim handler not set in reset_ime": "",
     "x": "",
     "Failed to query pointer position": "查询指针位置失败",
     "Failed to convert selection for drag and drop": "转换拖放选择失败",
-    "Failed to get XDND_DATA": "获取 XDND_DATA 失败",
+    "Failed to get XDND_DATA": "",
     "X11: Failed to set window bounds": "X11: 设置窗口边界失败",
     "X11: Failed to handle property notify": "X11: 处理属性通知失败",
     "Unknown x11 button: {}": "未知的 X11 按钮: {}",
     "Failed to set cursor style": "设置光标样式失败",
     "X11: Failed to forward XIM event": "X11: 转发 XIM 事件失败",
-    "bug: Failed to get window for XIM commit": "bug: 获取 XIM 提交窗口失败",
-    "bug: Failed to get window for XIM preedit": "bug: 获取 XIM 预编辑窗口失败",
+    "bug: Failed to get window for XIM commit": "",
+    "bug: Failed to get window for XIM preedit": "",
     "X11": "",
     "screen-capture": "",
     "X11: Failed to generate window ID": "X11: 生成窗口 ID 失败",
@@ -57913,9 +57922,9 @@
     "X11: Failed to write to clipboard (clipboard)": "X11: 写入剪贴板失败",
     "X11: Failed to read from clipboard (primary)": "X11: 读取剪贴板 (主选区) 失败",
     "X11: Failed to read from clipboard (clipboard)": "X11: 读取剪贴板失败",
-    "X11Client::run called but it's already running": "X11Client::run 已调用,但已在运行中",
-    "bug: XIM connection not set": "bug: XIM 连接未设置",
-    "bug: XIM handler not set": "bug: XIM 处理器未设置",
+    "X11Client::run called but it's already running": "",
+    "bug: XIM connection not set": "",
+    "bug: XIM handler not set": "",
     "Failed to get screen resources": "获取屏幕资源失败",
     "Failed to initialize window refresh timer": "初始化窗口刷新计时器失败",
     "X11: error while creating invisible cursor": "X11: 创建不可见光标时出错",
@@ -57932,7 +57941,7 @@
     "Failed to get {atom_name}": "获取 {atom_name} 失败",
     "_NET_SUPPORTING_WM_CHECK": "",
     "Compositor detection: _NET_WM_CM_S?={}, _NET_WM_CM_OWNER={}, _NET_SUPPORTING_WM_CHECK={}": "混成器检测: _NET_WM_CM_S?={}, _NET_WM_CM_OWNER={}, _NET_SUPPORTING_WM_CHECK={}",
-    "Failed to get _NET_SUPPORTED": "获取 _NET_SUPPORTED 失败",
+    "Failed to get _NET_SUPPORTED": "",
     "Failed to get XDnD supported atoms": "获取 XDnD 支持的原子失败",
     "Failed to send XDnD finished event": "发送 XDnD 完成事件失败",
     "Failed to send XDnD status event": "发送 XDnD 状态事件失败",
@@ -57951,7 +57960,7 @@
     "Using default scale factor: 1.0": "使用默认缩放因子: 1.0",
     "Calculated DPI factor {} is invalid, using 1.0": "计算出的 DPI 因子 {} 无效,使用 1.0"
   },
-  "zed/crates/gpui_linux/src/linux/x11/clipboard.rs": {
+  "zed/crates/gpui/src/platform/linux/x11/clipboard.rs": {
     "text/plain;charset=utf-8": "",
     "text/plain;charset=UTF-8": "",
     "text/plain": "",
@@ -57989,8 +57998,8 @@
     "SelectionRequest - selection is: {}, target is {}": "SelectionRequest - 选区为: {}, 目标为 {}",
     "The contents were written to the clipboard manager.": "内容已写入剪贴板管理器。",
     "Received a `SelectionNotify` from a selection other than the CLIPBOARD_MANAGER. This is unexpected in this thread.": "收到了来自 CLIPBOARD_MANAGER 以外选区的 `SelectionNotify`。在此线程中这是意外的。",
-    "notified": "已通知",
-    "written": "已写入",
+    "notified": "",
+    "written": "",
     "The clipboard manager indicated that it's done requesting the contents from us.": "剪贴板管理器表示已完成向我们请求内容。",
     "Received unwanted event: {:?}": "收到不需要的事件: {:?}",
     "Clipboard": "剪贴板",
@@ -58001,19 +58010,19 @@
     "Failed to flush the clipboard window. Error: {}": "刷新剪贴板窗口失败。错误: {}",
     "The clipboard server thread panicked. Panic message: '{}'": "剪贴板服务器线程崩溃。崩溃消息: '{}'",
     "The clipboard server thread panicked.": "剪贴板服务器线程崩溃。",
-    "selections": "选区",
+    "selections": "",
     "Right now we don't wait for clipboard contents to sync on app close, but we may in the future": "目前我们在应用关闭时不会等待剪贴板内容同步,但将来可能会",
     "other party": "其他方",
     "The clipboard contents were not available in the requested format or the clipboard is empty.": "剪贴板内容在请求的格式下不可用,或剪贴板为空。",
     "The native clipboard is not accessible due to being held by an other party.": "原生剪贴板因被其他方占用而无法访问。",
     "The image or the text that was about the be transferred to/from the clipboard could not be converted to the appropriate format.": "即将传入或传出剪贴板的图像或文本无法转换为适当的格式。",
     "Unknown error while interacting with the clipboard: {description}": "与剪贴板交互时发生未知错误: {description}",
-    "{name} - \\\"{self}\\\"": "{name} - \\\"{self}\\\""
+    "{name} - \"{self}\"": "{name} - \"{self}\""
   },
-  "zed/crates/gpui_linux/src/linux/x11/display.rs": {
+  "zed/crates/gpui/src/platform/linux/x11/display.rs": {
     "No screen found with index {x_screen_index}": "未找到索引为 {x_screen_index} 的屏幕"
   },
-  "zed/crates/gpui_linux/src/linux/x11/window.rs": {
+  "zed/crates/gpui/src/platform/linux/x11/window.rs": {
     "text/uri-list": "",
     "text/plain;charset=utf-8": "",
     "text/plain": "",
@@ -58036,6 +58045,7 @@
     "Window bounds contain a zero value. height={}, width={}. Falling back to defaults.": "窗口边界包含零值。height={}, width={}。回退到默认值。",
     "X11 CreateWindow failed. depth: {}, x_window: {}, visual_set.root: {}, bounds.origin.x.0: {}, bounds.origin.y.0: {}, bounds.size.width.0: {}, bounds.size.height.0: {}": "X11 CreateWindow 失败。depth: {}, x_window: {}, visual_set.root: {}, bounds.origin.x.0: {}, bounds.origin.y.0: {}, bounds.size.width.0: {}, bounds.size.height.0: {}",
     "X11 ChangeProperty for _NET_WM_PID failed.": "X11 ChangeProperty _NET_WM_PID 失败。",
+    "X11 change of WM_SIZE_HINTS failed. min_size: {:?}": "X11 更改 WM_SIZE_HINTS 失败。min_size: {:?}",
     "X11 ConfigureWindow failed. x: {}, y: {}": "X11 ConfigureWindow 失败。x: {}, y: {}",
     "X11 ChangeProperty8 on window title failed.": "X11 ChangeProperty8 设置窗口标题失败。",
     "X11 ChangeProperty32 setting window type for pop-up failed.": "X11 ChangeProperty32 设置弹出窗口类型失败。",
@@ -58048,7 +58058,6 @@
     "X11 ChangeProperty32 setting sync request counter failed.": "X11 ChangeProperty32 设置同步请求计数器失败。",
     "X11 XiSelectEvents failed.": "X11 XiSelectEvents 失败。",
     "X11 XiSelectEvents for device changes failed.": "X11 XiSelectEvents 设备更改失败。",
-    "X11 change of WM_SIZE_HINTS failed. max_size: {:?}": "X11 更改 WM_SIZE_HINTS 失败。max_size: {:?}",
     "X11 DestroyWindow failed while cleaning it up after setup failure.": "设置失败后清理时 X11 DestroyWindow 失败。",
     "X11 DestroyWindow failure.": "X11 DestroyWindow 失败。",
     "X11 TranslateCoordinates failed.": "X11 TranslateCoordinates 失败。",
@@ -58075,102 +58084,33 @@
     "x11: no compositor present, falling back to server-side window decorations": "x11: 未检测到合成器,回退到服务端窗口装饰",
     "X11 ChangeProperty for _MOTIF_WM_HINTS failed.": "X11 ChangeProperty _MOTIF_WM_HINTS 失败。"
   },
-  "zed/crates/gpui_linux/src/linux/x11/xim_handler.rs": {
+  "zed/crates/gpui/src/platform/linux/x11/xim_handler.rs": {
     "C": ""
   },
-  "zed/crates/gpui_linux/src/linux/xdg_desktop_portal.rs": {
+  "zed/crates/gpui/src/platform/linux/xdg_desktop_portal.rs": {
     "x11": "",
     "org.gnome.desktop.interface": "",
     "cursor-theme": "",
-    "cursor-size": ""
+    "cursor-size": "",
+    "linux": "",
+    "freebsd": ""
   },
-  "zed/crates/gpui_macos/build.rs": {
-    "build scripts are exempt": "",
-    "macos": "",
-    "runtime_shaders": "",
-    "cargo:rustc-link-lib=framework=System": "",
-    "src/dispatch.h": "",
-    "_dispatch_main_q": "",
-    "_dispatch_source_type_data_add": "",
-    "DISPATCH_QUEUE_PRIORITY_HIGH": "",
-    "DISPATCH_QUEUE_PRIORITY_DEFAULT": "",
-    "DISPATCH_QUEUE_PRIORITY_LOW": "",
-    "DISPATCH_TIME_NOW": "",
-    "dispatch_get_global_queue": "",
-    "dispatch_async_f": "",
-    "dispatch_after_f": "",
-    "dispatch_time": "",
-    "dispatch_source_merge_data": "",
-    "dispatch_source_create": "",
-    "dispatch_source_set_event_handler_f": "",
-    "dispatch_resume": "",
-    "dispatch_suspend": "",
-    "dispatch_source_cancel": "",
-    "dispatch_set_context": "",
-    "unable to generate bindings": "无法生成绑定",
+  "zed/crates/gpui/src/platform/mac.rs": {
+    "screen-capture": "",
+    "font-kit": "",
+    "": "",
+    "{{NSRange={}{}}}": ""
+  },
+  "zed/crates/gpui/src/platform/mac/dispatcher.rs": {
     "OUT_DIR": "",
-    "dispatch_sys.rs": "",
-    "couldn't write dispatch bindings": "无法写入 dispatch 绑定",
-    "scene.h": "",
-    "SCENE_H": "",
-    "Bounds": "",
-    "Corners": "",
-    "Edges": "",
-    "Size": "",
-    "Pixels": "",
-    "PointF": "",
-    "Hsla": "",
-    "ContentMask": "",
-    "Uniforms": "",
-    "AtlasTile": "",
-    "PathRasterizationInputIndex": "",
-    "PathVertex_ScaledPixels": "",
-    "PathRasterizationVertex": "",
-    "ShadowInputIndex": "",
-    "Shadow": "",
-    "QuadInputIndex": "",
-    "Underline": "",
-    "UnderlineInputIndex": "",
-    "Quad": "",
-    "BorderStyle": "",
-    "SpriteInputIndex": "",
-    "MonochromeSprite": "",
-    "PolychromeSprite": "",
-    "PathSprite": "",
-    "SurfaceInputIndex": "",
-    "SurfaceBounds": "",
-    "TransformationMatrix": "",
-    "CARGO_MANIFEST_DIR": "",
-    "src/scene.rs": "",
-    "src/geometry.rs": "",
-    "src/color.rs": "",
-    "src/window.rs": "",
-    "src/platform.rs": "",
-    "src/metal_renderer.rs": "",
-    "cargo:rerun-if-changed={}": "",
-    "Unable to generate bindings": "无法生成绑定",
-    "stitch": "",
-    "{header_contents}\\n{shader_contents}": "",
-    "stitched_shaders.metal": "",
-    "./src/shaders.metal": "",
-    "shaders.air": "",
-    "shaders.metallib": "",
-    "xcrun": "",
-    "-sdk": "",
-    "macosx": "",
-    "metal": "",
-    "-gline-tables-only": "",
-    "-mmacosx-version-min=10.15.7": "",
-    "-MO": "",
-    "-c": "",
-    "-include": "",
-    "-o": "",
-    "cargo::error=metal shader compilation failed:\\n{}": "cargo::error=Metal 着色器编译失败:\n{}",
-    "metallib": "",
-    "cargo::error=metallib compilation failed:\\n{}": "cargo::error=metallib 编译失败:\n{}"
+    "/dispatch_sys.rs": "",
+    "RealtimeAudio priority should use spawn_realtime, not dispatch": "RealtimeAudio 优先级应使用 spawn_realtime,而非 dispatch",
+    "C": "",
+    "failed to set thread extended policy": "设置线程扩展策略失败",
+    "failed to set thread precedence policy": "设置线程优先级策略失败",
+    "failed to set thread time constraint policy": "设置线程时间约束策略失败"
   },
-  "zed/crates/gpui_macos/src/dispatcher.rs": {},
-  "zed/crates/gpui_macos/src/display.rs": {
+  "zed/crates/gpui/src/platform/mac/display.rs": {
     "NSScreenNumber": "",
     "Failed to get active display list. Result: {result}": "获取活动显示器列表失败。结果: {result}",
     "ApplicationServices": "",
@@ -58179,7 +58119,7 @@
     "AppKit returned a null from CGDisplayCreateUUIDFromDisplayID": "AppKit 从 CGDisplayCreateUUIDFromDisplayID 返回了空值",
     "global display": ""
   },
-  "zed/crates/gpui_macos/src/display_link.rs": {
+  "zed/crates/gpui/src/platform/mac/display_link.rs": {
     "C": "",
     "DisplayLink": "",
     "CoreFoundation": "",
@@ -58191,7 +58131,7 @@
     "could not start display link, code: {}": "无法启动显示链接,代码: {}",
     "could not stop display link, code: {}": "无法停止显示链接,代码: {}"
   },
-  "zed/crates/gpui_macos/src/events.rs": {
+  "zed/crates/gpui/src/platform/mac/events.rs": {
     "space": "",
     "backspace": "",
     "escape": "",
@@ -58247,14 +58187,7 @@
     "enter": "",
     "": ""
   },
-  "zed/crates/gpui_macos/src/gpui_macos.rs": {
-    "macos": "",
-    "screen-capture": "",
-    "font-kit": "",
-    "": "",
-    "{{NSRange={}{}}}": ""
-  },
-  "zed/crates/gpui_macos/src/keyboard.rs": {
+  "zed/crates/gpui/src/platform/mac/keyboard.rs": {
     "switch window": "切换窗口",
     "": "",
     "com.apple.keylayout.ABC-AZERTY": "",
@@ -58317,10 +58250,10 @@
     "com.apple.keylayout.USInternational-PC": "",
     "com.apple.keylayout.Welsh": ""
   },
-  "zed/crates/gpui_macos/src/metal_atlas.rs": {
+  "zed/crates/gpui/src/platform/mac/metal_atlas.rs": {
     "failed to allocate": "分配失败"
   },
-  "zed/crates/gpui_macos/src/metal_renderer.rs": {
+  "zed/crates/gpui/src/platform/mac/metal_renderer.rs": {
     "test-support": "",
     "runtime_shaders": "",
     "OUT_DIR": "",
@@ -58364,12 +58297,12 @@
     "error locating fragment function": "定位片段函数时出错",
     "could not create render pipeline state": "无法创建渲染管线状态"
   },
-  "zed/crates/gpui_macos/src/open_type.rs": {
+  "zed/crates/gpui/src/platform/mac/open_type.rs": {
     "CoreText": "",
     "framework": "",
     "C": ""
   },
-  "zed/crates/gpui_macos/src/pasteboard.rs": {
+  "zed/crates/gpui/src/platform/mac/pasteboard.rs": {
     "zed-text-hash": "",
     "zed-metadata": "",
     "public.utf8-plain-text": "",
@@ -58387,8 +58320,60 @@
     "2": "",
     "text from other app": ""
   },
-  "zed/crates/gpui_macos/src/platform.rs": {},
-  "zed/crates/gpui_macos/src/screen_capture.rs": {
+  "zed/crates/gpui/src/platform/mac/platform.rs": {
+    "platform": "",
+    "GPUIApplication": "",
+    "GPUIApplicationDelegate": "",
+    "C": "",
+    "font-kit": "",
+    "Window": "",
+    "Workspace": "",
+    "Pane": "",
+    "Editor": "",
+    "cut:": "",
+    "copy:": "",
+    "paste:": "",
+    "selectAll:": "",
+    "undo:": "",
+    "redo:": "",
+    "handleGPUIMenuItem:": "",
+    "": "",
+    "app": "",
+    "$1": "",
+    "We are restarting ourselves, using std command thus is fine": "",
+    "/bin/bash": "",
+    "-c": "",
+    "failed to spawn restart script: {:?}": "无法启动重启脚本: {:?}",
+    "screen-capture": "",
+    "Failed to create NSURL from string: {}": "无法从字符串创建 NSURL: {}",
+    "macOS 12.0 or later is required to register URL schemes": "注册 URL 协议需要 macOS 12.0 或更高版本",
+    "Can only register URL scheme in bundled apps": "只能在打包应用中注册 URL 协议",
+    "Cannot register URL scheme until app is installed": "应用安装后才能注册 URL 协议",
+    "Failed to register: {msg:?}": "注册失败: {msg:?}",
+    "open": "",
+    "invoking open command": "调用 打开 命令",
+    "app is not running inside a bundle": "应用未在 Bundle 中运行",
+    "resource not found": "未找到资源",
+    "updating": "更新",
+    "creating": "创建",
+    "{verb} password failed: {status}": "{verb}密码失败: {status}",
+    "reading password failed: {status}": "读取密码失败: {status}",
+    "keychain item was not a dictionary": "钥匙串项不是字典",
+    "account was missing from keychain item": "钥匙串项中缺少账户",
+    "account was not a string": "账户不是字符串",
+    "password was missing from keychain item": "钥匙串项中缺少密码",
+    "password was not a string": "密码不是字符串",
+    "delete password failed: {status}": "删除密码失败: {status}",
+    "NSAutoFillHeuristicControllerEnabled": "",
+    "NSTextInputContextKeyboardSelectionDidChangeNotification": "",
+    "NSProcessInfoThermalStateDidChangeNotification": "",
+    "error converting path to string: {}": "路径转换为字符串出错: {}",
+    "url is not a file path: {}": "URL 不是文件路径: {}",
+    "Carbon": "",
+    "framework": "",
+    "Security": ""
+  },
+  "zed/crates/gpui/src/platform/mac/screen_capture.rs": {
     "frame_callback": "",
     "failed to add stream output {message:?}": "添加流输出失败 {message:?}",
     "failed to start screen capture stream {message:?}": "启动屏幕捕获流失败 {message:?}",
@@ -58400,7 +58385,13 @@
     "C": "",
     "GPUIStreamOutput": ""
   },
-  "zed/crates/gpui_macos/src/text_system.rs": {
+  "zed/crates/gpui/src/platform/mac/status_item.rs": {
+    "state": "",
+    "GPUIStatusItemView": "",
+    "C": "",
+    "CALayerDelegate": ""
+  },
+  "zed/crates/gpui/src/platform/mac/text_system.rs": {
     "C": "",
     "Could not load an embedded font.": "无法加载内嵌字体。",
     ".AppleSystemUIFont": "",
@@ -58427,7 +58418,7 @@
     "c": "",
     "": ""
   },
-  "zed/crates/gpui_macos/src/window.rs": {
+  "zed/crates/gpui/src/platform/mac/window.rs": {
     "test-support": "",
     "windowState": "",
     "CoreGraphics": "",
@@ -58468,28 +58459,19 @@
     "Saturat": "",
     "... inputSaturation = ...": ""
   },
-  "zed/crates/gpui_macos/src/window_appearance.rs": {
+  "zed/crates/gpui/src/platform/mac/window_appearance.rs": {
     "unknown appearance: {:?}": "未知外观: {:?}",
     "AppKit": "",
     "framework": "",
     "C": ""
   },
-  "zed/crates/gpui_platform/src/gpui_platform.rs": {
-    "macos": "",
-    "windows": "",
-    "failed to initialize Windows platform": "初始化 Windows 平台失败",
-    "Failed to open window": "打开窗口失败"
-  },
-  "zed/crates/gpui_wgpu/src/gpui_wgpu.rs": {
-    "windows": ""
-  },
-  "zed/crates/gpui_wgpu/src/wgpu_atlas.rs": {
+  "zed/crates/gpui/src/platform/wgpu/wgpu_atlas.rs": {
     "new tile": "",
     "failed to allocate": "分配失败",
     "atlas": "",
     "texture must exist": ""
   },
-  "zed/crates/gpui_wgpu/src/wgpu_context.rs": {
+  "zed/crates/gpui/src/platform/wgpu/wgpu_context.rs": {
     "wasm": "",
     "ZED_DEVICE_ID": "",
     "Failed to parse device ID from `ZED_DEVICE_ID` environment variable": "无法从 `ZED_DEVICE_ID` 环境变量解析设备 ID",
@@ -58524,8 +58506,7 @@
     "{:#x}": "",
     "{:#X}": ""
   },
-  "zed/crates/gpui_wgpu/src/wgpu_renderer.rs": {
-    "wasm": "",
+  "zed/crates/gpui/src/platform/wgpu/wgpu_renderer.rs": {
     "Failed to get window handle: {e}": "获取窗口句柄失败: {e}",
     "Failed to get display handle: {e}": "获取显示器句柄失败: {e}",
     "Failed to create surface: {e}": "创建 Surface 失败: {e}",
@@ -58588,61 +58569,10 @@
     "ZED_FONTS_GRAYSCALE_ENHANCED_CONTRAST": "",
     "ZED_FONTS_SUBPIXEL_ENHANCED_CONTRAST": ""
   },
-  "zed/crates/gpui_windows/build.rs": {
-    "build scripts are exempt": "",
-    "windows": "",
-    "CARGO_MANIFEST_DIR": "",
-    "src/shaders.hlsl": "",
-    "OUT_DIR": "",
-    "cargo:rerun-if-changed={}": "",
-    "quad": "",
-    "shadow": "",
-    "path_rasterization": "",
-    "path_sprite": "",
-    "underline": "",
-    "monochrome_sprite": "",
-    "subpixel_sprite": "",
-    "polychrome_sprite": "",
-    "{}/shaders_bytes.rs": "",
-    "Failed to remove existing Rust binding file": "无法删除现有的 Rust 绑定文件",
-    "src/color_text_raster.hlsl": "",
-    "emoji_rasterization": "",
-    "SOFTWARE\\WOW6432Node\\Microsoft\\Microsoft SDKs\\Windows\\v10.0": "",
-    "InstallationFolder": "",
-    "bin": "",
-    "x86_64": "",
-    "x64": "",
-    "aarch64": "",
-    "arm64": "",
-    "Unsupported architecture: {}": "不支持的架构: {}",
-    "GPUI_FXC_PATH": "",
-    "where.exe": "",
-    "fxc.exe": "",
-    "Failed to find fxc.exe": "找不到 fxc.exe",
-    "{}/{}_vs.h": "",
-    "{}_VERTEX_BYTES": "",
-    "{module}_vertex": "",
-    "vs_4_1": "",
-    "{}/{}_ps.h": "",
-    "{}_FRAGMENT_BYTES": "",
-    "{module}_fragment": "",
-    "ps_4_1": "",
-    "/T": "",
-    "/E": "",
-    "/Fh": "",
-    "/Vn": "",
-    "/O3": "",
-    "cargo::error=Shader compilation failed for {}:\n{}": "",
-    "cargo::error=Failed to run fxc for {}: {}": "",
-    "Failed to read header file": "无法读取头文件",
-    "const BYTE": "",
-    "const {}: &[u8] = &{}\n": "",
-    "[": "",
-    "]": "",
-    "Failed to open Rust binding file": "无法打开 Rust 绑定文件",
-    "Failed to write Rust binding file": "无法写入 Rust 绑定文件"
+  "zed/crates/gpui/src/platform/windows.rs": {
+    "screen-capture": ""
   },
-  "zed/crates/gpui_windows/src/clipboard.rs": {
+  "zed/crates/gpui/src/platform/windows/clipboard.rs": {
     "GPUI internal text hash": "",
     "GPUI internal metadata": "",
     "image/svg+xml": "",
@@ -58659,19 +58589,19 @@
     "Try to paste with unsupported clipboard format: {}, {}.": "尝试以不支持的剪贴板格式粘贴: {}, {}。",
     "BM": ""
   },
-  "zed/crates/gpui_windows/src/destination_list.rs": {
+  "zed/crates/gpui/src/platform/windows/destination_list.rs": {
     "New Window": "新建窗口",
     "Opens a new window": "打开新窗口",
     "Only `MenuItem::Action` is supported for dock menu on Windows.": "Windows 的停靠菜单仅支持 `MenuItem::Action`。",
     "--dock-action {}": "",
-    "\"{}\"": "",
+    "\\\"{}\\\"": "",
     " ": "",
-    "\n": "",
+    "\\n": "",
     "explorer.exe": "",
     ", ": "",
     "Recent Folders": "最近文件夹"
   },
-  "zed/crates/gpui_windows/src/direct_write.rs": {
+  "zed/crates/gpui/src/platform/windows/direct_write.rs": {
     "Failed to get system font collection": "获取系统字体集合失败",
     "Failed to select font: {:?}": "选择字体失败: {:?}",
     ".SystemUIFont": "",
@@ -58679,9 +58609,9 @@
     "Recreating GPU state for DirectWrite": "正在为 DirectWrite 重建 GPU 状态",
     "Failed to cast font face": "字体对象转换失败",
     "Failed to create font": "创建字体失败",
-    "DrawUnderline unimplemented": "",
-    "DrawStrikethrough unimplemented": "",
-    "DrawInlineObject unimplemented": "",
+    "DrawUnderline unimplemented": "DrawUnderline 未实现",
+    "DrawStrikethrough unimplemented": "DrawStrikethrough 未实现",
+    "DrawInlineObject unimplemented": "DrawInlineObject 未实现",
     "liga": "",
     "clig": "",
     "calt": "",
@@ -58690,10 +58620,10 @@
     "Use {} as UI font.": "使用 {} 作为界面字体。",
     "en-US": ""
   },
-  "zed/crates/gpui_windows/src/directx_atlas.rs": {
+  "zed/crates/gpui/src/platform/windows/directx_atlas.rs": {
     "failed to allocate": "分配失败"
   },
-  "zed/crates/gpui_windows/src/directx_devices.rs": {
+  "zed/crates/gpui/src/platform/windows/directx_devices.rs": {
     "DirectXRenderer failed to recover from lost device after multiple attempts": "DirectXRenderer 多次尝试后仍无法从设备丢失中恢复",
     "Creating DXGI factory": "创建 DXGI 工厂",
     "Getting DXGI adapter": "获取 DXGI 适配器",
@@ -58705,7 +58635,7 @@
     "Checking GPU device feature support": "检查 GPU 设备功能支持",
     "Required feature StructuredBuffer is not supported by GPU/driver": "GPU/驱动不支持所需的 StructuredBuffer 功能"
   },
-  "zed/crates/gpui_windows/src/directx_renderer.rs": {
+  "zed/crates/gpui/src/platform/windows/directx_renderer.rs": {
     "GPUI_DISABLE_DIRECT_COMPOSITION": "",
     "Creating DXGI device": "创建 DXGI 设备",
     "Direct Composition is disabled.": "Direct Composition 已禁用。",
@@ -58748,7 +58678,7 @@
     "vs_4_1\\0": "",
     "ps_4_1\\0": "",
     "CARGO_MANIFEST_DIR": "",
-    "src/{}": "",
+    "src/platform/windows/{}": "",
     "{ret:?}": "",
     "Shader compile error: {}": "着色器编译错误: {}",
     "Compile error: {}": "编译错误: {}",
@@ -58785,16 +58715,16 @@
     "{} ({})": "",
     "{}.{}.{}.{}": ""
   },
-  "zed/crates/gpui_windows/src/dispatcher.rs": {
+  "zed/crates/gpui/src/platform/windows/dispatcher.rs": {
     "RealtimeAudio priority should use spawn_realtime, not dispatch": "RealtimeAudio 优先级应使用 spawn_realtime,而非 dispatch",
     "thread priority class": "线程优先级类",
     "thread priority": "线程优先级"
   },
-  "zed/crates/gpui_windows/src/display.rs": {
+  "zed/crates/gpui/src/platform/windows/display.rs": {
     "can not find the primary monitor: {}": "无法找到主显示器: {}",
     "system": ""
   },
-  "zed/crates/gpui_windows/src/events.rs": {
+  "zed/crates/gpui/src/platform/windows/events.rs": {
     "Failed to resize renderer, invalidating devices: {}": "调整渲染器大小失败,正在使设备失效: {}",
     "unable to create timer: {}": "无法创建计时器: {}",
     "": "",
@@ -58849,16 +58779,13 @@
     "f23": "",
     "f24": ""
   },
-  "zed/crates/gpui_windows/src/gpui_windows.rs": {
-    "windows": ""
-  },
-  "zed/crates/gpui_windows/src/keyboard.rs": {
+  "zed/crates/gpui/src/platform/windows/keyboard.rs": {
     "Keystroke '{}' has both shift and a shifted key, this is likely a bug": "按键 '{}' 同时包含 shift 和 shifted key,这可能是一个 bug",
     "Failed to map key equivalent '{:?}' to a valid key": "无法将等效键 '{:?}' 映射到有效按键",
     "Failed to map keystroke {:?} with virtual key '{:?}' to a shifted key": "无法将虚拟键为 '{:?}' 的按键 {:?} 映射到 shifted key",
     "System\\CurrentControlSet\\Control\\Keyboard Layouts\\{id}": "",
     "Layout Text": "",
-    "unknown": "",
+    "unknown": "未知",
     "`": "",
     "~": "",
     "1": "",
@@ -58903,7 +58830,7 @@
     "?": "",
     "a": ""
   },
-  "zed/crates/gpui_windows/src/platform.rs": {
+  "zed/crates/gpui/src/platform/windows/platform.rs": {
     "unable to initialize Windows OLE": "无法初始化 Windows OLE",
     "Creating DirectX devices": "创建 DirectX 设备",
     "Error creating DirectWriteTextSystem": "创建 DirectWriteTextSystem 时出错",
@@ -58955,18 +58882,18 @@
     "12345": "",
     "abcdef": ""
   },
-  "zed/crates/gpui_windows/src/util.rs": {
+  "zed/crates/gpui/src/platform/windows/util.rs": {
     "64": "",
     "32": "",
     "zed:url={}": "",
     "Loading dll: {}": "加载 DLL: {}",
     "Freeing dll: {}": "释放 DLL: {}"
   },
-  "zed/crates/gpui_windows/src/vsync.rs": {
+  "zed/crates/gpui/src/platform/windows/vsync.rs": {
     "Failed to get DWM interval": "获取 DWM 间隔失败",
     "VSyncProvider::wait_for_vsync() took less time than expected": ""
   },
-  "zed/crates/gpui_windows/src/window.rs": {
+  "zed/crates/gpui/src/platform/windows/window.rs": {
     "Creating DirectX renderer": "创建 DirectX 渲染器",
     "failed to get window placement": "获取窗口位置失败",
     "failed to get window rect": "获取窗口矩形失败",
@@ -58988,113 +58915,5 @@
     "Unable to get user32.dll handle": "无法获取 user32.dll 句柄",
     "SetWindowCompositionAttribute": "",
     "NonRudeHWND": ""
-  },
-  "zed/crates/repl/src/kernels/ssh_kernel.rs": {
-    "127.0.0.1:0": "",
-    "shell_port": "",
-    "missing shell_port": "缺少 shell_port",
-    "iopub_port": "",
-    "missing iopub_port": "缺少 iopub_port",
-    "stdin_port": "",
-    "missing stdin_port": "缺少 stdin_port",
-    "control_port": "",
-    "missing control_port": "缺少 control_port",
-    "hb_port": "",
-    "missing hb_port": "缺少 hb_port",
-    "127.0.0.1": "",
-    "no remote client": "无远程客户端",
-    "failed to spawn ssh tunnel": "无法启动 SSH 隧道",
-    "ssh tunnel stderr: {}": "SSH 隧道标准错误: {}",
-    "ssh tunnel stdout: {}": "SSH 隧道标准输出: {}",
-    "127.0.0.1:{}": "",
-    "SSH tunnel established for kernel {} on attempt {}": "已在第 {} 次尝试时为内核 {} 建立 SSH 隧道",
-    "Waiting for SSH tunnel (attempt {}/{}): {}": "等待 SSH 隧道 (尝试 {}/{}): {}",
-    "SSH tunnel failed to establish after {} attempts": "经过 {} 次尝试后仍无法建立 SSH 隧道",
-    "ip": "",
-    "zed_ssh_kernel_{}.json": "",
-    "": "",
-    "failed to create iopub connection": "无法创建 iopub 连接",
-    "failed to create shell connection": "无法创建 Shell 连接",
-    "failed to create control connection": "无法创建 control 连接",
-    "failed to create stdin connection": "无法创建 stdin 连接"
-  },
-  "zed/crates/repl/src/kernels/wsl_kernel.rs": {
-    "WslRunningKernel": "",
-    "process": "",
-    "127.0.0.1": "",
-    "hmac-sha256": "",
-    "zed-wsl-{}": "",
-    "Failed to create jupyter runtime dir {runtime_dir:?}": "无法创建 jupyter 运行时目录 {runtime_dir:?}",
-    "kernel-zed-wsl-{entity_id}.json": "",
-    "wsl": "",
-    "/": "",
-    "-d": "",
-    "wslpath": "",
-    "-u": "",
-    "Failed to convert path to WSL path: {:?}": "无法将路径转换为 WSL 路径: {:?}",
-    "Empty argv in kernelspec {}": "内核规范 {} 中的 argv 为空",
-    "Directory name is invalid": "",
-    "--cd": "",
-    "env": "",
-    "{}={}": "",
-    "{connection_file}": "",
-    "python": "",
-    "python3": "",
-    "'{}'": "",
-    "'\\''": "",
-    " ": "",
-    "cd '{}' && ": "",
-    "bash": "",
-    "-l": "",
-    "-c": "",
-    "failed to start the kernel process": "启动内核进程失败",
-    "WSL kernel process exited prematurely with status: {:?}\nstderr: {}\nstdout: {}": "WSL 内核进程过早退出,状态: {:?}\nstderr: {}\nstdout: {}",
-    "": "",
-    "wsl kernel stderr: {}": "wsl 内核 stderr: {}",
-    "WSL kernel: kernel process exited with status: {:?}": "WSL 内核: 内核进程已退出,状态: {:?}",
-    "WSL kernel: kernel process exited with error: {:?}": "WSL 内核: 内核进程已退出,错误: {:?}",
-    "-q": "",
-    "jupyter kernelspec list --json": ""
-  },
-  "zed/crates/repl/src/outputs/html.rs": {
-    "---": "",
-    " | ": "",
-    "| {} |": "",
-    "\\n": "",
-    "|": "",
-    "<h1>Title</h1><p>Content</p>": "",
-    "# Title": "",
-    "<table border=": "",
-    " class=": "",
-    "Table line should start with |: {:?}": "表格行应以 | 开头: {:?}",
-    "| Name | Age |": "",
-    "| --- | --- |": "",
-    "| Alice | 25 |": "",
-    "dataframe": "",
-    "border": "",
-    "| A |": "",
-    "Missing separator row: {}": "缺少分隔行: {}",
-    "| Feature | Supported |": "",
-    "| Tables | ✓ |": ""
-  },
-  "zed/crates/title_bar/src/plan_chip.rs": {
-    "Free": "免费",
-    "Pro Trial": "专业版试用",
-    "Pro": "专业版",
-    "Student": "学生版"
-  },
-  "zed/crates/ui/src/components/notification/announcement_toast.rs": {
-    "Learn More": "了解更多",
-    "View Release Notes": "查看更新日志",
-    "try-now": "",
-    "release-notes": "",
-    "dismiss": "",
-    "A special toast for announcing new and exciting features.": "用于发布新功能和亮点特性的特殊通知。",
-    "Basic": "基础",
-    "What's new in Zed": "Zed 新特性",
-    "This version comes in with some changes to the workspace for a better experience.": "此版本对工作区进行了部分改进,以提供更好的体验。",
-    "Improved agent performance": "改进的 Agent 性能",
-    "New agentic features": "新增 Agent 功能",
-    "Better agent capabilities": "更强的 Agent 能力"
   }
 }
