@@ -58443,7 +58443,8 @@
         "explorer.exe": "",
         ", ": "",
         "Recent Folders": "最近文件夹",
-        "\\n": "\n"
+        "\\n": "\n",
+        "\\\"{}\\\"": "\"{}\""
     },
     "zed/crates/gpui_windows/src/direct_write.rs": {
         "Failed to get system font collection": "获取系统字体集合失败",
