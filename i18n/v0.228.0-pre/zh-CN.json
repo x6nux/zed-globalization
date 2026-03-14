@@ -2927,7 +2927,8 @@
         "last_active_thread": "",
         "session_id": "",
         "test-session": "",
-        "agent_type": ""
+        "agent_type": "",
+        "expected a string variant or {\\\"Custom\\\": {\\\"name\\\": ...}}": ""
     },
     "zed/crates/agent_ui/src/agent_registry_ui.rs": {
         "claude-acp": "",
@@ -22411,7 +22412,8 @@
         ":{": "",
         ":": "",
         "}}": "",
-        "my-agent": ""
+        "my-agent": "",
+        "expected a string variant or {\\\"custom\\\": {\\\"name\\\": ...}}": "应为字符串变体或 {\"custom\": {\"name\": ...}}"
     },
     "zed/crates/agent_ui/src/buffer_codegen.rs": {
         "rewrite_section": "",
