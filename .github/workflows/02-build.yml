@@ -1473,7 +1473,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: zed-macos-aarch64-bin
-          path: zed/target/aarch64-apple-darwin/release/zed
+          path: |
+            zed/target/aarch64-apple-darwin/release/zed
+            zed/target/aarch64-apple-darwin/release/cli
 
       - name: 上传图标资源
         uses: actions/upload-artifact@v4
@@ -1696,7 +1698,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: zed-macos-x86_64-bin
-          path: zed/target/x86_64-apple-darwin/release/zed
+          path: |
+            zed/target/x86_64-apple-darwin/release/zed
+            zed/target/x86_64-apple-darwin/release/cli
 
   # ===========================================================================
   # 5c. macOS 合并打包（Universal Binary + DMG）
@@ -1732,7 +1736,10 @@ jobs:
           chmod +x bins/aarch64/zed bins/x86_64/zed
           lipo -create bins/aarch64/zed bins/x86_64/zed -output zed-universal
           echo "Universal binary 架构: $(lipo -archs zed-universal)"
-          strip -x bins/aarch64/zed bins/x86_64/zed zed-universal
+          chmod +x bins/aarch64/cli bins/x86_64/cli
+          lipo -create bins/aarch64/cli bins/x86_64/cli -output cli-universal
+          echo "CLI universal 架构: $(lipo -archs cli-universal)"
+          strip -x bins/aarch64/zed bins/x86_64/zed zed-universal bins/aarch64/cli bins/x86_64/cli cli-universal
 
           # === 生成应用图标 ICNS（仅一次）===
           ICONSET_DIR="AppIcon.iconset"
@@ -1759,10 +1766,13 @@ jobs:
           make_dmg() {
             local BINARY="$1"
             local DMG_NAME="$2"
+            local CLI_BINARY="$3"
             local APP="ZedG-tmp.app"
             mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
             cp "$BINARY" "$APP/Contents/MacOS/zed"
             chmod +x "$APP/Contents/MacOS/zed"
+            cp "$CLI_BINARY" "$APP/Contents/MacOS/cli"
+            chmod +x "$APP/Contents/MacOS/cli"
             [ -f AppIcon.icns ] && cp AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
             [ -f "resources/Document.icns" ] && cp resources/Document.icns "$APP/Contents/Resources/"
             cat > "$APP/Contents/Info.plist" <<PLIST
@@ -1797,11 +1807,11 @@ jobs:
           }
 
           echo "=== 打包 Universal ==="
-          make_dmg zed-universal "zedg-${LANG_LOWER}-macos-universal-${BUILD_VERSION}.dmg"
+          make_dmg zed-universal "zedg-${LANG_LOWER}-macos-universal-${BUILD_VERSION}.dmg" cli-universal
           echo "=== 打包 Apple Silicon (aarch64) ==="
-          make_dmg bins/aarch64/zed "zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg"
+          make_dmg bins/aarch64/zed "zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" bins/aarch64/cli
           echo "=== 打包 Intel (x86_64) ==="
-          make_dmg bins/x86_64/zed "zedg-${LANG_LOWER}-macos-x86_64-${BUILD_VERSION}.dmg"
+          make_dmg bins/x86_64/zed "zedg-${LANG_LOWER}-macos-x86_64-${BUILD_VERSION}.dmg" bins/x86_64/cli
 
       - name: 上传产物
         uses: actions/upload-artifact@v4
