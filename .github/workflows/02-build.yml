@@ -2206,6 +2206,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+          pattern: "{zed-*,l10n-patch}"
 
       - name: 整理文件与生成 Hash
         run: |
