@@ -9391,7 +9391,10 @@
         "beta": "",
         "BETA": "",
         "patch_for_buffer_range mismatch at point {:?} in range {:?}\\nbase_text: {:?}\\ninitial_buffer: {:?}\\ncurrent_buffer: {:?}": "",
-        "patch_for_base_text_range mismatch at point {:?} in range {:?}\\nbase_text: {:?}\\ninitial_buffer: {:?}\\ncurrent_buffer: {:?}": ""
+        "patch_for_base_text_range mismatch at point {:?} in range {:?}\\nbase_text: {:?}\\ninitial_buffer: {:?}\\ncurrent_buffer: {:?}": "",
+        "one\\r\\ntwo\\r\\nthree\\r\\nfour\\r\\nfive\\r\\n": "",
+        "one\\ntwo\\nthree\\nfour\\nfive\\n": "",
+        "one\\nTWO\\nthree\\nfour\\nfive\\n": ""
     },
     "zed/crates/call/src/call_impl/diagnostics.rs": {
         "test-support": "",
