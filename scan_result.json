@@ -1,5 +1,5 @@
 {
-  "version": "v0.233.4-pre",
+  "version": "v0.233.5-pre",
   "files": [
     "crates/acp_thread/src/acp_thread.rs",
     "crates/acp_thread/src/connection.rs",
@@ -124,8 +124,6 @@
     "crates/agent_ui/src/terminal_codegen.rs",
     "crates/agent_ui/src/terminal_inline_assistant.rs",
     "crates/agent_ui/src/test_support.rs",
-    "crates/agent_ui/src/thread_history.rs",
-    "crates/agent_ui/src/thread_history_view.rs",
     "crates/agent_ui/src/thread_import.rs",
     "crates/agent_ui/src/thread_metadata_store.rs",
     "crates/agent_ui/src/thread_worktree_archive.rs",
