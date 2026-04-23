@@ -10812,6 +10812,7 @@
         "content": "",
         "/project/.git": "",
         "guest should see the same root_repo_common_dir as host": "",
+        "project should have exactly 1 repository": "",
         "cx_a": "",
         "cx_b": "",
         "/a": "",
@@ -10842,6 +10843,14 @@
         "Worktree count should be unchanged after failed rename": "",
         "Guest should not be able to remove worktrees via collab": "",
         "Worktree count should be unchanged after failed removal": "",
+        "main": "",
+        "feature-1": "",
+        "feature-2": "",
+        "refs/heads/feature-1": "",
+        "refs/heads/feature-2": "",
+        "refs/heads/main": "",
+        "totally-new-branch": "",
+        "refs/heads/totally-new-branch": "",
         "user_c": "",
         "/worktrees/feature-branch": "",
         "bbb222": "",
@@ -44761,7 +44770,8 @@
         "GetDocumentSymbols": "",
         "InlayHints": "",
         "SemanticTokens": "",
-        "<unknown>": ""
+        "<unknown>": "",
+        "refs/heads/main": ""
     },
     "zed/crates/proto/src/typed_envelope.rs": {
         "cannot downcast LspResponse to {} for message {}": "",
