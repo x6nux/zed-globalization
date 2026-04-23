@@ -2,7 +2,7 @@ name: 01 提取与翻译
 
 on:
   schedule:
-    - cron: "0 0,8,16 * * *" # 每日三次（UTC 0/8/16 点）检查 Zed 新版本
+    - cron: "0 * * * *" # 每小时整点（UTC）检查 Zed 新版本
   workflow_dispatch:
     inputs:
       version:
