@@ -974,7 +974,7 @@ jobs:
       - name: 安装依赖
         run: |
           sudo apt update
-          sudo apt install -y build-essential pkg-config python3 libasound2-dev \
+          sudo apt install -y build-essential pkg-config python3 ruby ruby-dev rpm libasound2-dev \
             libx11-dev libx11-xcb-dev libxkbfile-dev libgtk-3-dev \
             libxcb-xinput-dev libwayland-dev libxkbcommon-dev \
             libxkbcommon-x11-dev libxcb1-dev libxcb-render0-dev \
@@ -982,6 +982,7 @@ jobs:
             libxcb-randr0-dev libxcb-keysyms1-dev libxcb-util-dev \
             libgl1-mesa-dev libegl1-mesa-dev libfreetype6-dev libfontconfig1-dev \
             libssl-dev libudev-dev libclang-dev clang cmake mold
+          sudo gem install --no-document fpm
           echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
 
       - name: 克隆 Zed 源码并检出 Tag
@@ -1244,6 +1245,22 @@ jobs:
           CTRL
           dpkg-deb --build deb-pkg "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb"
 
+          # === rpm 包 ===
+          fpm -s dir -t rpm \
+            -n zedg \
+            -v "$CLEAN_VERSION" \
+            --iteration 1 \
+            --architecture x86_64 \
+            --description "Zed editor with globalization support." \
+            --url "https://github.com/x6nux/zed-globalization" \
+            --license "MIT" \
+            --maintainer "zed-globalization" \
+            --depends "glibc" \
+            --rpm-summary "Zed editor with globalization support" \
+            -C dist \
+            -p "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.rpm" \
+            .
+
       - name: 上传产物
         uses: actions/upload-artifact@v4
         with:
@@ -1251,6 +1268,7 @@ jobs:
           path: |
             zedg-${{ env.LANG_LOWER }}-linux-x86_64-${{ env.BUILD_VERSION }}.tar.gz
             zedg-${{ env.LANG_LOWER }}-linux-x86_64-${{ env.BUILD_VERSION }}.deb
+            zedg-${{ env.LANG_LOWER }}-linux-x86_64-${{ env.BUILD_VERSION }}.rpm
 
   # ===========================================================================
   # 5a. macOS aarch64 编译（Apple Silicon）
@@ -1862,7 +1880,7 @@ jobs:
       - name: 安装依赖
         run: |
           sudo apt update
-          sudo apt install -y build-essential pkg-config python3 libasound2-dev \
+          sudo apt install -y build-essential pkg-config python3 ruby ruby-dev rpm libasound2-dev \
             libx11-dev libx11-xcb-dev libxkbfile-dev libgtk-3-dev \
             libxcb-xinput-dev libwayland-dev libxkbcommon-dev \
             libxkbcommon-x11-dev libxcb1-dev libxcb-render0-dev \
@@ -1870,6 +1888,7 @@ jobs:
             libxcb-randr0-dev libxcb-keysyms1-dev libxcb-util-dev \
             libgl1-mesa-dev libegl1-mesa-dev libfreetype6-dev libfontconfig1-dev \
             libssl-dev libudev-dev libclang-dev clang cmake mold
+          sudo gem install --no-document fpm
           echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
 
       - name: 克隆 Zed 源码并检出 Tag
@@ -2126,6 +2145,21 @@ jobs:
           CTRL
           dpkg-deb --build deb-pkg "zedg-${LANG_LOWER}-linux-aarch64-${BUILD_VERSION}.deb"
 
+          fpm -s dir -t rpm \
+            -n zedg \
+            -v "$CLEAN_VERSION" \
+            --iteration 1 \
+            --architecture aarch64 \
+            --description "Zed editor with globalization support." \
+            --url "https://github.com/x6nux/zed-globalization" \
+            --license "MIT" \
+            --maintainer "zed-globalization" \
+            --depends "glibc" \
+            --rpm-summary "Zed editor with globalization support" \
+            -C dist \
+            -p "zedg-${LANG_LOWER}-linux-aarch64-${BUILD_VERSION}.rpm" \
+            .
+
       - name: 上传产物
         uses: actions/upload-artifact@v4
         with:
@@ -2133,6 +2167,7 @@ jobs:
           path: |
             zedg-${{ env.LANG_LOWER }}-linux-aarch64-${{ env.BUILD_VERSION }}.tar.gz
             zedg-${{ env.LANG_LOWER }}-linux-aarch64-${{ env.BUILD_VERSION }}.deb
+            zedg-${{ env.LANG_LOWER }}-linux-aarch64-${{ env.BUILD_VERSION }}.rpm
 
   # ===========================================================================
   # 6. 正式发布
@@ -2217,8 +2252,10 @@ jobs:
           mv "artifacts/zed-windows-msi/zedg-${LANG_LOWER}-windows-aarch64-${BUILD_VERSION}.msi" release-dist/ || echo "No Windows aarch64 MSI"
           mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.tar.gz" release-dist/ || echo "No Linux x86_64 tar artifact"
           mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb" release-dist/ || echo "No Linux x86_64 deb artifact"
+          mv "artifacts/zed-linux/zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.rpm" release-dist/ || echo "No Linux x86_64 rpm artifact"
           mv "artifacts/zed-linux-arm64/zedg-${LANG_LOWER}-linux-aarch64-${BUILD_VERSION}.tar.gz" release-dist/ || echo "No Linux ARM64 tar artifact"
           mv "artifacts/zed-linux-arm64/zedg-${LANG_LOWER}-linux-aarch64-${BUILD_VERSION}.deb" release-dist/ || echo "No Linux ARM64 deb artifact"
+          mv "artifacts/zed-linux-arm64/zedg-${LANG_LOWER}-linux-aarch64-${BUILD_VERSION}.rpm" release-dist/ || echo "No Linux ARM64 rpm artifact"
           mv "artifacts/zed-macos/zedg-${LANG_LOWER}-macos-universal-${BUILD_VERSION}.dmg" release-dist/ || echo "No macOS Universal artifact"
           mv "artifacts/zed-macos/zedg-${LANG_LOWER}-macos-aarch64-${BUILD_VERSION}.dmg" release-dist/ || echo "No macOS aarch64 artifact"
           mv "artifacts/zed-macos/zedg-${LANG_LOWER}-macos-x86_64-${BUILD_VERSION}.dmg" release-dist/ || echo "No macOS x86_64 artifact"
