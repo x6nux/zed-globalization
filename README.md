@@ -25,8 +25,10 @@
 | Windows (ARM64) | `zedg-zh-cn-windows-aarch64-*.zip` | 解压后运行 `ZedG.exe` |
 | Linux (x64) | `zedg-zh-cn-linux-x86_64-*.tar.gz` | 解压到 `/usr/local` |
 | Linux (x64 deb) | `zedg-zh-cn-linux-x86_64-*.deb` | `sudo dpkg -i *.deb` |
+| Linux (x64 rpm) | `zedg-zh-cn-linux-x86_64-*.rpm` | `sudo dnf install ./zedg-*.rpm` |
 | Linux (ARM64) | `zedg-zh-cn-linux-aarch64-*.tar.gz` | 解压到 `/usr/local` |
 | Linux (ARM64 deb) | `zedg-zh-cn-linux-aarch64-*.deb` | `sudo dpkg -i *.deb` |
+| Linux (ARM64 rpm) | `zedg-zh-cn-linux-aarch64-*.rpm` | `sudo dnf install ./zedg-*.rpm` |
 
 ### macOS 安装
 
@@ -97,6 +99,22 @@ scoop install zedg-preview
 > # 关闭
 > schtasks /delete /tn "ZedGUpdate" /f
 > ```
+
+### Fedora / RHEL 安装
+
+从 Releases 下载对应架构的 RPM 包后安装：
+
+```bash
+sudo dnf install ./zedg-zh-cn-linux-x86_64-*.rpm
+```
+
+ARM64 设备请下载并安装 `zedg-zh-cn-linux-aarch64-*.rpm`。
+
+卸载：
+
+```bash
+sudo dnf remove zedg
+```
 
 ## 特性
 
