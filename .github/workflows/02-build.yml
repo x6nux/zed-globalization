@@ -1246,20 +1246,12 @@ jobs:
           dpkg-deb --build deb-pkg "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb"
 
           # === rpm 包 ===
-          fpm -s dir -t rpm \
-            -n zedg \
-            -v "$CLEAN_VERSION" \
-            --iteration 1 \
-            --architecture x86_64 \
-            --description "Zed editor with globalization support." \
-            --url "https://github.com/x6nux/zed-globalization" \
-            --license "MIT" \
-            --maintainer "zed-globalization" \
-            --depends "glibc" \
-            --rpm-summary "Zed editor with globalization support" \
-            -C dist \
-            -p "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.rpm" \
-            .
+          script/package-rpm.sh \
+            dist \
+            x86_64 \
+            "$BUILD_VERSION" \
+            "$LANG_LOWER" \
+            "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.rpm"
 
       - name: 上传产物
         uses: actions/upload-artifact@v4
@@ -2145,20 +2137,12 @@ jobs:
           CTRL
           dpkg-deb --build deb-pkg "zedg-${LANG_LOWER}-linux-aarch64-${BUILD_VERSION}.deb"
 
-          fpm -s dir -t rpm \
-            -n zedg \
-            -v "$CLEAN_VERSION" \
-            --iteration 1 \
-            --architecture aarch64 \
-            --description "Zed editor with globalization support." \
-            --url "https://github.com/x6nux/zed-globalization" \
-            --license "MIT" \
-            --maintainer "zed-globalization" \
-            --depends "glibc" \
-            --rpm-summary "Zed editor with globalization support" \
-            -C dist \
-            -p "zedg-${LANG_LOWER}-linux-aarch64-${BUILD_VERSION}.rpm" \
-            .
+          script/package-rpm.sh \
+            dist \
+            aarch64 \
+            "$BUILD_VERSION" \
+            "$LANG_LOWER" \
+            "zedg-${LANG_LOWER}-linux-aarch64-${BUILD_VERSION}.rpm"
 
       - name: 上传产物
         uses: actions/upload-artifact@v4
