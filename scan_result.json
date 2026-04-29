@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.0",
+  "version": "v1.1.2-pre",
   "files": [
     "crates/acp_thread/src/acp_thread.rs",
     "crates/acp_thread/src/connection.rs",
@@ -487,6 +487,7 @@
     "crates/editor/src/clangd_ext.rs",
     "crates/editor/src/code_completion_tests.rs",
     "crates/editor/src/code_context_menus.rs",
+    "crates/editor/src/code_lens.rs",
     "crates/editor/src/display_map.rs",
     "crates/editor/src/display_map/block_map.rs",
     "crates/editor/src/display_map/crease_map.rs",
@@ -655,7 +656,6 @@
     "crates/git_ui/src/commit_view.rs",
     "crates/git_ui/src/conflict_view.rs",
     "crates/git_ui/src/file_diff_view.rs",
-    "crates/git_ui/src/file_history_view.rs",
     "crates/git_ui/src/git_panel.rs",
     "crates/git_ui/src/git_panel_settings.rs",
     "crates/git_ui/src/git_picker.rs",
@@ -692,6 +692,7 @@
     "crates/gpui/examples/layer_shell.rs",
     "crates/gpui/examples/list_example.rs",
     "crates/gpui/examples/mouse_pressure.rs",
+    "crates/gpui/examples/move_entity_between_windows.rs",
     "crates/gpui/examples/on_window_close_quit.rs",
     "crates/gpui/examples/opacity.rs",
     "crates/gpui/examples/ownership_post.rs",
@@ -977,6 +978,7 @@
     "crates/language/src/buffer_tests.rs",
     "crates/language/src/diagnostic.rs",
     "crates/language/src/diagnostic_set.rs",
+    "crates/language/src/file_content.rs",
     "crates/language/src/language.rs",
     "crates/language/src/language_registry.rs",
     "crates/language/src/language_settings.rs",
