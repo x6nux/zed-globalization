@@ -32296,6 +32296,7 @@
         "failed to get window rect": "",
         "failed to set window placement": "",
         "": "",
+        "failed to find any monitor": "",
         "unable to set window content size": "",
         "unable to get cursor position": "",
         "Info": "",
