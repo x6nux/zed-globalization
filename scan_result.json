@@ -1,5 +1,5 @@
 {
-  "version": "v1.2.3",
+  "version": "v1.2.4",
   "files": [
     "crates/acp_thread/src/acp_thread.rs",
     "crates/acp_thread/src/connection.rs",
@@ -1046,6 +1046,7 @@
     "crates/language_models/src/provider/open_ai.rs",
     "crates/language_models/src/provider/open_ai_compatible.rs",
     "crates/language_models/src/provider/open_router.rs",
+    "crates/language_models/src/provider/openai_subscribed.rs",
     "crates/language_models/src/provider/opencode.rs",
     "crates/language_models/src/provider/util.rs",
     "crates/language_models/src/provider/vercel_ai_gateway.rs",
@@ -1181,6 +1182,7 @@
     "crates/notifications/src/notification_store.rs",
     "crates/notifications/src/notifications.rs",
     "crates/notifications/src/status_toast.rs",
+    "crates/oauth_callback_server/src/oauth_callback_server.rs",
     "crates/ollama/src/ollama.rs",
     "crates/onboarding/src/base_keymap_picker.rs",
     "crates/onboarding/src/basics_page.rs",
