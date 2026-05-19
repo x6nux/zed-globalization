@@ -176,6 +176,7 @@ def patch_get_zed_cli_path(zed_dir: Path, *, dry_run: bool = False) -> bool:
         ]
     } else if cfg!(target_os = "linux") || cfg!(target_os = "freebsd") {
         vec![
+            format!("../libexec/{exe_name}").into(),
             format!("../bin/{exe_name}").into(),
             "./cli".into(),
         ]
