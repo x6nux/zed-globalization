@@ -1,5 +1,5 @@
 {
-  "version": "v1.15.1",
+  "version": "v1.16.1-pre",
   "files": [
     "crates/acp_thread/src/acp_thread.rs",
     "crates/acp_thread/src/connection.rs",
@@ -1269,6 +1269,7 @@
     "crates/migrator/src/migrations/m_2026_04_10/settings.rs",
     "crates/migrator/src/migrations/m_2026_04_17/settings.rs",
     "crates/migrator/src/migrations/m_2026_05_04/settings.rs",
+    "crates/migrator/src/migrations/m_2026_08_17/settings.rs",
     "crates/migrator/src/migrator.rs",
     "crates/migrator/src/patterns.rs",
     "crates/migrator/src/patterns/keymap.rs",
