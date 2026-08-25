@@ -32664,6 +32664,8 @@
         "foo/foo2.py": "",
         "foo directory should exist in tree view": "",
         "foo directory should be visible": "",
+        "modified.rs": "",
+        "the first visible file should be selected": "",
         "🦀": "",
         "...[truncated]": "",
         "Write a commit message.": "",
