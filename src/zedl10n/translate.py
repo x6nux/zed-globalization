@@ -34,16 +34,29 @@ from .utils import (
 log = logging.getLogger(__name__)
 
 
+# 流式保活间隔：无新 chunk 超过此时长视为连接僵死（代理/负载均衡空闲
+# 超时的典型表现——非流式大响应经常在 5-10 分钟生成期被中间层掐断），
+# 主动放弃并重试，而不是干等到客户端自身超时。
+STREAM_IDLE_TIMEOUT = 120.0
+
+
 async def _call_ai(
     client: object,
     model: str,
     system_prompt: str,
     user_prompt: str,
 ) -> str:
-    """调用 AI API，内置网络错误重试"""
+    """调用 AI API（流式），内置网络错误与流空闲超时重试。
+
+    流式的意义不在总耗时（token 量相同生成时间相同），而在连接活性：
+    chunk 持续到达证明链路存活，代理不会因"空闲超时"掐断长请求。
+    对 max_tokens=65535 的批量翻译批次，这是非流式经常 5-10 分钟断连
+    的主要解药。收到 [DONE] 后拼接完整内容，对调用方透明。
+    """
+    last_err: Exception | None = None
     for attempt in range(5):
         try:
-            response = await client.chat.completions.create(  # type: ignore[attr-defined]
+            stream = await client.chat.completions.create(  # type: ignore[attr-defined]
                 model=model,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -51,17 +64,35 @@ async def _call_ai(
                 ],
                 temperature=0,
                 max_tokens=65535,
+                stream=True,
                 extra_body={"thinking": {"type": "disabled"}},
             )
-            return (response.choices[0].message.content or "").strip()
+            chunks: list[str] = []
+            while True:
+                try:
+                    # chunk 间隔超过 STREAM_IDLE_TIMEOUT 视为链路僵死
+                    raw = await asyncio.wait_for(
+                        stream.__anext__(), timeout=STREAM_IDLE_TIMEOUT
+                    )
+                except StopAsyncIteration:
+                    break  # 正常结束
+                if getattr(raw, "choices", None):
+                    delta = raw.choices[0].delta.content
+                    if delta:
+                        chunks.append(delta)
+            return "".join(chunks).strip()
         except Exception as e:
+            last_err = e
             if attempt < 4:
                 delay = (2**attempt) * 3 + random.uniform(0, 2)
-                log.debug("网络错误，等待 %.1fs 重试 (%d/5)", delay, attempt + 1)
+                log.warning(
+                    "AI 调用失败（%s），等待 %.1fs 重试 (%d/5)",
+                    e, delay, attempt + 1,
+                )
                 await asyncio.sleep(delay)
                 continue
             raise
-    return ""
+    raise last_err if last_err else RuntimeError("AI 调用失败：未知原因")
 
 
 async def _fetch_translation(
