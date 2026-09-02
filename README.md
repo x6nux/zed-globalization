@@ -91,6 +91,20 @@ scoop bucket add zedg https://github.com/x6nux/scoop-zedg
 scoop install zedg-preview
 ```
 
+**生态兼容版（覆盖官方 zed 命令）：**
+
+```powershell
+scoop bucket add zedg https://github.com/x6nux/scoop-zedg
+scoop install zedg-compat
+```
+
+> **`zedg` 与 `zedg-compat` 的区别：** 两者安装同一 ZedG 编辑器，区别在命令行 shim：
+> - `zedg` — 只注册 `zedg` 命令，不影响官方 Zed（推荐已单独安装官方 Zed 的用户）
+> - `zedg-compat` — 额外注册 `zed` 命令，生态工具（git difftool、终端 `zed .` 等）会自动识别 ZedG 为默认编辑器。
+>   若之前安装过官方 Zed，建议先卸载或重命名其 `zed.exe`，避免命令冲突。
+>
+> 两者可随时切换：`scoop uninstall zedg && scoop install zedg-compat`（反之亦然）。
+
 > **自动更新（可选）：** 通过 Windows 计划任务每天定时更新（需要管理员权限）。
 > ```powershell
 > # 启用（每天中午 12:00 自动更新 ZedG）
@@ -109,6 +123,7 @@ scoop install zedg-preview
 - JSON <-> Excel 双向转换，支持人工校对
 - 跨平台构建（Windows / Linux / macOS），含应用图标
 - GitHub Actions 全自动流水线：扫描 -> 翻译 -> 构建 -> 发布
+- **可选覆盖官方 Zed**：Windows 安装向导（NSIS 组件页勾选）/ Scoop（`zedg-compat` 包）/ macOS & Linux（`zedg-activate.sh` 一键激活，`--revert` 还原）
 
 ## 自动化流水线
 
@@ -166,6 +181,35 @@ zedl10n replace --input i18n/zh-CN.json --source-root zed
 python3 patch_agent_env.py --source-root zed
 cd zed && cargo build --release
 ```
+
+### 生态兼容：让系统把 ZedG 当作 `zed`（可选）
+
+生态工具（git difftool、终端 `zed .`、"默认编辑器"选择器）通常找名为 `zed` 的命令。
+ZedG 提供三种方式注册，均**不破坏官方 Zed 安装**（可随时还原）：
+
+**Windows（NSIS 安装包）**
+
+安装向导的组件页勾选 **"覆盖官方 Zed 安装"**：
+- 自动备份官方 `zed.exe` → `zed.exe.official.bak` 后替换
+- 卸载 ZedG 时自动还原官方版本
+
+**Windows（Scoop）**
+
+安装 `zedg-compat` 包（额外 shim `zed` 命令）：
+
+```powershell
+scoop install zedg-compat
+```
+
+**macOS / Linux（tar.gz / deb / rpm 手动安装）**
+
+```bash
+zedg-activate.sh            # 激活：创建 ~/.local/bin/zed 链接 + 注册 desktop 入口
+zedg-activate.sh --status   # 查看当前接管状态
+zedg-activate.sh --revert   # 一键还原官方状态（官方 zed 已自动备份为 zed.orig）
+```
+
+> Linux deb/rpm 包还会自动注册 `zedg.desktop` 并关联 `text/plain`，应用列表直接可见。
 
 > **`patch_agent_env.py` 补丁说明：** Zed 源码中 `agent_server_store.rs` 会强制将 `ANTHROPIC_API_KEY` 设为空字符串，导致用户系统中已配置的 API Key 被清除；同时 `claude.rs` 的 `connect()` 方法没有像 Codex/Gemini 那样从系统环境变量读取并透传 API Key。该补丁自动修复这两个问题：
 > - **补丁 1**：删除 `agent_server_store.rs` 中 `env.insert("ANTHROPIC_API_KEY", "")` 的强制清空行
