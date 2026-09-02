@@ -1030,6 +1030,11 @@ jobs:
             libssl-dev libudev-dev libclang-dev clang cmake mold rpm \
             patchelf libgit2-dev
           echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
+          # issue #30: 22.04 的 gcc-11 对 webrtc-sys 的 C++ 头文件报
+          # "changes meaning of 'Network'"（clang 只警告，gcc 当错误）。
+          # 显式指定 clang++ 作为 C++ 编译器，与 24.04 默认行为对齐。
+          echo "CXX=clang++" >> $GITHUB_ENV
+          echo "CC=clang" >> $GITHUB_ENV
 
       - name: 克隆 Zed 源码并检出 Tag
         run: |
