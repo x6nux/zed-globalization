@@ -269,6 +269,11 @@ async def _translate_async(
         for s in strings:
             if mode == "full" or s not in result.get(file_path, {}):
                 to_translate[s] = ""
+            elif mode == "incremental" and not str(result[file_path].get(s, "")).strip():
+                # 增量模式也要补翻空值：AI 对颜色码、标识符风格的字符串偶尔
+                # 返回空串，而 "s in result" 让空值永远跳过重翻，缺口只会
+                # 越积越多（i18n/zh-CN.json 累积了 4 万+ 空值）。
+                to_translate[s] = ""
         if not to_translate:
             continue
         raw_content = _read_source_file(file_path, source_root)
