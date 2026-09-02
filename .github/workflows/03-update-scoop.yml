@@ -25,6 +25,11 @@ on:
           - stable     # 仅更新稳定版
           - prerelease # 仅更新预览版
           - both       # 同时拉取最新稳定版和预览版并推送
+      compat:
+        description: "是否生成 zedg-compat manifest（额外 shim `zed` 命令，覆盖官方 zed 的 PATH 位置）"
+        required: false
+        default: "false"
+        type: boolean
 
 permissions:
   contents: read
@@ -43,6 +48,7 @@ jobs:
           INPUT_TAG: ${{ inputs.version_tag }}
           INPUT_MODE: ${{ inputs.mode }}
           INPUT_IS_PRE: ${{ inputs.is_prerelease }}
+          INPUT_COMPAT: ${{ inputs.compat }}
           EVENT_TAG: ${{ github.event.release.tag_name }}
           EVENT_IS_PRE: ${{ github.event.release.prerelease }}
           SCOOP_PAT: ${{ secrets.TAP_GITHUB_TOKEN }}
@@ -73,7 +79,7 @@ jobs:
 
           # ── 生成单个 manifest ──────────────────────────────────────
           make_manifest() {
-            local tag="$1" is_pre="$2" out="$3"
+            local tag="$1" is_pre="$2" out="$3" compat="${4:-false}"
             local clean="${tag#v}"
             local repo_url="https://github.com/${GH_REPO}"
             local desc="Zed Editor (Localized / 汉化版)"
@@ -89,6 +95,7 @@ jobs:
 
             local manifest
             manifest=$(jq -n \
+              --argjson compat "$compat" \
               --arg version  "$clean" \
               --arg desc     "$desc" \
               --arg homepage "$repo_url" \
@@ -101,7 +108,8 @@ jobs:
                 version: $version, description: $desc,
                 homepage: $homepage, license: "GPL-3.0-only",
                 architecture: {"64bit": {url: $url_x64, hash: $hash_x64}},
-                bin: [["bin\\ZedG.exe", "zedg"]],
+                bin: ([["bin\\ZedG.exe", "zedg"]] +
+                      (if $compat == "true" then [["bin\\ZedG.exe", "zed"]] else [] end)),
                 shortcuts: [["ZedG.exe", "ZedG"]],
                 post_install: [
                   "$desktop = [Environment]::GetFolderPath(\"Desktop\")",
@@ -143,6 +151,9 @@ jobs:
 
           # ── 判断模式与目标版本 ─────────────────────────────────────
           MODE="${INPUT_MODE:-auto}"
+          # compat=true 时额外生成 zedg-compat(.preview).json：除 zedg 命令外
+          # 同时 shim `zed`，让生态工具/git difftool 把 ZedG 当默认编辑器。
+          COMPAT="${INPUT_COMPAT:-false}"
           TARGET_TAG=""
           IS_PRE="false"
 
@@ -161,6 +172,10 @@ jobs:
             echo "both 模式：stable=$STABLE_TAG  prerelease=${PRE_TAG:-（无）}"
             make_manifest "$STABLE_TAG" "false" /tmp/manifests/zedg.json
             [ -n "$PRE_TAG" ] && make_manifest "$PRE_TAG" "true" /tmp/manifests/zedg-preview.json
+            if [ "$COMPAT" = "true" ]; then
+              make_manifest "$STABLE_TAG" "false" /tmp/manifests/zedg-compat.json "true"
+              [ -n "$PRE_TAG" ] && make_manifest "$PRE_TAG" "true" /tmp/manifests/zedg-compat-preview.json "true"
+            fi
           else
             if [ -z "$TARGET_TAG" ] && [ -n "$INPUT_TAG" ]; then
               TARGET_TAG="$INPUT_TAG"
@@ -181,6 +196,13 @@ jobs:
               make_manifest "$TARGET_TAG" "true"  /tmp/manifests/zedg-preview.json
             else
               make_manifest "$TARGET_TAG" "false" /tmp/manifests/zedg.json
+            fi
+            if [ "$COMPAT" = "true" ]; then
+              if [ "$IS_PRE" = "true" ]; then
+                make_manifest "$TARGET_TAG" "true"  /tmp/manifests/zedg-compat-preview.json "true"
+              else
+                make_manifest "$TARGET_TAG" "false" /tmp/manifests/zedg-compat.json "true"
+              fi
             fi
           fi
 
