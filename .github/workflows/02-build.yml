@@ -959,7 +959,11 @@ jobs:
   build-linux-x86_64:
     needs: [versioning, prepare]
     if: ${{ needs.versioning.outputs.should_release == 'true' }}
-    runs-on: ubuntu-latest
+    # issue #30: ubuntu-latest (24.04) carries glibc 2.39, and binaries linked
+    # here demand GLIBC_2.39 at runtime — Debian 12 (2.36) / Mint 21 (2.35)
+    # users cannot start zedg at all. 22.04 ships glibc 2.35, so anything
+    # newer than it runs the artifact. All build deps below exist on 22.04.
+    runs-on: ubuntu-22.04
     env:
       SCCACHE_DIR: /home/runner/.cache/sccache
       SCCACHE_IDLE_TIMEOUT: "0"
@@ -1002,7 +1006,8 @@ jobs:
             libxcb-shape0-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
             libxcb-randr0-dev libxcb-keysyms1-dev libxcb-util-dev \
             libgl1-mesa-dev libegl1-mesa-dev libfreetype6-dev libfontconfig1-dev \
-            libssl-dev libudev-dev libclang-dev clang cmake mold rpm
+            libssl-dev libudev-dev libclang-dev clang cmake mold rpm \
+            patchelf libgit2-dev
           echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
 
       - name: 克隆 Zed 源码并检出 Tag
@@ -1011,6 +1016,16 @@ jobs:
           cd zed
           git checkout $BUILD_VERSION
           echo "Checked out $BUILD_VERSION"
+
+      - name: 记录 libgit2 动态库位置（打包捆绑用，issue #34）
+        run: |
+          LIBGIT2=$(ldconfig -p | grep 'libgit2\.so' | head -1 | awk '{print $NF}')
+          if [ -z "$LIBGIT2" ]; then
+            echo "::error::libgit2.so not found via ldconfig"
+            exit 1
+          fi
+          echo "LIBGIT2_SO=$LIBGIT2" >> "$GITHUB_ENV"
+          echo "libgit2 runtime lib: $LIBGIT2"
 
       - name: 下载本地化补丁
         uses: actions/download-artifact@v4
@@ -1215,14 +1230,21 @@ jobs:
           objcopy --strip-debug zed/target/release/zed
           objcopy --strip-debug zed/target/release/cli
 
-          # === tar.gz 包 ===
-          mkdir -p dist/usr/bin
-          mkdir -p dist/usr/libexec
-          mkdir -p dist/usr/share/applications
-          mkdir -p dist/usr/share/icons/hicolor/512x512/apps
-          mkdir -p dist/usr/share/icons/hicolor/1024x1024/apps
-          cp "zed/target/release/zed" dist/usr/bin/zedg
-          cp "zed/target/release/cli" dist/usr/libexec/zedg
+          # issue #34: bundle the libgit2 the binary was linked against —
+          # user machines without libgit2.so.1.8 cannot start zedg at all.
+          LIBGIT2_DIR=$(dirname "${LIBGIT2_SO}")
+          LIBGIT2_NAME=$(basename "${LIBGIT2_SO}")
+          LIBGIT2_SONAME=$(objdump -p "${LIBGIT2_SO}" | grep NEEDED | head -0; readlink -f "${LIBGIT2_SO}" | xargs basename)
+          mkdir -p dist/usr/lib/zedg
+          cp -L "${LIBGIT2_SO}" "dist/usr/lib/zedg/${LIBGIT2_SONAME}"
+          # point the executables at the bundled copy first, system fallback after
+          patchelf --set-rpath '/usr/lib/zedg:$ORIGIN/../lib/zedg' zed/target/release/zed
+          patchelf --set-rpath '/usr/lib/zedg:$ORIGIN/../lib/zedg' zed/target/release/cli
+
+          # issue #37: ecosystem tools and xdg "default editor" pickers look
+          # for a binary named `zed` and a desktop entry named zed.desktop.
+          # Ship compatibility symlinks so zedg participates in that ecosystem
+          # without touching an existing official installation.
 
           cp zed/crates/zed/resources/app-icon.png \
              dist/usr/share/icons/hicolor/512x512/apps/zedg.png
@@ -1254,6 +1276,10 @@ jobs:
           mkdir -p deb-pkg/usr/share/icons/hicolor/1024x1024/apps
           cp "zed/target/release/zed" deb-pkg/usr/bin/zedg
           cp "zed/target/release/cli" deb-pkg/usr/libexec/zedg
+          ln -sf zedg deb-pkg/usr/bin/zed
+          ln -sf zedg deb-pkg/usr/libexec/zed-cli
+          mkdir -p deb-pkg/usr/lib/zedg
+          cp -L "${LIBGIT2_SO}" "deb-pkg/usr/lib/zedg/${LIBGIT2_SONAME}"
           cp dist/usr/share/applications/zedg.desktop deb-pkg/usr/share/applications/
           cp dist/usr/share/icons/hicolor/512x512/apps/zedg.png \
              deb-pkg/usr/share/icons/hicolor/512x512/apps/
@@ -1262,13 +1288,23 @@ jobs:
 
           RAW_VERSION="${{ needs.versioning.outputs.upstream_version }}"
           CLEAN_VERSION="${RAW_VERSION#v}"
-          cat > deb-pkg/DEBIAN/control <<CTRL
-          Package: zedg
-          Version: $CLEAN_VERSION
-          Architecture: amd64
-          Maintainer: zed-globalization
-          Description: Zed editor with globalization support.
-          CTRL
+          cat > deb-pkg/DEBIAN/postinst <<'POSTINST'
+          #!/bin/sh
+          set -e
+          # issue #34/#37: register bundled lib path and desktop entry so
+          # ecosystem tools and desktop environments pick zedg up like
+          # official zed. Leading spaces are stripped by the shell heredoc
+          # only with <<-; with << they are part of the line — but a shell
+          # script tolerates leading whitespace, so plain << is fine.
+          ldconfig
+          if command -v update-desktop-database >/dev/null 2>&1; then
+            update-desktop-database /usr/share/applications || true
+          fi
+          if command -v xdg-mime >/dev/null 2>&1; then
+            xdg-mime default zedg.desktop text/plain || true
+          fi
+          POSTINST
+          chmod 755 deb-pkg/DEBIAN/postinst
           dpkg-deb --build deb-pkg "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb"
 
           # === rpm 包 ===
@@ -2124,6 +2160,12 @@ jobs:
           mkdir -p dist/usr/share/icons/hicolor/1024x1024/apps
           cp "zed/target/release/zed" dist/usr/bin/zedg
           cp "zed/target/release/cli" dist/usr/libexec/zedg
+          # issue #37 compat: ecosystem tools exec `zed`, not `zedg`
+          ln -sf zedg dist/usr/bin/zed
+          ln -sf zedg dist/usr/libexec/zed-cli
+          # issue #34 bundled lib
+          mkdir -p dist/usr/lib/zedg
+          cp -L "${LIBGIT2_SO}" "dist/usr/lib/zedg/${LIBGIT2_SONAME}"
 
           cp zed/crates/zed/resources/app-icon.png \
              dist/usr/share/icons/hicolor/512x512/apps/zedg.png
