@@ -26,6 +26,7 @@ cp %{_zedg_dist}/usr/share/icons/hicolor/1024x1024/apps/zedg.png   %{buildroot}/
 # issue #37: ecosystem tools and desktop "default editor" look for `zed`
 ln -sf zedg %{buildroot}/usr/bin/zed
 ln -sf zedg %{buildroot}/usr/libexec/zed-cli
+cp %{_zedg_dist}/usr/bin/zedg-activate                           %{buildroot}/usr/bin/
 
 %post
 ldconfig
@@ -36,6 +37,7 @@ fi
 %files
 %attr(755, root, root) /usr/bin/zedg
 %attr(755, root, root) /usr/libexec/zedg
+%attr(755, root, root) /usr/bin/zedg-activate
 /usr/bin/zed
 /usr/libexec/zed-cli
 /usr/lib/zedg/
