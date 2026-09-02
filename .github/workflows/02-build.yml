@@ -1982,6 +1982,15 @@ jobs:
           git checkout $BUILD_VERSION
           echo "Checked out $BUILD_VERSION"
 
+      - name: 记录 libgit2 动态库位置（打包捆绑用，issue #34）
+        run: |
+          LIBGIT2=$(ldconfig -p | grep 'libgit2\.so' | head -1 | awk '{print $NF}')
+          if [ -z "$LIBGIT2" ]; then
+            echo "::error::libgit2.so not found via ldconfig"
+            exit 1
+          fi
+          echo "LIBGIT2_SO=$LIBGIT2" >> "$GITHUB_ENV"
+          echo "libgit2 runtime lib: $LIBGIT2"
       - name: 下载本地化补丁
         uses: actions/download-artifact@v4
         with:
