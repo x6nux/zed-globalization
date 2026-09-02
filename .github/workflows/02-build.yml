@@ -554,11 +554,22 @@ jobs:
           Copy-Item "D:\z\target\release\cli.exe" zed-dist\bin\ZedG.exe
           Compress-Archive -Path zed-dist\* -DestinationPath "zedg-$env:LANG_LOWER-windows-x86_64-$env:BUILD_VERSION.zip"
 
+      # issue #37 / 安装包需求: NSIS 安装向导（可选组件里提供"覆盖官方 Zed"）
+      - name: 构建 Windows 安装程序 (NSIS)
+        shell: pwsh
+        run: |
+          Copy-Item packaging\windows\zedg-setup.nsi .
+          (Get-Content zedg-setup.nsi) -replace 'VERSION_PLACEHOLDER', $env:BUILD_VERSION | Set-Content zedg-setup.nsi
+          & "C:\Program Files (x86)\NSIS\makensis.exe" zedg-setup.nsi
+          Move-Item ..\zedg-setup.exe "zedg-setup-windows-x86_64-$env:BUILD_VERSION.exe"
+
       - name: 上传产物
         uses: actions/upload-artifact@v4
         with:
           name: zed-windows
-          path: zedg-${{ env.LANG_LOWER }}-windows-x86_64-${{ env.BUILD_VERSION }}.zip
+          path: |
+            zedg-${{ env.LANG_LOWER }}-windows-x86_64-${{ env.BUILD_VERSION }}.zip
+            zedg-setup-windows-x86_64-${{ env.BUILD_VERSION }}.exe
 
   # ===========================================================================
   # 3b. Windows ARM64 构建
@@ -874,11 +885,21 @@ jobs:
           Copy-Item "C:\z\target\aarch64-pc-windows-msvc\release\cli.exe" zed-dist\bin\ZedG.exe
           Compress-Archive -Path zed-dist\* -DestinationPath "zedg-$env:LANG_LOWER-windows-aarch64-$env:BUILD_VERSION.zip"
 
+      - name: 构建 Windows ARM64 安装程序 (NSIS)
+        shell: pwsh
+        run: |
+          Copy-Item packaging\windows\zedg-setup.nsi .
+          (Get-Content zedg-setup.nsi) -replace 'VERSION_PLACEHOLDER', $env:BUILD_VERSION | Set-Content zedg-setup.nsi
+          & "C:\Program Files (x86)\NSIS\makensis.exe" zedg-setup.nsi
+          Move-Item ..\zedg-setup.exe "zedg-setup-windows-aarch64-$env:BUILD_VERSION.exe"
+
       - name: 上传产物
         uses: actions/upload-artifact@v4
         with:
           name: zed-windows-arm64
-          path: zedg-${{ env.LANG_LOWER }}-windows-aarch64-${{ env.BUILD_VERSION }}.zip
+          path: |
+            zedg-${{ env.LANG_LOWER }}-windows-aarch64-${{ env.BUILD_VERSION }}.zip
+            zedg-setup-windows-aarch64-${{ env.BUILD_VERSION }}.exe
 
   # ===========================================================================
   # 3c. Windows MSI 安装包构建（依赖 x64 和 arm64 产物）
@@ -1280,6 +1301,8 @@ jobs:
           ln -sf zedg deb-pkg/usr/libexec/zed-cli
           mkdir -p deb-pkg/usr/lib/zedg
           cp -L "${LIBGIT2_SO}" "deb-pkg/usr/lib/zedg/${LIBGIT2_SONAME}"
+          cp scripts/zedg-activate.sh deb-pkg/usr/bin/zedg-activate
+          chmod 755 deb-pkg/usr/bin/zedg-activate
           cp dist/usr/share/applications/zedg.desktop deb-pkg/usr/share/applications/
           cp dist/usr/share/icons/hicolor/512x512/apps/zedg.png \
              deb-pkg/usr/share/icons/hicolor/512x512/apps/
@@ -2166,6 +2189,9 @@ jobs:
           # issue #34 bundled lib
           mkdir -p dist/usr/lib/zedg
           cp -L "${LIBGIT2_SO}" "dist/usr/lib/zedg/${LIBGIT2_SONAME}"
+          # 生态兼容开关脚本（用户自行运行）
+          cp scripts/zedg-activate.sh dist/usr/bin/zedg-activate
+          chmod 755 dist/usr/bin/zedg-activate
 
           cp zed/crates/zed/resources/app-icon.png \
              dist/usr/share/icons/hicolor/512x512/apps/zedg.png
