@@ -9,6 +9,7 @@ import random
 from pathlib import Path
 
 from .batch import split_batch
+from .error_codes import report as report_error
 from .prompts import (
     SYSTEM_PROMPT_TEMPLATE,
     XML_FALLBACK_INSTRUCTION,
@@ -85,10 +86,7 @@ async def _call_ai(
             last_err = e
             if attempt < 4:
                 delay = (2**attempt) * 3 + random.uniform(0, 2)
-                log.warning(
-                    "AI 调用失败（%s），等待 %.1fs 重试 (%d/5)",
-                    e, delay, attempt + 1,
-                )
+                report_error(log, e, f"重试 {attempt + 1}/5，等待 {delay:.1f}s")
                 await asyncio.sleep(delay)
                 continue
             raise
@@ -114,7 +112,7 @@ async def _fetch_translation(
             if result:
                 return result
         except Exception as e:
-            log.warning("翻译失败 %s: %s", file_path, e)
+            report_error(log, e, f"翻译失败 {file_path}（JSON 级）")
             return {}
 
     # 第二级: XML(CDATA) 格式重试 3 次
@@ -127,7 +125,7 @@ async def _fetch_translation(
                 return result
             log.debug("XML 解析重试 (%d/3): %s", attempt + 1, file_path)
         except Exception as e:
-            log.warning("翻译失败 %s: %s", file_path, e)
+            report_error(log, e, f"翻译失败 {file_path}（XML 级）")
             return {}
 
     # 第三级: 编号格式重试 3 次
@@ -141,7 +139,7 @@ async def _fetch_translation(
                 return result
             log.debug("编号格式解析重试 (%d/3): %s", attempt + 1, file_path)
         except Exception as e:
-            log.warning("翻译失败 %s: %s", file_path, e)
+            report_error(log, e, f"翻译失败 {file_path}（编号级）")
             return {}
 
     log.warning(
@@ -181,7 +179,7 @@ async def _translate_batch(
             raw = await _call_ai(client, model, system_prompt, fix_prompt)
             fixed = parse_json_response(raw)
         except Exception as e:
-            log.warning("占位符修正请求失败 %s: %s", file_path, e)
+            report_error(log, e, f"占位符修正请求失败 {file_path} [ZL1005]")
             break
         if fixed:
             for key, val in fixed.items():
@@ -243,7 +241,7 @@ async def _ai_fix_consistency(
         raw = await _call_ai(client, model, system_prompt, user_prompt)
         fixed = parse_json_response(raw)
     except Exception as e:
-        log.warning("AI 一致性修复请求失败: %s", e)
+        report_error(log, e, "AI 一致性修复请求失败")
         return result, fix_log
 
     if not fixed:
