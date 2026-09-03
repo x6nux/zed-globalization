@@ -1069,6 +1069,7 @@ jobs:
             libgl1-mesa-dev libegl1-mesa-dev libfreetype6-dev libfontconfig1-dev \
             libssl-dev libudev-dev libclang-dev clang cmake mold rpm \
             patchelf libgit2-dev
+          sudo ldconfig
           echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
           # issue #30: 22.04 的 gcc-11 对 webrtc-sys 的 C++ 头文件报
           # "changes meaning of 'Network'"（clang 只警告，gcc 当错误）。
@@ -2014,6 +2015,7 @@ jobs:
             libgl1-mesa-dev libegl1-mesa-dev libfreetype6-dev libfontconfig1-dev \
             libssl-dev libudev-dev libclang-dev clang cmake mold rpm \
             patchelf libgit2-dev
+          sudo ldconfig
           echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
 
       - name: 克隆 Zed 源码并检出 Tag
