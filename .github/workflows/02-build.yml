@@ -2012,7 +2012,8 @@ jobs:
             libxcb-shape0-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
             libxcb-randr0-dev libxcb-keysyms1-dev libxcb-util-dev \
             libgl1-mesa-dev libegl1-mesa-dev libfreetype6-dev libfontconfig1-dev \
-            libssl-dev libudev-dev libclang-dev clang cmake mold rpm
+            libssl-dev libudev-dev libclang-dev clang cmake mold rpm \
+            patchelf libgit2-dev
           echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
 
       - name: 克隆 Zed 源码并检出 Tag
