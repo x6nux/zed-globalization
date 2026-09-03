@@ -1380,6 +1380,16 @@ jobs:
           fi
           POSTINST
           chmod 755 deb-pkg/DEBIAN/postinst
+          # issue #50: the packaging rewrite dropped the control file write —
+          # dpkg-deb fails with "failed to open package info file
+          # 'deb-pkg/DEBIAN/control'". Restore it.
+          cat > deb-pkg/DEBIAN/control <<CTRL
+          Package: zedg
+          Version: $CLEAN_VERSION
+          Architecture: amd64
+          Maintainer: zed-globalization
+          Description: Zed editor with globalization support.
+          CTRL
           dpkg-deb --build deb-pkg "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.deb"
 
           # === rpm 包 ===
@@ -2293,6 +2303,20 @@ jobs:
 
           RAW_VERSION="${{ needs.versioning.outputs.upstream_version }}"
           CLEAN_VERSION="${RAW_VERSION#v}"
+          # issue #50: keep postinst in sync with the x86_64 section —
+          # register bundled lib path and desktop entry after install.
+          cat > deb-pkg/DEBIAN/postinst <<'POSTINST'
+          #!/bin/sh
+          set -e
+          ldconfig
+          if command -v update-desktop-database >/dev/null 2>&1; then
+            update-desktop-database /usr/share/applications || true
+          fi
+          if command -v xdg-mime >/dev/null 2>&1; then
+            xdg-mime default zedg.desktop text/plain || true
+          fi
+          POSTINST
+          chmod 755 deb-pkg/DEBIAN/postinst
           cat > deb-pkg/DEBIAN/control <<CTRL
           Package: zedg
           Version: $CLEAN_VERSION
