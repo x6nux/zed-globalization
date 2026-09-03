@@ -303,7 +303,7 @@ Function un.RemoveFromPath
   Call un.StrContains
   Pop $2
   StrCmp $2 "" done
-    ${StrRep} $1 "$1;" ";$0;" ";"
+    !insertmacro StrRep $1 "$1;" ";$0;" ";"
     WriteRegExpandStr HKCU "Environment" "Path" "$1"
     SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=2000
   done:
