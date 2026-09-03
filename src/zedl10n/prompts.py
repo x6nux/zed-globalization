@@ -111,13 +111,6 @@ def build_entries_text(strings: dict[str, str]) -> str:
     return "\n".join(lines)
 
 
-def estimate_tokens(text: str) -> int:
-    """使用 o200k_base 编码计算 token 数，乘 1.1 保守估算"""
-    import tiktoken
-    enc = tiktoken.get_encoding("o200k_base")
-    return int(len(enc.encode(text, disallowed_special=())) * 1.1)
-
-
 def build_user_prompt(
     file_path: str, strings: dict[str, str], file_content: str = "",
 ) -> str:

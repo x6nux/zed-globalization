@@ -2435,6 +2435,7 @@ jobs:
         run: |
           mkdir release-dist
           mv "artifacts/zed-windows/zedg-${LANG_LOWER}-windows-x86_64-${BUILD_VERSION}.zip" release-dist/ || echo "No Windows x86_64 artifact"
+          mv "artifacts/zed-windows/zedg-setup-windows-x86_64-${BUILD_VERSION}.exe" release-dist/ || echo "No Windows x86_64 NSIS setup artifact"
           mv "artifacts/zed-windows-arm64/zedg-${LANG_LOWER}-windows-aarch64-${BUILD_VERSION}.zip" release-dist/ || echo "No Windows ARM64 artifact"
           mv "artifacts/zed-windows-msi/zedg-${LANG_LOWER}-windows-x86_64-${BUILD_VERSION}.msi" release-dist/ || echo "No Windows x86_64 MSI"
           mv "artifacts/zed-windows-msi/zedg-${LANG_LOWER}-windows-aarch64-${BUILD_VERSION}.msi" release-dist/ || echo "No Windows aarch64 MSI"
