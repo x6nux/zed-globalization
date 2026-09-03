@@ -555,6 +555,27 @@ jobs:
           Compress-Archive -Path zed-dist\* -DestinationPath "zedg-$env:LANG_LOWER-windows-x86_64-$env:BUILD_VERSION.zip"
 
       # issue #37 / 安装包需求: NSIS 安装向导（可选组件里提供"覆盖官方 Zed"）
+      # windows-2025 (windows-latest) 镜像不再预装 NSIS（actions/runner-images#11754），
+      # 这里显式安装，避免 makensis.exe 找不到
+      - name: 安装 NSIS
+        shell: pwsh
+        run: |
+          if (Test-Path "C:\Program Files (x86)\NSIS\makensis.exe") {
+            Write-Host "NSIS 已预装"
+            exit 0
+          }
+          for ($i = 1; $i -le 3; $i++) {
+            Write-Host "Chocolatey 安装 NSIS 尝试 $i/3..."
+            choco install nsis -y --no-progress 2>&1
+            if ($LASTEXITCODE -eq 0 -and (Test-Path "C:\Program Files (x86)\NSIS\makensis.exe")) {
+              Write-Host "NSIS 安装成功"
+              exit 0
+            }
+            if ($i -lt 3) { Write-Host "等待 30 秒后重试..."; Start-Sleep -Seconds 30 }
+          }
+          Write-Host "::error::NSIS 安装失败"
+          exit 1
+
       - name: 构建 Windows 安装程序 (NSIS)
         shell: pwsh
         run: |
@@ -884,6 +905,25 @@ jobs:
           Copy-Item "C:\z\target\aarch64-pc-windows-msvc\release\zed.exe" zed-dist\ZedG.exe
           Copy-Item "C:\z\target\aarch64-pc-windows-msvc\release\cli.exe" zed-dist\bin\ZedG.exe
           Compress-Archive -Path zed-dist\* -DestinationPath "zedg-$env:LANG_LOWER-windows-aarch64-$env:BUILD_VERSION.zip"
+
+      - name: 安装 NSIS
+        shell: pwsh
+        run: |
+          if (Test-Path "C:\Program Files (x86)\NSIS\makensis.exe") {
+            Write-Host "NSIS 已预装"
+            exit 0
+          }
+          for ($i = 1; $i -le 3; $i++) {
+            Write-Host "Chocolatey 安装 NSIS 尝试 $i/3..."
+            choco install nsis -y --no-progress 2>&1
+            if ($LASTEXITCODE -eq 0 -and (Test-Path "C:\Program Files (x86)\NSIS\makensis.exe")) {
+              Write-Host "NSIS 安装成功"
+              exit 0
+            }
+            if ($i -lt 3) { Write-Host "等待 30 秒后重试..."; Start-Sleep -Seconds 30 }
+          }
+          Write-Host "::error::NSIS 安装失败"
+          exit 1
 
       - name: 构建 Windows ARM64 安装程序 (NSIS)
         shell: pwsh
