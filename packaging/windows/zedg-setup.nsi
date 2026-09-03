@@ -202,10 +202,7 @@ FunctionEnd
 !macroend
 !insertmacro _AddToPathImpl
 
-!macro _StrRepImpl
-  !ifndef _STRREP_DEFINED
-    !define _STRREP_DEFINED
-    !macro StrRep output string search replace
+!macro StrRep output string search replace
       Push `${string}`
       Push `${search}`
       Push `${replace}`
@@ -294,8 +291,6 @@ FunctionEnd
           Pop $R0
           Push $R0
         FunctionEnd
-  !endif
-!insertmacro _StrRepImpl
 
 !macro _RemoveFromPathImpl
 Function un.RemoveFromPath
