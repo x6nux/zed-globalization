@@ -137,7 +137,7 @@ FunctionEnd
 ; ---------------------------------------------------------------------------
 Function .onInstSuccess
   ; 记录版本信息
-  WriteRegStr HKCU "Software\${APP_NAME}" "Version" "${VERSION_PLACEHOLDER}"
+  WriteRegStr HKCU "Software\${APP_NAME}" "Version" "VERSION_PLACEHOLDER"
 FunctionEnd
 
 ; ---------------------------------------------------------------------------
@@ -201,6 +201,101 @@ Function AddToPath
 FunctionEnd
 !macroend
 !insertmacro _AddToPathImpl
+
+!macro _StrRepImpl
+  !ifndef _STRREP_DEFINED
+    !define _STRREP_DEFINED
+    !macro StrRep output string search replace
+      Push `${string}`
+      Push `${search}`
+      Push `${replace}`
+      !ifndef __UNINSTALL__
+        Call StrRep
+      !else
+        Call un.StrRep
+      !endif
+      Pop ${output}
+    !macroend
+    Function StrRep
+      Exch $R2 ; replace
+      Exch $R1 ; search
+      Exch 2
+      Exch $R0 ; string
+      Push $R3
+      Push $R4
+      Push $R5
+      Push $R6
+      StrCpy $R3 0
+      StrLen $R4 $R1
+      loop:
+        StrCpy $R5 $R0 $R4 $R3
+        StrCmp $R5 $R1 found
+        StrCmp $R5 "" done
+        IntOp $R3 $R3 + 1
+        Goto loop
+      found:
+        StrCpy $R6 $R0 $R3
+        IntOp $R3 $R3 + $R4
+        StrCpy $R0 $R0 "" $R3
+        StrCpy $R0 $R6$R2$R0
+        StrCpy $R3 0
+        StrLen $R4 $R1
+        StrCmp $R4 0 done
+        Goto loop
+      done:
+        Pop $R6
+        Pop $R5
+        Pop $R4
+        Pop $R3
+        Push $R0
+        Pop $R0
+        Exch 2
+        Pop $R2
+        Pop $R1
+        Pop $R0
+        Push $R0
+      FunctionEnd
+      Function un.StrRep
+        Exch $R2
+        Exch $R1
+        Exch 2
+        Exch $R0
+        Push $R3
+        Push $R4
+        Push $R5
+        Push $R6
+        StrCpy $R3 0
+        StrLen $R4 $R1
+        loop_u:
+          StrCpy $R5 $R0 $R4 $R3
+          StrCmp $R5 $R1 found_u
+          StrCmp $R5 "" done_u
+          IntOp $R3 $R3 + 1
+          Goto loop_u
+        found_u:
+          StrCpy $R6 $R0 $R3
+          IntOp $R3 $R3 + $R4
+          StrCpy $R0 $R0 "" $R3
+          StrCpy $R0 $R6$R2$R0
+          StrCpy $R3 0
+          StrLen $R4 $R1
+          StrCmp $R4 0 done_u
+          Goto loop_u
+        done_u:
+          Pop $R6
+          Pop $R5
+          Pop $R4
+          Pop $R3
+          Push $R0
+          Pop $R0
+          Exch 2
+          Pop $R2
+          Pop $R1
+          Pop $R0
+          Push $R0
+        FunctionEnd
+  !endif
+!insertmacro _StrRepImpl
 
 !macro _RemoveFromPathImpl
 Function un.RemoveFromPath
@@ -278,6 +373,4 @@ Function un.StrContains
     Pop $1
 FunctionEnd
 
-!macro _StrRepImpl
-!macroend
-!insertmacro _StrRepImpl
+
