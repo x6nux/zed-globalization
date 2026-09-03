@@ -1297,6 +1297,12 @@ jobs:
           objcopy --strip-debug zed/target/release/zed
           objcopy --strip-debug zed/target/release/cli
 
+          mkdir -p dist/usr/bin
+          mkdir -p dist/usr/libexec
+          mkdir -p dist/usr/share/applications
+          mkdir -p dist/usr/share/icons/hicolor/512x512/apps
+          mkdir -p dist/usr/share/icons/hicolor/1024x1024/apps
+
           # issue #34: bundle the libgit2 the binary was linked against —
           # user machines without libgit2.so.1.8 cannot start zedg at all.
           LIBGIT2_DIR=$(dirname "${LIBGIT2_SO}")
