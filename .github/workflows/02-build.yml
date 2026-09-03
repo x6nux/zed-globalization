@@ -1340,6 +1340,17 @@ jobs:
           MimeType=text/plain;
           DESKTOP
 
+          # issue #37 compat: ecosystem tools exec `zed`, not `zedg`
+          # issue #52: #34/#37 rewrite dropped the binary cp into dist/ —
+          # rpm spec reads dist/usr/bin/zedg so it must exist (align arm64).
+          cp "zed/target/release/zed" dist/usr/bin/zedg
+          cp "zed/target/release/cli" dist/usr/libexec/zedg
+          ln -sf zedg dist/usr/bin/zed
+          ln -sf zedg dist/usr/libexec/zed-cli
+          # 生态兼容开关脚本（用户自行运行）
+          cp scripts/zedg-activate.sh dist/usr/bin/zedg-activate
+          chmod 755 dist/usr/bin/zedg-activate
+
           tar -czvf "zedg-${LANG_LOWER}-linux-x86_64-${BUILD_VERSION}.tar.gz" -C dist .
 
           # === deb 包 ===
