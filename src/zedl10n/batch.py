@@ -1,14 +1,21 @@
-"""翻译批次拆分与 token 预算管理"""
+"""翻译批次拆分与字符预算管理。
+
+不做 token 估算（tiktoken 的 Rust 扩展在并发场景下有堆损坏风险，
+run 33756674101 实证），改用字符数硬限制：对中英混合文本，
+5 万字符约对应 1.5~2 万 token，与原 MAX_INPUT_TOKENS=10000 的
+批次粒度相当且偏保守。
+"""
 
 from __future__ import annotations
 
 import logging
 
-from .prompts import build_user_prompt, estimate_tokens
+from .prompts import build_user_prompt
 
 log = logging.getLogger(__name__)
 
-MAX_INPUT_TOKENS = 10_000
+MAX_INPUT_TOKENS = 10_000  # 兼容保留（外部可能引用）
+MAX_INPUT_CHARS = 50_000  # 请求总字符数硬上限
 
 
 def estimate_request_tokens(
@@ -17,9 +24,9 @@ def estimate_request_tokens(
     strings: dict[str, str],
     file_content: str,
 ) -> int:
-    """估算完整请求（system + user prompt）的 token 数"""
+    """以字符数近似请求规模（不再换算 token，仅用于相对比较与日志）"""
     user_prompt = build_user_prompt(file_path, strings, file_content)
-    return estimate_tokens(system_prompt) + estimate_tokens(user_prompt)
+    return len(system_prompt) + len(user_prompt)
 
 
 def truncate_file_content(
@@ -28,11 +35,15 @@ def truncate_file_content(
     system_prompt: str,
     max_tokens: int,
 ) -> str:
-    """当源文件过大时，保留字符串附近上下文并截断其余部分"""
-    budget = max_tokens - estimate_tokens(system_prompt) - 5000
+    """当源文件过大时，保留字符串附近上下文并截断其余部分。
+
+    max_tokens 参数兼容旧签名，内部按字符预算换算：
+    chars_budget ≈ max_tokens * 5，且不超过 MAX_INPUT_CHARS。
+    """
+    budget = min(max_tokens * 5, MAX_INPUT_CHARS) - len(system_prompt) - 25_000
     if budget <= 0:
         return ""
-    if estimate_tokens(file_content) <= budget:
+    if len(file_content) <= budget:
         return file_content
 
     # 找到每个字符串在文件中的行号（匹配带引号的字面量）
@@ -46,14 +57,14 @@ def truncate_file_content(
 
     if not hit_lines:
         # 没找到匹配，按比例从头截断
-        ratio = budget / estimate_tokens(file_content)
+        ratio = budget / len(file_content)
         cut = int(len(file_content) * ratio)
         return file_content[:cut] + "\n... (文件过大，已截断)"
 
     # 从大窗口开始尝试，逐步缩小直到满足 budget
     for ctx_lines in (80, 40, 20, 10):
         kept = _build_context_regions(lines, hit_lines, ctx_lines)
-        if estimate_tokens(kept) <= budget:
+        if len(kept) <= budget:
             log.debug(
                 "源文件过大，保留 %d 处字符串附近 ±%d 行上下文",
                 len(hit_lines),
@@ -63,8 +74,8 @@ def truncate_file_content(
 
     # 最小窗口仍超限，用最小窗口的结果再按比例截断
     kept = _build_context_regions(lines, hit_lines, 5)
-    if estimate_tokens(kept) > budget:
-        ratio = budget / estimate_tokens(kept)
+    if len(kept) > budget:
+        ratio = budget / len(kept)
         cut = int(len(kept) * ratio)
         kept = kept[:cut] + "\n... (已截断)"
     return kept
@@ -112,7 +123,7 @@ def split_batch(
     file_content: str,
     max_tokens: int = MAX_INPUT_TOKENS,
 ) -> tuple[list[dict[str, str]], str]:
-    """根据 token 预算将字符串拆分为多批。
+    """按字符预算将字符串拆分为多批。
 
     如果源文件过大，自动截断。返回 (批次列表, 实际使用的 file_content)。
     """
@@ -132,10 +143,10 @@ def split_batch(
         dict(items),
         content,
     )
-    if total <= max_tokens:
+    if total <= MAX_INPUT_CHARS:
         return [dict(items)], content
 
-    # 超限：估算每条字符串的平均 token 开销，计算初始批容量
+    # 超限：按每条字符串的平均字符开销，计算初始批容量
     overhead = estimate_request_tokens(
         system_prompt,
         file_path,
@@ -143,21 +154,20 @@ def split_batch(
         content,
     )
     per_string = max(1, (total - overhead) // len(items))
-    capacity = max(10, (max_tokens - overhead) // per_string)
+    capacity = max(1, (MAX_INPUT_CHARS - overhead) // per_string)
 
-    # 验证并缩减直到满足限制
-    while capacity >= 10:
+    # 验证并缩减直到满足限制（下限 1 条：单条超限时也必须拆出去）
+    while capacity > 1:
         test_batch = dict(items[:capacity])
-        tokens = estimate_request_tokens(
+        size = estimate_request_tokens(
             system_prompt,
             file_path,
             test_batch,
             content,
         )
-        if tokens <= max_tokens:
+        if size <= MAX_INPUT_CHARS:
             break
-        capacity = int(capacity * 0.8)
-    capacity = max(10, capacity)
+        capacity = max(1, int(capacity * 0.8))
 
     batches = [dict(items[i : i + capacity]) for i in range(0, len(items), capacity)]
     return batches, content
