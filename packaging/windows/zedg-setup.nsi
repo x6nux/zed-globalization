@@ -1,4 +1,4 @@
-# ZedG Windows 安装程序（NSIS）
+﻿# ZedG Windows 安装程序（NSIS）
 # 生成: zedg-setup-x64.exe / zedg-setup-arm64.exe
 # 功能:
 #   1. 释放 ZedG.exe + bin\ZedG.exe(cli) + 运行时库到安装目录
