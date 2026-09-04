@@ -6,10 +6,6 @@
 
 [Zed 编辑器](https://github.com/zed-industries/zed) 汉化版（中文版），支持简体中文、繁体中文、日语、韩语等多语言。AI 驱动的全自动翻译与构建流水线，开箱即用。
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=x6nux/zed-globalization&type=Date)](https://star-history.com/#x6nux/zed-globalization&Date)
-
 > **Zed 汉化版** | Zed 中文版 | Zed Chinese | Zed Localized | Zed 多语言 | Zed 国际化 | Zed i18n | Zed l10n
 
 ## 下载安装
