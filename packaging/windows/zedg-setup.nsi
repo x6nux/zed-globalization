@@ -16,6 +16,10 @@
 !include "MUI2.nsh"
 !include "FileFunc.nsh"
 
+; Unicode 安装程序: 字符串以 UTF-16 存储, 不随编译机/用户系统代码页变化。
+; 否则 ANSI 模式下中文在英文 CI 编译机 (CP1252) 上被转成 '?'，装出来就是乱码
+Unicode true
+
 Name "${APP_NAME}"
 OutFile "..\zedg-setup.exe"
 InstallDir "$LOCALAPPDATA\Programs\ZedG"
@@ -314,58 +318,65 @@ FunctionEnd
 !macroend
 !insertmacro _RemoveFromPathImpl
 
+; StrContains: 在 haystack 中查找 needle, 命中返回从命中处起的尾部, 未命中返回空串。
+; 调用约定: 先 push haystack 再 push needle (needle 在栈顶), 返回值压栈
+; 注意: 全部使用标签跳转, 禁用相对 Goto (相对偏移跳错会跳过自增导致死循环)
 Function StrContains
-  Exch $1 ; needle
-  Exch
-  Exch $0 ; haystack
-  Exch
-  Push $2
-  Push $3
-  StrCpy $2 -1
-  IntOp $2 $2 + 1
-  StrCpy $3 $0 1 $2
-  StrCmp $3 "" notfound
-  StrCpy $3 $0 ${NSIS_MAX_STRLEN} $2
-  StrCmp $3 $1 found
-  Goto -4
-  found:
-    StrCpy $2 $2 $0 ""
-    StrCpy $0 $2
-    Goto done
-  notfound:
-    StrCpy $0 ""
-  done:
-    Pop $3
-    Pop $2
-    Exch $0
-    Pop $1
+  Exch $R0            ; $R0 = needle, 栈: [haystack, $R0_old]
+  Exch                ; 栈: [$R0_old, haystack]
+  Exch $R1            ; $R1 = haystack, 栈: [$R0_old, $R1_old]
+  Push $R2
+  Push $R3
+  Push $R4
+  StrLen $R2 $R0      ; needle 长度
+  StrCpy $R3 0        ; 扫描位置
+  loop_scan:
+    StrCpy $R4 $R1 $R2 $R3
+    StrCmp $R4 $R0 scan_found
+    StrCmp $R4 "" scan_notfound
+    IntOp $R3 $R3 + 1
+    Goto loop_scan
+  scan_found:
+    StrCpy $R1 $R1 "" $R3
+    Goto scan_done
+  scan_notfound:
+    StrCpy $R1 ""
+  scan_done:
+    Pop $R4
+    Pop $R3
+    Pop $R2
+    Exch              ; 栈: [$R1_old, $R0_old]
+    Pop $R0
+    Exch $R1          ; 栈顶 = 结果, $R1 恢复
 FunctionEnd
 
 Function un.StrContains
-  Exch $1
+  Exch $R0
   Exch
-  Exch $0
-  Exch
-  Push $2
-  Push $3
-  StrCpy $2 -1
-  IntOp $2 $2 + 1
-  StrCpy $3 $0 1 $2
-  StrCmp $3 "" notfound
-  StrCpy $3 $0 ${NSIS_MAX_STRLEN} $2
-  StrCmp $3 $1 found
-  Goto -4
-  found:
-    StrCpy $2 $2 $0 ""
-    StrCpy $0 $2
-    Goto done
-  notfound:
-    StrCpy $0 ""
-  done:
-    Pop $3
-    Pop $2
-    Exch $0
-    Pop $1
+  Exch $R1
+  Push $R2
+  Push $R3
+  Push $R4
+  StrLen $R2 $R0
+  StrCpy $R3 0
+  loop_scan_u:
+    StrCpy $R4 $R1 $R2 $R3
+    StrCmp $R4 $R0 scan_found_u
+    StrCmp $R4 "" scan_notfound_u
+    IntOp $R3 $R3 + 1
+    Goto loop_scan_u
+  scan_found_u:
+    StrCpy $R1 $R1 "" $R3
+    Goto scan_done_u
+  scan_notfound_u:
+    StrCpy $R1 ""
+  scan_done_u:
+    Pop $R4
+    Pop $R3
+    Pop $R2
+    Exch
+    Pop $R0
+    Exch $R1
 FunctionEnd
 
 

@@ -580,7 +580,7 @@ jobs:
         shell: pwsh
         run: |
           Copy-Item packaging\windows\zedg-setup.nsi .
-          (Get-Content zedg-setup.nsi) -replace 'VERSION_PLACEHOLDER', $env:BUILD_VERSION | Set-Content zedg-setup.nsi
+          (Get-Content zedg-setup.nsi -Raw) -replace 'VERSION_PLACEHOLDER', $env:BUILD_VERSION | Set-Content zedg-setup.nsi -Encoding utf8BOM
           & "C:\Program Files (x86)\NSIS\makensis.exe" zedg-setup.nsi
           Move-Item ..\zedg-setup.exe "zedg-setup-windows-x86_64-$env:BUILD_VERSION.exe"
 
@@ -929,7 +929,7 @@ jobs:
         shell: pwsh
         run: |
           Copy-Item packaging\windows\zedg-setup.nsi .
-          (Get-Content zedg-setup.nsi) -replace 'VERSION_PLACEHOLDER', $env:BUILD_VERSION | Set-Content zedg-setup.nsi
+          (Get-Content zedg-setup.nsi -Raw) -replace 'VERSION_PLACEHOLDER', $env:BUILD_VERSION | Set-Content zedg-setup.nsi -Encoding utf8BOM
           & "C:\Program Files (x86)\NSIS\makensis.exe" zedg-setup.nsi
           Move-Item ..\zedg-setup.exe "zedg-setup-windows-aarch64-$env:BUILD_VERSION.exe"
 
