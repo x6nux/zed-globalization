@@ -110,6 +110,58 @@ scoop install zedg-compat
 > schtasks /delete /tn "ZedGUpdate" /f
 > ```
 
+## 卸载
+
+### macOS（Homebrew）
+
+```bash
+# 卸载 ZedG（稳定版 / 预览版同理）
+brew uninstall --cask zedg
+brew untap x6nux/zedg   # 可选：移除 tap 源
+```
+
+若启用了自动更新，先取消定时任务再卸载：
+
+```bash
+brew autoupdate stop        # 停止 12 小时定时更新
+brew untap homebrew/autoupdate   # 可选：彻底移除 autoupdate
+```
+
+### Windows（Scoop）
+
+```powershell
+# 卸载 ZedG（稳定版 / 预览版 / 兼容版同理）
+scoop uninstall zedg
+
+# 若启用了自动更新，先删除计划任务
+schtasks /delete /tn "ZedGUpdate" /f
+```
+
+### Windows（NSIS 安装包）
+
+双击运行安装目录下的 `Uninstall.exe`（或在 "设置 → 应用" 中卸载 ZedG）。卸载程序会：
+- 删除 ZedG 程序文件与 PATH 注册
+- 若曾勾选 "覆盖官方 Zed 安装"，自动还原官方 `zed.exe`
+
+### Linux
+
+```bash
+# deb 包（Ubuntu / Debian）
+sudo apt remove zedg
+
+# rpm 包（Fedora / RHEL）
+sudo dnf remove zedg
+
+# tar.gz 手动安装（解压到 /usr/local 的反向操作）
+sudo rm -f /usr/local/bin/zedg /usr/local/bin/zed
+sudo rm -f /usr/local/libexec/zedg /usr/local/libexec/zed-cli
+sudo rm -rf /usr/local/lib/zedg
+sudo rm -f /usr/local/share/applications/zedg.desktop
+sudo rm -f /usr/local/share/icons/hicolor/{512x512,1024x1024}/apps/zedg.png
+sudo rm -f /usr/local/bin/zedg-activate
+sudo ldconfig
+```
+
 ## 特性
 
 - AI 自动扫描识别需翻译的 Rust 源文件
