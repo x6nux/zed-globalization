@@ -57,3 +57,6 @@ target/
 
 # macOS
 .DS_Store
+
+# 本地 NSIS 安装器测试产物
+test-nsis/
