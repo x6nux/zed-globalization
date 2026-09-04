@@ -1670,6 +1670,9 @@ jobs:
       SCCACHE_DIR: /Users/runner/Library/Caches/Mozilla.sccache
       SCCACHE_IDLE_TIMEOUT: "0"
       BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
+      # Intel runner 上 rustc/LLVM AlwaysInliner 偶发 SIGSEGV（run 33834780189），
+      # rustc 官方建议增大线程栈（默认 8MB -> 16MB）
+      RUST_MIN_STACK: "16777216"
     steps:
       - uses: actions/checkout@v4
 
