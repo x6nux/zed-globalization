@@ -434,7 +434,21 @@
         "cancelled permission request should not select an outcome": "已取消的权限请求不应选择结果",
         "toolu_01completed_while_waiting": "",
         "terminal tool call update should close pending permission request": "终端工具调用更新应关闭待处理的权限请求",
-        "/test/file": ""
+        "/test/file": "",
+        "\n\n": "",
+        "\n": "",
+        "```sh\necho 'hello from exec test'\n```": "",
+        "```\nplain preview\n```": "",
+        "```cpp\nint main() {}\n```": "",
+        "```\n# plain preview\n```": "",
+        "one\ntwo\nthree\n": "",
+        "one\ntwo\nthree\nfour\nfive\n": "",
+        "zero\n": "",
+        "zero\none\ntwo\nthree\nfour\nfive\n": "",
+        "one\ntwo\nthree\nfour\n": "",
+        "three\nfour\n": "",
+        "one\ntwo\n": "",
+        "two\nthree\n": ""
     },
     "zed/crates/acp_thread/src/mention.rs": {
         "default_include_errors": "",
@@ -715,7 +729,8 @@
         "acp-connection-selector": "",
         "restart_connection": "",
         "Restart Connection": "重新连接",
-        "Reconnecting to {}": "正在重新连接到 {}"
+        "Reconnecting to {}": "正在重新连接到 {}",
+        "```json\n{}\n```": ""
     },
     "zed/crates/activity_indicator/src/activity_indicator.rs": {
         "Language server {server_name}:\\n\\n{status}": "语言服务器 {server_name}:\n\n{status}",
@@ -4260,7 +4275,8 @@
         "expected Editor variant": "预期为编辑器变体",
         "expected exactly one range for whole-line fallback": "整行回退应恰好有一个范围",
         "def": "",
-        "whole-line fallback should capture the current row": "整行回退应捕获当前行"
+        "whole-line fallback should capture the current row": "整行回退应捕获当前行",
+        "abc\ndef\nghi": ""
     },
     "zed/crates/agent_ui/src/context.rs": {
         "Images attached by user:": "用户附加的图片:",
@@ -4279,7 +4295,7 @@
         "Assistant Response Accepted": "",
         "bug: failed to find blocks for scrolling to inline assist": "错误:找不到用于滚动到内联助手的代码块",
         "test-support": "",
-        "editor was dropped": "",
+        "editor was dropped": "编辑器已被释放",
         "Inline assistant error: {}": "内联助手错误: {}",
         "assistant": "",
         "Fix with Assistant": "使用助手修复",
@@ -4867,7 +4883,7 @@
         "unable to get module handle": "无法获取模块句柄",
         "unable to load icon file": "无法加载图标文件",
         "unable to get desktop window rect": "无法获取桌面窗口矩形",
-        "Zed": "",
+        "Zed": "Zed",
         "unable to create dialog window": "无法创建对话框窗口",
         "system": "",
         "Updating Zed...": "正在更新 Zed...",
@@ -5470,7 +5486,7 @@
         "LD_LIBRARY_PATH": "",
         "/usr/bin/flatpak-spawn": "",
         "--host": "",
-        "--env=ZED_UPDATE_EXPLANATION=Please use flatpak to update zed": "",
+        "--env=ZED_UPDATE_EXPLANATION=Please use flatpak to update zed": "--env=ZED_UPDATE_EXPLANATION=请使用 flatpak 更新 zed",
         "--env={EXTRA_LIB_ENV_NAME}={}": "",
         "lib": "",
         "bin": "",
@@ -6009,7 +6025,7 @@
         "Find components or usages…": "查找组件或用法…",
         "Uncategorized": "未分类",
         "All Components": "所有组件",
-        "({})": "",
+        "({})": "({})",
         "component-list": "",
         "No components matching '{}'.": "没有匹配“{}”的组件。",
         "render-component-page": "",
@@ -6777,7 +6793,7 @@
         "Provides an interactive terminal session within the debugging environment.": "在调试环境中提供交互式终端会话。",
         "Allows inspection of memory contents.": "允许检查内存内容。",
         "debugger_panel_": "",
-        "Serializing pane group with serde_json as a string": "",
+        "Serializing pane group with serde_json as a string": "使用 serde_json 将窗格组序列化为字符串",
         "{DEBUGGER_PANEL_PREFIX}-{adapter_name}": "",
         "{DEBUGGER_PANEL_PREFIX}-{}": "",
         "Displays program output and allows manual input of debugger commands": "显示程序输出,并允许手动输入调试器命令",
@@ -7017,7 +7033,7 @@
         "Debugger": "调试器"
     },
     "zed/crates/dev_container/src/devcontainer_api.rs": {
-        "default": "",
+        "default": "默认",
         ".devcontainer/devcontainer.json": "",
         "camelCase": "",
         "{}": "",
@@ -7030,7 +7046,7 @@
         "Cannot find a valid node runtime": "无法找到有效的 node 运行时",
         "Not within a valid project": "不在有效的项目中",
         "find_devcontainer_configs: No workspace found": "",
-        "find_devcontainer_configs: No worktree found": "",
+        "find_devcontainer_configs: No worktree found": "find_devcontainer_configs: 未找到工作树",
         ".devcontainer": "",
         "valid path": "",
         "find_devcontainer_configs: .devcontainer directory not found in worktree": "",
@@ -7112,15 +7128,15 @@
         "DevContainer template apply failed with error: {}": "应用 DevContainer 模板失败,错误:{}",
         "{}.js": "",
         "Non-success status running devcontainer up for workspace: out: {:?}, err: {:?}": "为工作区运行 devcontainer up 时返回非成功状态:out: {:?}, err: {:?}",
-        "root": "",
+        "root": "根",
         ".devcontainer.json": "",
-        "find_configs_in_snapshot: Scanning .devcontainer directory": "",
-        "find_configs_in_snapshot: Found entry: {:?}, is_file: {}, is_dir: {}": "",
-        "find_configs_in_snapshot: Found default devcontainer.json": "",
-        "find_configs_in_snapshot: Found config in subfolder: {}": "",
-        "find_configs_in_snapshot: Subfolder {} has no devcontainer.json": "",
-        "find_configs_in_snapshot: Found .devcontainer.json in project root": "",
-        "find_configs_in_snapshot: Found {} configurations": "",
+        "find_configs_in_snapshot: Scanning .devcontainer directory": "find_configs_in_snapshot: 正在扫描 .devcontainer 目录",
+        "find_configs_in_snapshot: Found entry: {:?}, is_file: {}, is_dir: {}": "find_configs_in_snapshot: 找到条目: {:?}, is_file: {}, is_dir: {}",
+        "find_configs_in_snapshot: Found default devcontainer.json": "find_configs_in_snapshot: 找到默认 devcontainer.json",
+        "find_configs_in_snapshot: Found config in subfolder: {}": "find_configs_in_snapshot: 在子文件夹中找到配置: {}",
+        "find_configs_in_snapshot: Subfolder {} has no devcontainer.json": "find_configs_in_snapshot: 子文件夹 {} 没有 devcontainer.json",
+        "find_configs_in_snapshot: Found .devcontainer.json in project root": "find_configs_in_snapshot: 在项目根目录找到 .devcontainer.json",
+        "find_configs_in_snapshot: Found {} configurations": "find_configs_in_snapshot: 找到 {} 个配置",
         "/project": "",
         "should have a worktree": "",
         "devcontainer.json": "",
@@ -9832,7 +9848,7 @@
         "JSON": "",
         "runtime_diagnostics": "",
         "Create Pull Request": "创建拉取请求",
-        "stdout:\n{}\nstderr:\n{}": "",
+        "stdout:\n{}\nstderr:\n{}": "标准输出:\n{}\n标准错误:\n{}",
         "view-options-menu-trigger": "",
         "View Options": "视图选项",
         "Skip Hooks": "跳过钩子",
@@ -10086,7 +10102,13 @@
         "repo B should list its own x.txt": "仓库 B 应列出其自己的 x.txt",
         "marks must not carry over to another repository": "标记不得延续到另一个仓库",
         "{prompt}{user_agents_md_section}{rules_section}{instructions_section}{subject_section}\\nHere are the changes in this commit:\\n{diff_text}": "{prompt}{user_agents_md_section}{rules_section}{instructions_section}{subject_section}\\n以下是本次提交的更改:\\n{diff_text}",
-        "modified\\n": "已修改\\n"
+        "modified\\n": "已修改\\n",
+        "head one\nhead two\nhead three\nhead four": "",
+        "index one\nindex two": "",
+        "<<<<<<< HEAD\nours\n=======\ntheirs\n>>>>>>> branch\n": "",
+        "   \n  ": "",
+        "\u001b[31mhello\u001b[0m": "",
+        "\u001b[1;32mfoo\u001b[0m bar": ""
     },
     "zed/crates/git_ui/src/git_picker.rs": {
         "Branches": "分支",
@@ -11815,7 +11837,7 @@
         "Available only in the subproject you're currently in.": "仅在当前所在的子项目中可用。",
         "Available in all locations in your current project.": "在当前项目的所有位置可用。",
         "Available in all of your projects on this machine.": "在本机的所有项目中可用。",
-        "static": ""
+        "static": "静态"
     },
     "zed/crates/language_model/src/registry.rs": {
         "Configure at least one LLM provider to start using the panel.": "请至少配置一个 LLM 提供商以开始使用该面板。",
@@ -11961,7 +11983,9 @@
         "Claude Opus 4.6": "",
         "this Anthropic model does not support explicit compaction": "此 Anthropic 模型不支持显式压缩",
         "XHigh": "",
-        "xhigh": ""
+        "xhigh": "",
+        "\n": "",
+        "{response_lines}\n": ""
     },
     "zed/crates/language_models/src/provider/bedrock.rs": {
         "amazon-bedrock": "",
@@ -12804,7 +12828,7 @@
         "To reset your API key, unset the {env_var_name} environment variable.": "要重置 API 密钥,请取消设置 {env_var_name} 环境变量。",
         "Loading credentials…": "正在加载凭据…",
         "reset-api": "",
-        "OpenAI": "",
+        "OpenAI": "OpenAI",
         "custom-model": "",
         "minimal": "",
         "low": "",
@@ -12916,7 +12940,7 @@
     },
     "zed/crates/language_models/src/provider/x_ai.rs": {
         "x_ai": "",
-        "xAI": "",
+        "xAI": "xAI",
         "XAI_API_KEY": "",
         "x_ai/{}": "",
         "user": "",
@@ -16548,11 +16572,11 @@
         "uname -sm": "",
         "Failed to determine remote OS version: {error:#}": "无法确定远程操作系统版本: {error:#}",
         "{}: {:?}": "",
-        "Skipping environment variable with invalid name": "",
+        "Skipping environment variable with invalid name": "跳过名称无效的环境变量",
         "{name}={value}": "",
         "{docker_cli:?} {subcommand:?}": "",
         " {argument:?}": "",
-        "failed to run command {}: {}": "",
+        "failed to run command {}: {}": "无法运行命令 {}: {}",
         "{name}=<redacted>": "",
         "DATABASE_URL": "",
         "postgres://user:password@host/db": "",
@@ -18316,7 +18340,9 @@
         "fn main() { let a = 2; }\n": "",
         "\n\nfn main() { let a: i32 = 2; }\n": "",
         "fn main() { let a: i32 = 2; }\n": "",
-        "\n\n\n\n\nAA\n\n\n\n\n": ""
+        "\n\n\n\n\nAA\n\n\n\n\n": "",
+        "\n\n\n\n\n A \n\n\n\n\n": "",
+        "\n\n\n\n\n B \n\n\n\n\n": ""
     },
     "zed/crates/search/src/search.rs": {
         "Match Whole Words": "全词匹配",
@@ -25566,8 +25592,8 @@
         "stub": "",
         "Test": "",
         "visual-test-model": "",
-        "Visual Test Model": "",
-        "A stub model for visual testing": "",
+        "Visual Test Model": "视觉测试模型",
+        "A stub model for visual testing": "用于视觉测试的桩模型",
         "Closing sessions is not supported": "不支持关闭会话",
         "build_outcome_for_checked_patterns called on non-DropdownWithPatterns": "",
         "Always": "始终",
@@ -25749,7 +25775,7 @@
         "content of b": "",
         "dir/file_a": "",
         "dir/file_b": "",
-        "MODIFIED: ": "",
+        "MODIFIED: ": "已修改: ",
         "child 1 should only track file_a": "子日志 1 应仅追踪 file_a",
         "child 2 should only track file_b": "子日志 2 应仅追踪 file_b",
         "parent should track both files": "父日志应追踪两个文件",
@@ -25758,7 +25784,7 @@
         "file_read_time should be recorded after buffer_read": "buffer_read 之后应记录 file_read_time",
         "file_read_time should be None before buffer_edited": "buffer_edited 之前 file_read_time 应为 None",
         "file_read_time should be recorded after buffer_edited": "buffer_edited 之后应记录 file_read_time",
-        "existing content": "",
+        "existing content": "现有内容",
         "file_read_time should be None before buffer_created": "buffer_created 之前 file_read_time 应为 None",
         "file_read_time should be recorded after buffer_created": "buffer_created 之后应记录 file_read_time",
         "file_read_time should exist after buffer_read": "buffer_read 之后 file_read_time 应存在",
@@ -27604,7 +27630,12 @@
         "NEEDLE inside fence": "围栏内的 NEEDLE",
         "snippet should contain the matched line, got:\n{snippet}": "",
         "````\n": "",
-        "snippet should be wrapped in a fence longer than the inner ```, got:\n{snippet}": ""
+        "snippet should be wrapped in a fence longer than the inner ```, got:\n{snippet}": "",
+        "model-facing output should not embed file:// links, got:\\n{output}": "",
+        "before\\n```\\nNEEDLE inside fence\\n```\\nafter": "",
+        "snippet should contain the matched line, got:\\n{snippet}": "",
+        "````\\n": "",
+        "snippet should be wrapped in a fence longer than the inner ```, got:\\n{snippet}": ""
     },
     "zed/crates/agent/src/tools/list_directory_tool.rs": {
         "Cannot list directory": "无法列出目录",
@@ -27813,7 +27844,8 @@
         "[database]\nurl = \"postgres://localhost/db1\"": "",
         "const SECRET_TOKEN = \"private_token_2\";": "",
         "{\"api_key\": \"json_secret_key\"}": "",
-        "---\nname: my-skill\ndescription: x\n---\nbody": ""
+        "---\nname: my-skill\ndescription: x\n---\nbody": "",
+        "[database]\\nurl = \"postgres://localhost/db1\"": ""
     },
     "zed/crates/agent_servers/src/agent_servers.rs": {
         "test-support": "",
@@ -28708,7 +28740,7 @@
         "Project Unshared": "项目已取消共享",
         "": "",
         "not in a call": "未在通话中",
-        "SharedScreen view must be a RemoteVideoTrackView": ""
+        "SharedScreen view must be a RemoteVideoTrackView": "共享屏幕视图必须是 RemoteVideoTrackView"
     },
     "zed/crates/call/src/call_impl/participant.rs": {
         "participant location was not provided": "未提供参与者位置"
@@ -28753,7 +28785,7 @@
         "/notes": "",
         "#{}": "",
         "{:?} elapsed without receiving channels": "等待接收频道超时 {:?}",
-        "notes": "",
+        "notes": "笔记",
         "no channel for id: {channel_id}": "没有 ID 为 {channel_id} 的频道",
         "{error}": "",
         "failed to open channel {resource_name}": "无法打开频道 {resource_name}",
@@ -31122,7 +31154,8 @@
         "function two() { return 2; }": "",
         "3.rs": "",
         "mod test": "",
-        "test-internal-api-key": ""
+        "test-internal-api-key": "",
+        "one\none\none": ""
     },
     "zed/crates/collab_ui/src/notifications.rs": {
         "stories": ""
@@ -32794,7 +32827,13 @@
         "/docs/preview/": "",
         "/docs/": "",
         "<meta name=\\\"robots\\\" content=\\\"noindex, nofollow\\\">": "",
-        "#noindex#": ""
+        "#noindex#": "",
+        "<kbd class=\"keybinding\">{formatted_macos_binding}&#124;{formatted_linux_binding}</kbd>": "",
+        "<code class=\"hljs\">{}</code>": "",
+        "<meta name=\"robots\" content=\"noindex, nofollow\">": "",
+        "<dl style=\"line-height: 1.8;\">\\n": "",
+        "<dt style=\"margin-top: 1.5em; margin-bottom: 0.5em; font-weight: bold;\"><code>": "",
+        "<dd style=\"margin-left: 2em; margin-bottom: 1em;\">\\n": ""
     },
     "zed/crates/edit_prediction/src/edit_prediction_tests.rs": {
         "/root": "",
@@ -33249,7 +33288,9 @@
         "/root/LICENSE-APACHE": "",
         "Nevermind": "",
         "Also nevermind": "",
-        "": ""
+        "": "",
+        "  Paragraph 1\nwith multiple lines\n\n\n\nParagraph 2\nwith more lines\n  ": "",
+        "Word1\t\tWord2\n\n   Word3\r\n\r\n\r\nWord4   ": ""
     },
     "zed/crates/edit_prediction/src/mercury.rs": {
         "https://api.inceptionlabs.ai/v1/edit/completions": "",
@@ -34483,7 +34524,7 @@
         "unexpected EOF": "",
         "peer closed connection without sending TLS close_notify": "",
         "snowflake sql api timed out code={} message={}": "Snowflake SQL API 超时 code={} message={}",
-        "<no code>": "",
+        "<no code>": "<无代码>",
         "NULL": "",
         "accepted-after:": "",
         "explicitly-rejected-after:": "",
@@ -34590,7 +34631,15 @@
         "@@ -15,4 +17,3 @@ red": "",
         "@@ -10,6 +9,7 @@ gray": "",
         "@@ -17,4 +17,3 @@ red": "",
-        "{line}\\n": ""
+        "{line}\\n": "",
+        "--- /dev/null\n": "",
+        "--- a/{}\n": "",
+        "+++ /dev/null\n": "",
+        "+++ b/{}\n": "",
+        "{line}\n": "",
+        "\n": "",
+        "{header}\n{lines}": "",
+        "Patch header\n============\n\n": ""
     },
     "zed/crates/edit_prediction_cli/src/repair.rs": {
         "prompts/repair.md": "",
@@ -34889,8 +34938,8 @@
     },
     "zed/crates/edit_prediction_cli/src/synthesize.rs": {
         "latest_failed": "",
-        "clone {}": "",
-        "{}: list-commits": "",
+        "clone {}": "克隆 {}",
+        "{}: list-commits": "{}: 列出提交",
         "{}: {} {}": "",
         "analyzing...": "分析中...",
         "no pattern": "无模式",
@@ -35029,7 +35078,18 @@
         "\\n\\n": "",
         "```\\n\\n": "",
         "## Expected Patch Hunks\\n\\n```diff\\n": "",
-        "## Rejection Reason\\n\\n{}\\n": ""
+        "## Rejection Reason\\n\\n{}\\n": "",
+        "\n": "",
+        "Source commit: {} ({})\n\n{}": "源提交: {} ({})\n\n{}",
+        "--- a/{}\n+++ b/{}\n{}": "",
+        "# Rejected Example\n\n": "# 被拒绝的示例\n\n",
+        "## Name\n\n{}\n\n": "## 名称\n\n{}\n\n",
+        "## Reasoning\n\n{}\n\n": "## 推理\n\n{}\n\n",
+        "## Edit History Hunks\n\n```diff\n": "## 编辑历史块\n\n```差异\n",
+        "\n\n": "",
+        "```\n\n": "",
+        "## Expected Patch Hunks\n\n```diff\n": "## 预期补丁块\n\n```差异\n",
+        "## Rejection Reason\n\n{}\n": "## 拒绝原因\n\n{}\n"
     },
     "zed/crates/edit_prediction_cli/src/word_diff.rs": {
         "": "",
@@ -35888,7 +35948,10 @@
         "yyy yyy yyy\\nyyy\\n": "",
         "|stale|": "",
         "|valid|": "",
-        "zzz zzz zzz\\nzzz\\n": ""
+        "zzz zzz zzz\\nzzz\\n": "",
+        "xxx xxx xxx\nxxx\n": "",
+        "yyy yyy yyy\nyyy\n": "",
+        "zzz zzz zzz\nzzz\n": ""
     },
     "zed/crates/editor/src/display_map/invisibles.rs": {
         "\\u{2007}": "",
@@ -39235,10 +39298,10 @@
         "Saving scroll position for item {item_id:?} in workspace {workspace_id:?}": "正在保存工作区 {workspace_id:?} 中项目 {item_id:?} 的滚动位置",
         "Invalid scroll anchor: {:?}": "无效的滚动锚点: {:?}",
         "native": "",
-        "shared scroll anchor references a non native display map, but snapshot has no companion": "",
-        "shared scroll anchor display map should match the snapshot's split companion": "",
-        "shared scroll anchor references a non native display map, but the snapshot has no companion": "",
-        "shared scroll anchor display map should match the companion used for native anchor conversion": ""
+        "shared scroll anchor references a non native display map, but snapshot has no companion": "共享滚动锚点引用了非原生显示映射,但快照没有伴随快照",
+        "shared scroll anchor display map should match the snapshot's split companion": "共享滚动锚点的显示映射应与快照的拆分伴随快照匹配",
+        "shared scroll anchor references a non native display map, but the snapshot has no companion": "共享滚动锚点引用了非原生显示映射,但快照没有伴随快照",
+        "shared scroll anchor display map should match the companion used for native anchor conversion": "共享滚动锚点的显示映射应与用于原生锚点转换的伴随快照匹配"
     },
     "zed/crates/editor/src/selections_collection.rs": {
         "test-support": "",
@@ -41354,7 +41417,7 @@
         "linux": "",
         "freebsd": "",
         "test-support": "",
-        "called as_fake on a real fs": "",
+        "called as_fake on a real fs": "在真实文件系统上调用了 as_fake",
         "mtime comparison considered harmful": "",
         "_for_user": "",
         "fcntl returned -1": "fcntl 返回 -1",
@@ -41486,7 +41549,7 @@
         ".": "",
         "..": "",
         "Could not make the path absolute": "无法将路径转换为绝对路径",
-        "Failed to watch {}:\n{e}": "",
+        "Failed to watch {}:\n{e}": "无法监视 {}:\n{e}",
         "pending path events: {:?}": "待处理的路径事件: {:?}",
         "file already exists: {}": "文件已存在: {}",
         "{message}": ""
@@ -41693,7 +41756,9 @@
         "file": "",
         "bar": "",
         "straße": "",
-        "ÇŞ": ""
+        "ÇŞ": "",
+        "İ": "",
+        "i̇": ""
     },
     "zed/crates/fuzzy/src/strings.rs": {
         "Invariant violation: Index {start} out of range or not on a utf-8 boundary in string {:?}": "不变量违规:索引 {start} 超出范围或不在字符串 {:?} 的 utf-8 边界上",
@@ -43456,9 +43521,9 @@
         "app is quitting": "应用正在退出",
         "window was unexpectedly closed": "窗口意外关闭",
         "entity has no current window": "实体没有当前窗口",
-        "build_entity is taken exactly once": "",
-        "update_window returned Err without invoking the closure": "",
-        "args are taken exactly once": ""
+        "build_entity is taken exactly once": "build_entity 只会被取出一次",
+        "update_window returned Err without invoking the closure": "update_window 返回了 Err 但未调用闭包",
+        "args are taken exactly once": "args 只会被取出一次"
     },
     "zed/crates/gpui/src/app/context.rs": {
         "The entity must be alive if we have a entity context": "如果存在实体上下文,则该实体必须处于活动状态",
@@ -43818,7 +43883,7 @@
         "test-support": "",
         "GPUI_RUN_UNTIL_PARKED_LOG": "",
         "1": "",
-        "[gpui::executor] allow_parking: enabled": "",
+        "[gpui::executor] allow_parking: enabled": "[gpui::executor] allow_parking: 已启用",
         "block_test future did not complete": "block_test future 未完成",
         "Task should run normally when app is alive": "App 存活时任务应正常运行",
         "App should have been dropped": "App 应已被丢弃",
@@ -44559,7 +44624,8 @@
         "IBM Plex Sans": "",
         "Zed Plex Mono": "",
         "Lilex": "",
-        "": ""
+        "": "",
+        "ZedMono": ""
     },
     "zed/crates/gpui/src/util.rs": {
         "Timed out before future resolved": "在 future 完成前超时",
@@ -45423,7 +45489,9 @@
         "Format Selection": "格式化选区",
         "comment": "",
         "string": "",
-        "grammar in indent match set has indents_config": ""
+        "grammar in indent match set has indents_config": "",
+        "--- a/{}\n+++ b/{}\n": "",
+        "\n": ""
     },
     "zed/crates/language/src/buffer_tests.rs": {
         "Empty chunk should have empty tabs bitmap": "空块应具有空的制表符位图",
@@ -48028,7 +48096,15 @@
         "a<em>b</em>c": "",
         "a<strong>b</strong>c": "",
         "unrecognized inline HTML \\\"{input}\\\" should emit InlineHtml": "无法识别的内联HTML \"{input}\" 应发出内联HTML",
-        "unrecognized inline HTML \\\"{input}\\\" should not emit HardBreak": "无法识别的内联HTML \"{input}\" 不应发出硬换行"
+        "unrecognized inline HTML \\\"{input}\\\" should not emit HardBreak": "无法识别的内联HTML \"{input}\" 不应发出硬换行",
+        "&nbsp;&nbsp; https://some.url some \\`&#9658;\\` text": "",
+        " ": "",
+        "-- --- ... \"double quoted\" 'single quoted' ----------": "",
+        "+++\\ntitle = \"Example\"\\n+++\\n\\nParagraph": "",
+        "https://example.com/cat/é‍☕": "",
+        "‍": "",
+        "hello<br class=\"x\">world": "",
+        "hello<br class=\"x\"/>world": ""
     },
     "zed/crates/markdown/src/path_range.rs": {
         "L{}:{}": "",
@@ -48200,7 +48276,22 @@
         "the focused pane's content must be unaffected": "焦点窗格的内容必须不受影响",
         "# readme\\n": "",
         "md": "",
-        "markdown": ""
+        "markdown": "",
+        "alpha\nbeta\ngamma\n": "",
+        "first\nsecond\nthird\n": "",
+        "# Notes\n\nintro\n\n": "",
+        "filler line\n\n": "",
+        "## Target Section\n\nfound it\n": "",
+        "# Other\n\nshort\n": "",
+        "\nappended\n": "",
+        "new\n": "",
+        "old\n": "",
+        "# Note\n\nBody text\n": "",
+        "# Note\n": "",
+        "![image](image.png)\n": "",
+        "# A\n": "",
+        "# B\n": "",
+        "# readme\n": ""
     },
     "zed/crates/media/build.rs": {
         "build scripts are exempt": "",
@@ -49532,7 +49623,116 @@
         "removing {paths_to_remove:?} must edit the multibuffer exactly once": "移除 {paths_to_remove:?} 必须恰好编辑一次多缓冲区",
         "other": "",
         "タx": "",
-        "x": ""
+        "x": "",
+        "XXX\n": "",
+        "bbbb\nccccc": "",
+        "fff\ngggg": "",
+        "\n": "",
+        "bbbb\n": "",
+        "c\n": "",
+        "cc\n": "",
+        "fff\n": "",
+        "gggg\n": "",
+        "one\ntwo\nthree\n": "",
+        "one\nthree\n": "",
+        "one\ntwo\nthree\nfour\nfive\nsix\nseven\neight\n": "",
+        "one\nfour\nseven\n": "",
+        "one\nTWO\nthree\n": "",
+        "ZERO\none\nTHREE\nfour\nseven\nEIGHT\nNINE\n": "",
+        "one\ntwo\nfour\nfive\nsix\nseven\n": "",
+        "one\ntwo\nTHREE\nfour\nfive\nseven\n": "",
+        "__\n__": "",
+        "zzzzzz\n": "",
+        "ccc\n": "",
+        "ddd\n": "",
+        "ggg\n": "",
+        "hhh\n": "",
+        "ooo\n": "",
+        "ppp\n": "",
+        "bbb\n": "",
+        "eee\n": "",
+        "iii\n": "",
+        "jjj\n": "",
+        "nnn\n": "",
+        "qqq\n": "",
+        "rrr\n": "",
+        "aaaa\n": "",
+        "cccc\n": "",
+        "dddd\n": "",
+        "eeee\n": "",
+        "ffff\n": "",
+        "iiii\n": "",
+        "jjjj\n": "",
+        "kkkk\n": "",
+        "llll\n": "",
+        "a\nb\nc": "",
+        "a\nb\nc\n": "",
+        "a\nb\nc\nX": "",
+        "a\nb\nc\n\nX": "",
+        "abcd\nefghi": "",
+        "WabcdX\nYefghiZ": "",
+        "aaa\nbbb\nccc\n": "",
+        "xxx\nyyy\nzzz\n": "",
+        "111\n222\n333\n": "",
+        "a\n": "",
+        "AB1234\nAB5678": "",
+        "ABC1234\nAB5678": "",
+        "ABCDE1234\nAB5678": "",
+        "1234\n5678": "",
+        "ABCDE1234\n5678": "",
+        "AB1234\n5678": "",
+        "ABCD1234\nAB5678": "",
+        "XABCD1234\nAB5678": "",
+        "one\ntwo": "",
+        "one\n": "",
+        "foo\n": "",
+        "  ----------\n": "",
+        "---------\n": "",
+        "ZERO\nONE\nTWO\n": "",
+        "new base\n": "",
+        "one\ntwo\nthree\nfour\nfive\n": "",
+        "one\nTWO\nthree\nfour\nfive\n": "",
+        "one\nTWO\nthree\nFOUR\nfive\n": "",
+        "ZERO\n": "",
+        "-----\n": "",
+        "\n ": "",
+        "Hello World\nSecond line": "",
+        "\nHello, World ": "",
+        "hello world foo bar\n": "",
+        "hello WORLD foo BAR\n": "",
+        "    hello world foo bar\n": "",
+        "aaa bbb\nccc ddd\n": "",
+        "aaa BBB\nccc DDD\n": "",
+        "aaa bbb\ndeleted line\nccc ddd\n": "",
+        "hello world\n": "",
+        "hello WORLD\n": "",
+        "aa0\naa1": "",
+        "bb0\nbb1": "",
+        "aa0\naa1\nbb0\nbb1\ncc0": "",
+        "aaa\nbbb": "",
+        "aaa\nbbb\nccc": "",
+        "aaa\nbbb\n": "",
+        "ccc\nddd": "",
+        "aaa\nbbb\nccc\nddd": "",
+        "line_b {i}\n": "",
+        "line_c {i}\n": "",
+        "line_d {i}\n": "",
+        "second buffer\n": "",
+        "ddd\neee\n": "",
+        "xxx\n": "",
+        "yyy\n": "",
+        "zzz\n": "",
+        "www\n": "",
+        "vvv\n": "",
+        "DEL1\nDEL2\nbbb\nccc\nddd\n": "",
+        "DEL1\nbbb\nccc\nddd\n": "",
+        "DEL2\nbbb\nccc\nddd\n": "",
+        "bbb\nccc\nddd\n": "",
+        "xxx\nyyy\n": "",
+        "Q\n": "",
+        "DEL1\nDEL2\nbbb\nccc\ndd\n": "",
+        "DEL1\nDEL2\nbbb\nccc\nddd\ndd\n": "",
+        "DEL1\nDEL2\nbbb\nccc\nddd\nd\n": ""
     },
     "zed/crates/net/src/async_net.rs": {
         "windows": ""
@@ -50491,7 +50691,8 @@
         "\\nrange formatted by test prettier": "",
         "{suffix}\\n{parser}": "",
         "{text}\\n{parser}": "",
-        "Option::is_none": ""
+        "Option::is_none": "",
+        "\\\\": ""
     },
     "zed/crates/project/src/agent_registry_store.rs": {
         "https://cdn.agentclientprotocol.com/registry/v1/latest/registry.json": "",
@@ -51275,9 +51476,9 @@
         "LSP store has been dropped": "LSP store 已被丢弃",
         "No URI": "无 URI",
         "No schema handler registered": "未注册 schema 处理器",
-        "Handling schema request for {:?}": "",
-        "Schema request resolved with {}B schema": "",
-        "Schema request failed: {}": "",
+        "Handling schema request for {:?}": "正在处理 schema 请求:{:?}",
+        "Schema request resolved with {}B schema": "Schema 请求已解析,schema 大小为 {}B",
+        "Schema request failed: {}": "Schema 请求失败:{}",
         "Notifying server {NAME} (id {ID:?}) of schema change for URI: {uri:?}": "正在通知服务器 {NAME} (id {ID:?}) URI 的 schema 变更: {uri:?}",
         "Failed to notify server {NAME} (id {ID:?}) of schema change for URI {uri:?}: {error:#}": "无法通知服务器 {NAME} (id {ID:?}) URI 的 schema 变更 {uri:?}: {error:#}",
         "Notifying schema changes for URIs: {:?}": "通知 URI 的 schema 变更: {:?}"
@@ -55542,7 +55743,8 @@
         "x": "",
         "oversized": "",
         "/skills/oversized": "",
-        "/skills/oversized/SKILL.md": ""
+        "/skills/oversized/SKILL.md": "",
+        " .rules": ""
     },
     "zed/crates/proto/build.rs": {
         "cargo:rerun-if-changed=proto": "",
@@ -56303,7 +56505,7 @@
     },
     "zed/crates/repl/src/repl_editor.rs": {
         "editor is not in a worktree": "编辑器不在工作树中",
-        "editor was dropped": "编辑器已释放",
+        "editor was dropped": "编辑器已被释放",
         "No kernel found for language: {}": "未找到语言对应的内核: {}",
         "{comment_prefix}%%": "",
         "Markdown": "",
@@ -56839,7 +57041,7 @@
         "\\\"{}\\\"": "",
         "\\nIn section without context predicate:": "\n在没有上下文谓词的区段中:",
         "\\nIn section with {}:": "\n在包含 {} 的区段中:",
-        "context = \\\"{}\\\"": "",
+        "context = \\\"{}\\\"": "上下文 = \\\"{}\\\"",
         "\\\\ a": "",
         "\\\\ b": "",
         "UnbindTargetAction": "",
@@ -57479,7 +57681,7 @@
         "comment": "",
         "•": "",
         "→": "",
-        "trigger": "",
+        "trigger": "触发",
         "source.organizeImports": "",
         "type": "",
         "parameter": "",
@@ -57993,7 +58195,7 @@
         "snake_case": "",
         "crate::serialize_optional_f32_with_two_decimal_places": "",
         "macos": "",
-        "none": "",
+        "none": "无",
         "experimental.show": "",
         "tree_sitter": "",
         "language_server": "",
@@ -64245,7 +64447,19 @@
         "line one\\nline two\\n«ˇline three\\n»": "",
         "oneˇ\\ntwo\\nthree": "",
         "«one\\nˇ»two\\nthree": "",
-        "The ˇ\\nfox jumps over": ""
+        "The ˇ\\nfox jumps over": "",
+        "ˇhello world\njump labels": "",
+        "alpha beta\nˇfoo bar baz\nqux quux": "",
+        "alpha beta\nfoo «barˇ» baz\nqux quux": "",
+        "«    indented line\nˇ»next line\n": "",
+        "    «indented lineˇ»\nnext line\n": "",
+        "aa«    ˇ»next\n": "",
+        "aa   ˇ next\n": "",
+        "«  aa  ˇ»\nbbb\nccc\n": "",
+        "  «aaˇ»  \nbbb\nccc\n": "",
+        "«  aa  \nˇ»bbb\nccc\n": "",
+        "hello worldˇ\n": "",
+        "hello world\nˇ\n": ""
     },
     "zed/crates/vim/src/indent.rs": {
         "shiftwidth=4": "",
@@ -66309,7 +66523,75 @@
         "fffffff2": "",
         "Some(2)": "",
         "fn main() { let a = 2.Some(2)ˇ; }": "",
-        "fn main() { let a = Some(2)ˇ; }": ""
+        "fn main() { let a = Some(2)ˇ; }": "",
+        "aˇa\nbb\ncc\ndd\nee": "",
+        "aa\nbb\ncˇc\ndd\nee": "",
+        "aa\nbb\ncc\ndd\neˇe": "",
+        "aˇa\nbb\ncc": "",
+        "aa\nbb\ncˇc": "",
+        "ˇaa\nbb\ncc": "",
+        "aa\nbˇb\ncc": "",
+        "aa\n    bˇb\ncc": "",
+        "aa\n    bˇb\n    cc": "",
+        "aa\nbˇb\ncc\n": "",
+        "aa\n    bˇb\n    cc\n": "",
+        "aa\nbˇb\n    cc\n": "",
+        "    aa\n    bˇb\n        cc\n": "",
+        "ˇaa\nbb\ncc\n": "",
+        "    ˇaa\n    bb\n    cc\n": "",
+        "aa\nbb\nˇcc\n": "",
+        "    aa\n    bb\n    ˇcc\n": "",
+        "a\nb\nccˇc\n": "",
+        "    a\n    b\n    ccˇc\n": "",
+        "        a\n        b\n        ccˇc\n": "",
+        "        a\n    bˇ\n    ccc\n": "",
+        "        a\nbˇ\nccc\n": "",
+        "aˇbc\n": "",
+        "hello worldˇ\n": "",
+        "hello world\nˇ\n": "",
+        "aa\nbˇb\ncc\ncc\ncc\n": "",
+        "aa\nbb\nˇcc\ncc\ncc\n": "",
+        "aa\nbb\ncc\nˇcc\ncc\n": "",
+        "  barp()\n  bazp()\n": "",
+        "1\nˇ2\n3": "",
+        "1\n2\nˇ3": "",
+        "ˇ1\n2\n3": "",
+        "ˇhello hello\nhello hello": "",
+        "hello hello\nhello hellˇo": "",
+        "hellˇo hello\nhello hello": "",
+        "ˇ1234\n56789": "",
+        "\nhello quˇoel world\n": "",
+        "\nˇhello quoel world\n": "",
+        "```rust\nSome(2)\n```": "",
+        "line one\nline ˇtwo\nline three": "",
+        "line one\nˇline two\nline three": "",
+        "line one\nˇtwo\nline three": "",
+        "twelve ˇchar twelve char\ntwelve char": "",
+        "twelve ˇtwelve char\ntwelve char": "",
+        "\" _ x": "",
+        "noremap x \"_x": "",
+        "\" + escape x": "",
+        "d i w \" _ d a w": "",
+        "one\n\ntwo\nthree\nˇ\nfour": "",
+        "one\n\nˇtwo\nthree\n\nfour": "",
+        "hello.\n\n\nworˇld.": "",
+        "hello.\n\n\nˇworld.": "",
+        "hello.\n\nˇ\nworld.": "",
+        "ˇhello.\n\n\nworld.": "",
+        "helˇlo.\n\n\nworld.": "",
+        "hello.\nˇ\n\nworld.": "",
+        "hello.\n\n\nworldˇ.": "",
+        "111\n222\n333\n444\n": "",
+        "aaa\nbbb\nccc\nddd\n": "",
+        "AAA\nBBB\nCCC\nDDD\n": "",
+        "one\ntwo\nthr\nfou\n": "",
+        "hello world.\n": "",
+        "ˇ\nhello world.\n": "",
+        "heˇl\n\nhello world.\n": "",
+        "(wow)\n  oth(wow)": "",
+        "  oth(wow)\n  oth(wow)\n": "",
+        "all it lacks\nis a\n\n": "",
+        "first paragraph\nstill first\n\n": ""
     },
     "zed/crates/vim/src/visual.rs": {
         "<": "",
@@ -70343,7 +70625,7 @@
         "Description": "描述",
         "Detail": "详细信息",
         "\\n  {label}: {value}": "",
-        "\\n  Parse error at line: {line}": "",
+        "\\n  Parse error at line: {line}": "\\n  第 {line} 行解析错误",
         ", column: {col}": ", 列: {col}",
         "Element type": "元素类型",
         "Element ID": "元素 ID",
@@ -70351,10 +70633,10 @@
         "Collector": "收集器",
         "Provider": "提供商",
         "Unknown": "未知",
-        "\\n  Object type: {name}": "",
-        "\\n  Inner HRESULT: {hr}": "",
-        "\\n  Description: {desc}": "",
-        "\\n  Caused by:": "",
+        "\\n  Object type: {name}": "\\n  对象类型: {name}",
+        "\\n  Inner HRESULT: {hr}": "\\n  内部 HRESULT: {hr}",
+        "\\n  Description: {desc}": "\\n  描述: {desc}",
+        "\\n  Caused by:": "\\n  原因:",
         "\\n  IErrorInfo: {desc}": "",
         "cast to IUnknown": "转换为 IUnknown",
         "{context}": "",
@@ -71949,7 +72231,7 @@
     },
     "zed/crates/gpui_windows/src/vsync.rs": {
         "Failed to get DWM interval": "获取 DWM 间隔失败",
-        "VSyncProvider::wait_for_vsync() took less time than expected": ""
+        "VSyncProvider::wait_for_vsync() took less time than expected": "VSyncProvider::wait_for_vsync() 耗时低于预期."
     },
     "zed/crates/gpui_windows/src/window.rs": {
         "Creating DirectX renderer": "创建 DirectX 渲染器",
@@ -72478,7 +72760,8 @@
         "expected SlashAutocompleteOpened to have been emitted; saw events: {events:?}": "应已发出 SlashAutocompleteOpened 事件;实际看到的事件:{events:?}",
         "{} needs work\\n": "{} 需要修改\\n",
         "before\\r\\n": "",
-        "before\\n[@file.txt](file:///project/file.txt)": ""
+        "before\\n[@file.txt](file:///project/file.txt)": "",
+        "}": ""
     },
     "zed/crates/agent_ui/src/mode_selector.rs": {
         "Failed to set session mode: {:?}": "设置会话模式失败: {:?}",
@@ -72490,7 +72773,7 @@
         "Cycle Through Modes": "循环切换模式",
         "manual": "",
         "test-agent": "",
-        "test agent server cannot connect": "",
+        "test agent server cannot connect": "测试代理服务器无法连接",
         "auto": "",
         "Auto": "自动",
         "Manual": "手动"
@@ -72567,28 +72850,28 @@
         "wasm": "",
         "Cannot block on wasm": "无法在 wasm 上阻塞",
         "profiler": "",
-        "SmokeDispatcher should not be asked to dispatch in this test": "",
-        "SmokeDispatcher does not implement a main thread": "",
-        "SmokeDispatcher does not implement timers": "",
-        "SmokeDispatcher does not implement realtime": "",
-        "tasks must share the dedicated thread": "",
-        "dedicated tasks must not run on the spawning thread": "",
+        "SmokeDispatcher should not be asked to dispatch in this test": "此测试不应要求 SmokeDispatcher 执行调度",
+        "SmokeDispatcher does not implement a main thread": "SmokeDispatcher 未实现主线程",
+        "SmokeDispatcher does not implement timers": "SmokeDispatcher 未实现定时器",
+        "SmokeDispatcher does not implement realtime": "SmokeDispatcher 未实现实时调度",
+        "tasks must share the dedicated thread": "任务必须共享专用线程",
+        "dedicated tasks must not run on the spawning thread": "专用任务不得在生成它们的线程上运行",
         "slept": "",
-        "dedicated future ran on the test thread": "",
-        "expected the dedicated thread to genuinely sleep, elapsed = {:?}": "",
-        "started signal must be received": "",
-        "after-park signal must be received": "",
-        "dedicated future failed to start": "",
-        "dedicated future advanced past the await after its Task was dropped": "",
-        "dedicated future ran code past the cancellation point": "",
-        "dedicated future's captured state was not dropped after task completion": "",
-        "dedicated future's captured state must be dropped on the dedicated thread, not elsewhere": "",
-        "gate sender dropped before child resumed": "",
-        "child_done receiver dropped": "",
-        "detached child finished before being released": "",
-        "gate receiver dropped": "",
-        "detached child failed to complete after gate was released": "",
-        "detached child ran on the test thread instead of the dedicated thread": ""
+        "dedicated future ran on the test thread": "专用 future 在测试线程上运行了",
+        "expected the dedicated thread to genuinely sleep, elapsed = {:?}": "预期专用线程真正休眠,实际耗时 = {:?}",
+        "started signal must be received": "必须收到启动信号",
+        "after-park signal must be received": "必须收到驻留后信号",
+        "dedicated future failed to start": "专用 future 启动失败",
+        "dedicated future advanced past the await after its Task was dropped": "专用 future 在其任务被丢弃后越过了 await 点",
+        "dedicated future ran code past the cancellation point": "专用 future 在取消点之后继续执行了代码",
+        "dedicated future's captured state was not dropped after task completion": "任务完成后,专用 future 捕获的状态未被丢弃",
+        "dedicated future's captured state must be dropped on the dedicated thread, not elsewhere": "专用 future 捕获的状态必须在专用线程上丢弃,而不是在其他地方",
+        "gate sender dropped before child resumed": "子任务恢复前,门控发送器已被丢弃",
+        "child_done receiver dropped": "child_done 接收器已被丢弃",
+        "detached child finished before being released": "分离的子任务在释放前就完成了",
+        "gate receiver dropped": "门控接收器已被丢弃",
+        "detached child failed to complete after gate was released": "门控释放后,分离的子任务未能完成",
+        "detached child ran on the test thread instead of the dedicated thread": "分离的子任务在测试线程上运行,而不是在专用线程上"
     },
     "zed/crates/gpui_util/src/lib.rs": {
         "ZED_MEASUREMENTS": "",
@@ -76724,7 +77007,9 @@
         "Hello": "",
         "request should reach the http client": "",
         "request should carry the session header": "",
-        "generated session id should be a u64": ""
+        "generated session id should be a u64": "",
+        "thread\n123": "",
+        "event: message_stop\ndata: {\"type\":\"message_stop\"}\n\n": ""
     },
     "zed/crates/livekit_client/src/livekit_client/linux.rs": {
         "[webrtc] {}": "",
@@ -79566,7 +79851,8 @@
         "<body><p>A</body>": "",
         "<body><p>A</body><!-- -->": "",
         "<p>Some text</p><button></button>": "",
-        "\"": ""
+        "\"": "",
+        " x   \n  \t \n   y  ": ""
     },
     "zed/crates/markdown/src/html/html_parser.rs": {
         "img": "",
@@ -79754,7 +80040,10 @@
         "a zoom above the floor must not track container resizes": "",
         "the mermaid diagram should have been parsed": "",
         "{source}\\n\\nmore text": "",
-        "plain text": ""
+        "plain text": "",
+        "<svg xmlns=\"": "",
+        " width=\"": "",
+        " height=\"": ""
     },
     "zed/crates/sidebar/src/sidebar_tests.rs": {
         "Contextless Thread": "无上下文线程",
@@ -81612,7 +81901,10 @@
         "Claude Opus 4.6": "",
         "GPT-5.4": "",
         "test-token": "",
-        "refreshed-test-token": ""
+        "refreshed-test-token": "",
+        "{}\n": "",
+        "\n": "",
+        "{response_lines}\n": ""
     },
     "zed/crates/migrator/src/migrations/m_2026_03_30/settings.rs": {
         "agent": "",
@@ -83299,7 +83591,8 @@
         "/project/renamed.rs": "",
         "Bookmark labels for {}": "文件 {} 的书签标签",
         "first": "第一个",
-        "  keeps inner spaces  ": "  保留内部空格  "
+        "  keeps inner spaces  ": "  保留内部空格  ",
+        "": ""
     },
     "zed/crates/settings_content/src/action.rs": {
         "editor::Cancel": "",
@@ -83542,7 +83835,7 @@
     "zed/crates/agent/src/tools/create_thread_tool.rs": {
         "Create worktree": "创建工作树",
         "snake_case": "",
-        "Investigate flaky login test": "",
+        "Investigate flaky login test": "排查不稳定的登录测试",
         "Option::is_none": "",
         "Failed to serialize create_thread output: {e}": "无法序列化 create_thread 输出:{e}",
         "create_thread": "",
@@ -84552,7 +84845,36 @@
         "outer": "",
         "---\\nname: outer\\ndescription: Outer skill\\n---\\n\\nBody": "",
         "references": "",
-        "---\\nname: bogus-inner\\ndescription: Should not load\\n---\\n\\nBody": ""
+        "---\\nname: bogus-inner\\ndescription: Should not load\\n---\\n\\nBody": "",
+        "%USERPROFILE%\\": "",
+        "\\": "",
+        "# My Skill\n\nDo the thing.": "",
+        "# My Skill\n\nNo frontmatter here.": "",
+        "---\n---\nbody\n": "",
+        "---\nname: whitespace-skill\ndescription: Test\n---\n\n   \n\n   \n": "",
+        "---\r\nname: crlf-skill\r\ndescription: A skill with CRLF line endings\r\n---\r\n\r\n# CRLF Skill\r\n\r\nDo the thing.\r\n": "",
+        "---\r\nname: mixed-skill\r\ndescription: Frontmatter uses CRLF, body uses LF\r\n---\r\n\n# Mixed Skill\n\nBody uses LF only.\n": "",
+        "---\nname: foo\ndescription: bar\n---trailing-junk\nbody content\n": "",
+        "---\nname: skill-name\ndescription: A real description\nsummary: \"---trailing\"\n---\nbody content\n": "",
+        "---\nname: foo\ndescription: bar\n----\nbody content\n": "",
+        "---\nname: my-skill\ndescription: Test skill\n---\n\n# Instructions\nDo stuff.": "",
+        "---\nname: my-skill\ndescription: Symlinked skill\n---\n\n# Instructions": "",
+        "---\nname: skill-one\ndescription: First skill\n---\n\nContent one": "",
+        "---\nname: skill-two\ndescription: Second skill\n---\n\nContent two": "",
+        "---\nname: charlie\ndescription: C\n---\n\nC": "",
+        "---\nname: alpha\ndescription: A\n---\n\nA": "",
+        "---\nname: bravo\ndescription: B\n---\n\nB": "",
+        "---\nname: my-skill\ndescription: Test\n---\n\nContent": "",
+        "---\nname: valid-skill\ndescription: Valid\n---\n\nContent": "",
+        "---\nname: outer\ndescription: Outer skill\n---\n\nBody": "",
+        "---\nname: bogus-inner\ndescription: Should not load\n---\n\nBody": "",
+        "---\nname: huge\ndescription: Too big\n---\n\n{}": "",
+        "---\nname: my-skill\ndescription: A skill for tests\ndisable-model-invocation: true\n---\n\n# Body\n\nLots of body text here.\n": "",
+        "---\nname: my-skill\ndescription: Test skill\n---\n\n# Instructions\n\nDo the thing.\n\n": "",
+        "# Instructions\n\nDo the thing.": "",
+        "---\nname: long-description\ndescription: {long_desc}\n---\n\nBody": "",
+        "---\nname: empty\ndescription: No body\n---\n": "",
+        "---\nname: my-skill\ndescription: Does a thing.\n---\n\n## Steps\n\nDo the thing.\n": ""
     },
     "zed/crates/agent_ui/src/conversation_view/elicitation.rs": {
         "{} is required": "{}是必填项",
@@ -85082,7 +85404,7 @@
     },
     "zed/crates/collab/src/services/user_service.rs": {
         "test-support": "",
-        "called as_fake on a real `UserService`": "",
+        "called as_fake on a real `UserService`": "在真实的 `UserService` 上调用了 as_fake",
         "Content-Type": "",
         "application/json": "",
         "Authorization": "",
@@ -85096,7 +85418,7 @@
         "{}/internal/users/fuzzy_search": "",
         "{}/internal/channel_members/fuzzy_search": "",
         "https://github.com/{}.png?size=128": "",
-        "not currently exercised by any tests": ""
+        "not currently exercised by any tests": "目前未被任何测试使用"
     },
     "zed/crates/collab/tests/integration/auto_watch_tests.rs": {
         "user_a": "",
@@ -85267,7 +85589,7 @@
         "code action fetch": "代码操作获取"
     },
     "zed/crates/editor/src/completions.rs": {
-        "bug: SnippetChoices requested_source is not handled": "",
+        "bug: SnippetChoices requested_source is not handled": "错误:未处理 SnippetChoices 请求的来源",
         "applying post-completion command": "应用补全后命令",
         "merge transactions": "合并事务",
         "test-support": ""
@@ -85421,7 +85743,8 @@
         "> ": "",
         ">": "",
         "> {stripped_line}": "",
-        "Markdown": ""
+        "Markdown": "",
+        "": ""
     },
     "zed/crates/editor/src/navigation.rs": {
         "no references found under cursor": "光标下未找到引用",
@@ -85531,7 +85854,7 @@
         "--replace": "",
         "--help": "",
         "-h": "",
-        "Usage: editor_benchmarks [OPTIONS] <FILE> <QUERY>": "",
+        "Usage: editor_benchmarks [OPTIONS] <FILE> <QUERY>": "用法: editor_benchmarks [选项] <文件> <查询>",
         "failed to read input file": "无法读取输入文件",
         "Read {} ({file_len} bytes)": "已读取 {}({file_len} 字节)",
         "invalid regex query": "无效的正则表达式查询",
@@ -86012,7 +86335,7 @@
         "macos": "",
         "macos_git_children": "",
         "git runtime diagnostics: failed to collect macOS git-child info: {err:#}": "Git 运行时诊断:收集 macOS Git 子进程信息失败:{err:#}",
-        "sysinfo::get_current_pid failed: {e}": "",
+        "sysinfo::get_current_pid failed: {e}": "sysinfo::get_current_pid 失败: {e}",
         "pid": "",
         "ppid": "",
         "name": "",
@@ -86271,7 +86594,7 @@
         "ActionTiming": "",
         "name": "",
         "runtime": "",
-        "un-named": ""
+        "un-named": "未命名"
     },
     "zed/crates/gpui/src/window/a11y.rs": {
         "synthetic children": "合成子节点",
@@ -87410,7 +87733,34 @@
         "expected zed-accent-N classes on tspan elements in sequence diagram": "预期在时序图的 tspan 元素上出现 zed-accent-N 类",
         "{name}: render failed (skipped): {e}": "{name}: 渲染失败 (已跳过): {e}",
         "Found {} issues in merman SVG output (rgb theme):\n\n{}": "",
-        "\n": ""
+        "\n": "",
+        "flowchart TD\\n    A[Hello] --> B[World]\\n    B --> C{Decision}\\n    C -->|Yes| D[OK]\\n    C -->|No| E[Fail]": "",
+        "sequenceDiagram\\n    Alice->>Bob: Hello\\n    Bob-->>Alice: Hi\\n    Note over Alice,Bob: A note": "",
+        "stateDiagram-v2\\n    [*] --> Active\\n    Active --> [*]": "",
+        "erDiagram\\n    A { int id PK }\\n    B { int id PK }\\n    A ||--o{ B : has": "",
+        "classDiagram\\n    class Foo {\\n        +bar() void\\n    }": "",
+        "pie title Test\\n    \\\"A\\\" : 42\\n    \\\"B\\\" : 58": "",
+        "gantt\\n    title Test\\n    dateFormat YYYY-MM-DD\\n    section S\\n        Task :a1, 2025-01-01, 7d": "",
+        "mindmap\\n  root((Root))\\n    Child1\\n    Child2": "",
+        "journey\\n    title Test\\n    section S\\n        Task: 5: Actor": "",
+        "gitGraph\\n    commit id: \\\"init\\\"\\n    branch dev\\n    commit id: \\\"feat\\\"\\n    checkout main\\n    merge dev": "",
+        "quadrantChart\\n    title Test\\n    x-axis Low --> High\\n    y-axis Low --> High\\n    A: [0.3, 0.8]\\n    B: [0.7, 0.4]": "",
+        "timeline\\n    title Test\\n    section 2020s\\n        2020 : Event A\\n        2022 : Event B": "",
+        "xychart-beta\\n    title Test\\n    x-axis [\\\"A\\\", \\\"B\\\", \\\"C\\\"]\\n    y-axis \\\"Val\\\" 0 --> 10\\n    bar [3, 7, 5]": "",
+        "fill=\\\"\\\"": "",
+        "stroke=\\\"\\\"": "",
+        "width=\\\"\\\"": "",
+        "height=\\\"\\\"": "",
+        "fill=\\\" \\\"": "",
+        "{name}: found `{pattern}` at byte {abs}:\\n  ...{}...\\n": "",
+        "{name}: <{tag}> has empty {key}=\\\"\\\"\\n": "",
+        "{name}: <{tag}> has {key}=\\\"{val}\\\" (px suffix)\\n": "",
+        "{name}: XML parse error: {e}\\n": "",
+        "stateDiagram-v2\\n    [*] --> Idle\\n    Idle --> Processing\\n    Processing --> Done\\n    Done --> [*]": "",
+        "classDiagram\\n    class Shelter {\\n        -List~Animal~ animals\\n        +adopt(Animal a) bool\\n    }": "",
+        "sequenceDiagram\\n    participant Database": "",
+        "Found {} issues in merman SVG output (rgb theme):\\n\\n{}": "",
+        "\\n": ""
     },
     "zed/crates/oauth_callback_server/src/oauth_callback_server.rs": {
         "#f38ba8": "",
@@ -87527,7 +87877,7 @@
         "This resize handle is not drawn when the preview is hidden": "预览隐藏时不绘制此调整大小手柄"
     },
     "zed/crates/picker/src/shape.rs": {
-        "ViewportFraction must be between zero and one": ""
+        "ViewportFraction must be between zero and one": "ViewportFraction 必须介于 0 和 1 之间"
     },
     "zed/crates/picker_preview/src/picker_preview.rs": {
         "No results to preview": "没有可预览的结果",
@@ -87797,7 +88147,7 @@
         "sh": "",
         "-c": "",
         "cat {}": "cat {}",
-        "Succeeded": "",
+        "Succeeded": "成功",
         "printf sandbox-test > {}": "printf sandbox-test > {}",
         "{host}:{echo_port}": "{host}:{echo_port}",
         "bwrap_not_found": "",
@@ -89294,7 +89644,11 @@
         "diagnostic": "",
         "terminal": "",
         "channel": "",
-        "{first}_{second}_{salt}": ""
+        "{first}_{second}_{salt}": "",
+        "    path.replace('\\\\', \"/\")": "",
+        "        let {suffix} = self.version.checked_add({relative_index}).context(\"version overflow\")?;": "",
+        "        tracing::trace!(target: \"agent_bench\", value = {relative_index});": "",
+        "        tracing::trace!(target: \"agent_bench\", {helper_name});": ""
     },
     "zed/crates/terminal/src/alacritty.rs": {
         "windows": "",
@@ -90266,7 +90620,7 @@
         "mutating fs": "正在修改文件系统",
         "creating dir {:?}": "正在创建目录 {:?}",
         "creating file {:?}": "正在创建文件 {:?}",
-        "creating gitignore {:?} with contents:\n{}": "正在创建内容如下的 gitignore {:?}:\n{}",
+        "creating gitignore {:?} with contents:\n{}": "",
         "renaming {:?} to {}{:?}": "正在将 {:?} 重命名为 {}{:?}",
         "overwrite ": "覆盖 ",
         "deleting file {:?}": "正在删除文件 {:?}",
@@ -90468,7 +90822,18 @@
         "file.txt\\n": "",
         "0000000000000000000000000000000000000000\\n": "",
         "1111111111111111111111111111111111111111\\n": "",
-        "2222222222222222222222222222222222222222\\n": ""
+        "2222222222222222222222222222222222222222\\n": "",
+        "a/b\n": "",
+        "ignored-dep\n": "",
+        "node_modules\n": "",
+        "ignored-dir\n": "",
+        "**/target\n/node_modules\ntop_level.txt\n": "",
+        "mod another;\n": "",
+        "mod foo;\nmod bar;\n": "",
+        "**/target\n/node_modules\n": "",
+        "**/target\n/node_modules/\n": "",
+        "**/target\n": "",
+        "C:\\root": ""
     },
     "zed/crates/zed/src/reliability/hang_detection.rs": {
         "debug build, only reporting hangs longer then {hang_time:?}": "调试构建,仅报告超过 {hang_time:?} 的挂起",
@@ -90489,11 +90854,11 @@
         "Tasks(s) that ran too long\\n": "运行时间过长的任务:\\n"
     },
     "zed/crates/zed/src/reliability/hang_detection/task_traces.rs": {
-        "main": "",
-        "hang timings serialization": "",
+        "main": "main",
+        "hang timings serialization": "挂起计时数据序列化",
         "hang-{}.miniprof.json": "",
         "%Y-%m-%d_%H-%M-%S": "",
-        "hang trace file writing": "",
+        "hang trace file writing": "挂起追踪文件写入",
         "json": "",
         "miniprof": ""
     },
@@ -91853,7 +92218,8 @@
         "old_refresh": "",
         "fresh_refresh": "",
         "access_token": "",
-        "expires_in": ""
+        "expires_in": "",
+        "data: {event}\n\n": ""
     },
     "zed/crates/project/src/lsp_store/dynamic_registration.rs": {
         "active": "",
@@ -93520,7 +93886,15 @@
         "description, with commas": "",
         "status": "",
         "1": "",
-        "active": ""
+        "active": "",
+        "Name,Age,City\nJohn,30,New York\nJane,25,Los Angeles": "",
+        "Name,Description,Status\n\"John\nDoe\",\"A person with\nmultiple lines\",Active\n\"Jane Smith\",\"Simple\",\"Also\nActive\"": "",
+        "John\nDoe": "",
+        "A person with\nmultiple lines": "",
+        "Also\nActive": "",
+        "Name\tAge\tCity\nJohn\t30\tNew York\nJane\t25\tLos Angeles": "",
+        "Name|Age|City\nJohn|30|New York\nJane|25|Los Angeles": "",
+        "Name;Age;City\nJohn;30;New York\nJane;25;Los Angeles": ""
     },
     "zed/crates/tabular_data_preview/src/renderer.rs": {
         "dev-tools": ""
