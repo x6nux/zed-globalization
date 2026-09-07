@@ -28,6 +28,17 @@ on:
         description: "跳过编译检查（加速手动触发）"
         type: boolean
         default: false
+      arch:
+        description: "构建架构，逗号分隔可多选。可用值: all | linux | linux-x86_64 | linux-aarch64 | windows | macos （例: linux-x86_64,linux-aarch64）"
+        type: string
+        default: all
+      publish:
+        description: "产物去向：release=发布到 Releases；actions=仅保留在 Action Artifacts"
+        type: choice
+        options:
+          - release
+          - actions
+        default: release
 permissions:
   contents: write
   actions: write
@@ -60,6 +71,12 @@ jobs:
       is_prerelease: ${{ steps.set_vars.outputs.is_prerelease }}
       lang: ${{ steps.set_vars.outputs.lang }}
       lang_lower: ${{ steps.set_vars.outputs.lang_lower }}
+      arch: ${{ steps.set_vars.outputs.arch }}
+      publish: ${{ steps.set_vars.outputs.publish }}
+      run_linux_x64: ${{ steps.set_vars.outputs.run_linux_x64 }}
+      run_linux_arm64: ${{ steps.set_vars.outputs.run_linux_arm64 }}
+      run_windows: ${{ steps.set_vars.outputs.run_windows }}
+      run_macos: ${{ steps.set_vars.outputs.run_macos }}
     steps:
       - id: set_vars
         env:
@@ -94,6 +111,40 @@ jobs:
              fi
              SHOULD_RELEASE="${{ inputs.release }}"
           fi
+
+          # 架构与发布去向（仅手动触发时有意义；链式触发默认全平台 + 发布）
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            ARCH="all"
+            PUBLISH_TARGET="release"
+          else
+            ARCH="${{ inputs.arch }}"
+            PUBLISH_TARGET="${{ inputs.publish }}"
+          fi
+
+          # 解析逗号分隔架构 → 各平台布尔
+          # 规范化为逗号列表（把中文/空格分隔符统一为逗号；all/linux 展开）
+          NORM=$(echo "$ARCH" | tr '，;' ',' | tr -d ' ')
+          case "$NORM" in
+            all|"") RUN_LX64=true; RUN_LARM=true; RUN_WIN=true; RUN_MAC=true ;;
+            linux) RUN_LX64=true; RUN_LARM=true; RUN_WIN=false; RUN_MAC=false ;;
+            *) RUN_LX64=false; RUN_LARM=false; RUN_WIN=false; RUN_MAC=false
+               IFS=',' read -ra ARR <<< "$NORM"
+               for a in "${ARR[@]}"; do
+                 case "$a" in
+                   linux-x86_64|x86_64|x64) RUN_LX64=true ;;
+                   linux-aarch64|aarch64|arm64) RUN_LARM=true ;;
+                   windows|win) RUN_WIN=true ;;
+                   macos|mac|darwin) RUN_MAC=true ;;
+                 esac
+               done ;;
+          esac
+
+          echo "arch=$ARCH" >> $GITHUB_OUTPUT
+          echo "publish=$PUBLISH_TARGET" >> $GITHUB_OUTPUT
+          echo "run_linux_x64=$RUN_LX64" >> $GITHUB_OUTPUT
+          echo "run_linux_arm64=$RUN_LARM" >> $GITHUB_OUTPUT
+          echo "run_windows=$RUN_WIN" >> $GITHUB_OUTPUT
+          echo "run_macos=$RUN_MAC" >> $GITHUB_OUTPUT
 
           # === Tag 去重：v0.222.4 → v0.222.4.1 → v0.222.4.2 ===
           VER="$BASE_VER"
@@ -244,7 +295,7 @@ jobs:
   # ===========================================================================
   build-windows-x86_64:
     needs: [versioning, prepare]
-    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    if: ${{ needs.versioning.outputs.should_release == 'true' && needs.versioning.outputs.run_windows == 'true' }}
     runs-on: windows-latest
     env:
       SCCACHE_DIR: D:\c\sccache
@@ -597,7 +648,7 @@ jobs:
   # ===========================================================================
   build-windows-aarch64:
     needs: [versioning, prepare]
-    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    if: ${{ needs.versioning.outputs.should_release == 'true' && needs.versioning.outputs.run_windows == 'true' }}
     runs-on: windows-11-arm
     env:
       SCCACHE_DIR: C:\cc\sccache
@@ -946,7 +997,7 @@ jobs:
   # ===========================================================================
   build-windows-msi:
     needs: [versioning, build-windows-x86_64, build-windows-aarch64]
-    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    if: ${{ needs.versioning.outputs.should_release == 'true' && needs.versioning.outputs.run_windows == 'true' }}
     runs-on: windows-latest
     env:
       BUILD_VERSION: ${{ needs.versioning.outputs.version }}
@@ -1019,7 +1070,7 @@ jobs:
   # ===========================================================================
   build-linux-x86_64:
     needs: [versioning, prepare]
-    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    if: ${{ needs.versioning.outputs.should_release == 'true' && needs.versioning.outputs.run_linux_x64 == 'true' }}
     # issue #30: ubuntu-latest (24.04) carries glibc 2.39, and binaries linked
     # here demand GLIBC_2.39 at runtime — Debian 12 (2.36) / Mint 21 (2.35)
     # users cannot start zedg at all. 22.04 ships glibc 2.35, so anything
@@ -1070,10 +1121,14 @@ jobs:
             libssl-dev libudev-dev libclang-dev clang cmake mold rpm \
             patchelf libgit2-dev
           sudo ldconfig
-          echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
+          echo "RUSTFLAGS=-C link-args=-Wl,--disable-new-dtags,-rpath,\$ORIGIN/../lib/zedg" >> $GITHUB_ENV
           # issue #30: 22.04 的 gcc-11 对 webrtc-sys 的 C++ 头文件报
           # "changes meaning of 'Network'"（clang 只警告，gcc 当错误）。
           # 显式指定 clang++ 作为 C++ 编译器，与 24.04 默认行为对齐。
+          # issue #60: 去掉 -fuse-ld=mold，x86_64 对齐官方默认链接器（官方
+          # 仅在 aarch64 用 lld）。mold 在大 RELATIVE 二进制上会把 PLT32
+          # 塞进 .rela.dyn[0] 导致新版 glibc(2.44) 启动断言崩溃。RPATH
+          # 改链接期注入（官方做法），替代事后 patchelf。
           echo "CXX=clang++" >> $GITHUB_ENV
           echo "CC=clang" >> $GITHUB_ENV
 
@@ -1294,8 +1349,18 @@ jobs:
 
       - name: 打包 Linux
         run: |
-          objcopy --strip-debug zed/target/release/zed
-          objcopy --strip-debug zed/target/release/cli
+          # issue #60: 用 llvm-objcopy（官方做法）替代 GNU objcopy ——
+          # 新版 LLVM 产物带 CREL 段，GNU objcopy 在旧 distro(22.04) 不识别会破坏重定位布局。
+          llvm-objcopy --strip-debug --discard-all zed/target/release/zed
+          llvm-objcopy --strip-debug --discard-all zed/target/release/cli
+
+          # issue #60 自检：确认 .rela.dyn[0] 是 RELATIVE，不是 PLT32
+          # （旧 mold 链路曾在 .rela.dyn[0] 塞入 PLT32，新版 glibc 启动断言崩溃）
+          for BIN in zed/target/release/zed zed/target/release/cli; do
+            FIRST="$(readelf -rW "$BIN" | grep -A2 'rela.dyn' | sed -n '3p')"
+            echo "自检 $BIN: $FIRST"
+            echo "$FIRST" | grep -q R_X86_64_RELATIVE || { echo "::error::$BIN .rela.dyn[0] 非 RELATIVE"; exit 1; }
+          done
 
           mkdir -p dist/usr/bin
           mkdir -p dist/usr/libexec
@@ -1310,9 +1375,7 @@ jobs:
           LIBGIT2_SONAME=$(objdump -p "${LIBGIT2_SO}" | grep NEEDED | head -0; readlink -f "${LIBGIT2_SO}" | xargs basename)
           mkdir -p dist/usr/lib/zedg
           cp -L "${LIBGIT2_SO}" "dist/usr/lib/zedg/${LIBGIT2_SONAME}"
-          # point the executables at the bundled copy first, system fallback after
-          patchelf --set-rpath '/usr/lib/zedg:$ORIGIN/../lib/zedg' zed/target/release/zed
-          patchelf --set-rpath '/usr/lib/zedg:$ORIGIN/../lib/zedg' zed/target/release/cli
+          # issue #60: RPATH 已在链接期注入（RUSTFLAGS），不再事后 patchelf。
 
           # issue #37: ecosystem tools and xdg "default editor" pickers look
           # for a binary named `zed` and a desktop entry named zed.desktop.
@@ -1428,7 +1491,7 @@ jobs:
   # ===========================================================================
   build-macos-aarch64:
     needs: [versioning, prepare]
-    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    if: ${{ needs.versioning.outputs.should_release == 'true' && needs.versioning.outputs.run_macos == 'true' }}
     runs-on: macos-latest
     env:
       SCCACHE_DIR: /Users/runner/Library/Caches/Mozilla.sccache
@@ -1664,7 +1727,7 @@ jobs:
   # ===========================================================================
   build-macos-x86_64:
     needs: [versioning, prepare]
-    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    if: ${{ needs.versioning.outputs.should_release == 'true' && needs.versioning.outputs.run_macos == 'true' }}
     runs-on: macos-15-intel
     env:
       SCCACHE_DIR: /Users/runner/Library/Caches/Mozilla.sccache
@@ -1889,7 +1952,7 @@ jobs:
   # ===========================================================================
   build-macos-universal:
     needs: [versioning, build-macos-aarch64, build-macos-x86_64]
-    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    if: ${{ needs.versioning.outputs.should_release == 'true' && needs.versioning.outputs.run_macos == 'true' }}
     runs-on: macos-latest
     env:
       BUILD_VERSION: ${{ needs.versioning.outputs.upstream_version }}
@@ -2009,7 +2072,7 @@ jobs:
   # ===========================================================================
   build-linux-aarch64:
     needs: [versioning, prepare]
-    if: ${{ needs.versioning.outputs.should_release == 'true' }}
+    if: ${{ needs.versioning.outputs.should_release == 'true' && needs.versioning.outputs.run_linux_arm64 == 'true' }}
     runs-on: ubuntu-24.04-arm
     env:
       SCCACHE_DIR: /home/runner/.cache/sccache
@@ -2046,7 +2109,7 @@ jobs:
             libssl-dev libudev-dev libclang-dev clang cmake mold rpm \
             patchelf libgit2-dev
           sudo ldconfig
-          echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=mold" >> $GITHUB_ENV
+          echo "RUSTFLAGS=-C link-arg=-fuse-ld=lld -C link-args=-Wl,--disable-new-dtags,-rpath,\$ORIGIN/../lib" >> $GITHUB_ENV
 
       - name: 克隆 Zed 源码并检出 Tag
         run: |
@@ -2260,8 +2323,16 @@ jobs:
 
       - name: 打包 Linux ARM64
         run: |
-          objcopy --strip-debug zed/target/release/zed
-          objcopy --strip-debug zed/target/release/cli
+          # issue #60: 用 llvm-objcopy（官方做法）替代 GNU objcopy
+          llvm-objcopy --strip-debug --discard-all zed/target/release/zed
+          llvm-objcopy --strip-debug --discard-all zed/target/release/cli
+
+          # issue #60 自检：确认 .rela.dyn[0] 是 RELATIVE，不是错误的 PLT32 类型
+          for BIN in zed/target/release/zed zed/target/release/cli; do
+            FIRST="$(readelf -rW "$BIN" | grep -A2 'rela.dyn' | sed -n '3p')"
+            echo "自检 $BIN: $FIRST"
+            echo "$FIRST" | grep -q RELATIVE || { echo "::error::$BIN .rela.dyn[0] 非 RELATIVE"; exit 1; }
+          done
 
           mkdir -p dist/usr/bin
           mkdir -p dist/usr/libexec
@@ -2369,12 +2440,13 @@ jobs:
     if: >-
       always() &&
       needs.versioning.outputs.should_release == 'true' &&
+      needs.versioning.outputs.publish == 'release' &&
       needs.versioning.result == 'success' &&
-      needs.build-windows-x86_64.result == 'success' &&
-      needs.build-windows-aarch64.result == 'success' &&
-      needs.build-linux-x86_64.result == 'success' &&
-      needs.build-linux-aarch64.result == 'success' &&
-      needs.build-macos-universal.result == 'success'
+      needs.build-windows-x86_64.result != 'failure' && needs.build-windows-x86_64.result != 'cancelled' &&
+      needs.build-windows-aarch64.result != 'failure' && needs.build-windows-aarch64.result != 'cancelled' &&
+      needs.build-linux-x86_64.result != 'failure' && needs.build-linux-x86_64.result != 'cancelled' &&
+      needs.build-linux-aarch64.result != 'failure' && needs.build-linux-aarch64.result != 'cancelled' &&
+      needs.build-macos-universal.result != 'failure' && needs.build-macos-universal.result != 'cancelled'
     env:
       LANG_LOWER: ${{ needs.versioning.outputs.lang_lower }}
       TARGET_LANG: ${{ needs.versioning.outputs.lang }}
