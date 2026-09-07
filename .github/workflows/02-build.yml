@@ -2106,7 +2106,7 @@ jobs:
             libxcb-shape0-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
             libxcb-randr0-dev libxcb-keysyms1-dev libxcb-util-dev \
             libgl1-mesa-dev libegl1-mesa-dev libfreetype6-dev libfontconfig1-dev \
-            libssl-dev libudev-dev libclang-dev clang cmake mold rpm \
+            libssl-dev libudev-dev libclang-dev clang cmake mold lld rpm \
             patchelf libgit2-dev
           sudo ldconfig
           echo "RUSTFLAGS=-C link-arg=-fuse-ld=lld -C link-args=-Wl,--disable-new-dtags,-rpath,\$ORIGIN/../lib" >> $GITHUB_ENV
