@@ -3011,7 +3011,7 @@
         "\\n    \\\"oauth\\\": {": "",
         "      \\\"client_id\\\": {},": "",
         "      \\\"client_secret\\\": {}": "",
-        "      /// Optional client secret for confidential clients\\n      // \\\"client_secret\\\": \\\"your-client-secret\\\"": "",
+        "      /// Optional client secret for confidential clients\\n      // \\\"client_secret\\\": \\\"your-client-secret\\\"": "      /// 可选:用于机密客户端的客户端密钥\\n      // \\\"client_secret\\\": \\\"your-client-secret\\\"",
         "    },": "",
         "Enter client secret (leave empty for public clients)": "输入客户端密钥(公开客户端留空)",
         "configure-server": "",
@@ -4383,7 +4383,7 @@
         "Close Assistant": "关闭助手",
         "previous": "",
         "Previous Alternative": "上一个备选",
-        "{}/{}": "",
+        "{}/{}": "{}/{}",
         "next": "",
         "Next Alternative": "下一个备选",
         "Interrupt Generation": "中断生成",
@@ -7754,7 +7754,8 @@
         "Disable Copilot Edit Predictions": "禁用 Copilot 编辑预测",
         "Edit predictions are disabled for {}": "已为 {} 禁用编辑预测",
         "Display predictions inline only when holding a modifier key (": "仅当按住修饰键时才内联显示预测(",
-        " by default).": "默认)。"
+        " by default).": "默认)。",
+        "settings/copilot": ""
     },
     "zed/crates/edit_prediction_ui/src/edit_prediction_context_view.rs": {
         "Total Time": "总耗时",
@@ -9336,7 +9337,8 @@
         "  branch  name  ": "",
         "branch--name": "",
         "Hold ": "按住 ",
-        " to force delete": " 以强制删除"
+        " to force delete": " 以强制删除",
+        " .git": ""
     },
     "zed/crates/git_ui/src/clone.rs": {
         "Select as Repository Destination": "选择仓库目标位置",
@@ -9344,7 +9346,8 @@
         "repository": "仓库",
         "Git Clone: {}": "Git 克隆: {}",
         "Add repo to project": "将仓库添加到项目",
-        "Open repo in new project": "在新项目中打开仓库"
+        "Open repo in new project": "在新项目中打开仓库",
+        " .git": ""
     },
     "zed/crates/git_ui/src/commit_modal.rs": {
         "commit-split-button-right": "",
@@ -9386,7 +9389,7 @@
         "copy-commit-sha": "",
         "Copy SHA": "复制 SHA",
         "Error parsing date": "解析日期出错",
-        "+{}": "",
+        "+{}": "+{}",
         "Shallow clone boundary: earlier history is missing, so these lines may come from an older commit.": "浅克隆边界:更早的历史记录缺失,因此这些行可能来自更早的提交。",
         "fetch-unshallow": "",
         "Fetching…": "正在获取…",
@@ -13066,7 +13069,9 @@
         "query should return multiple matches": "查询应返回多个匹配项",
         "query should produce at least one match": "查询应至少产生一个匹配项",
         "editor should have an active buffer": "编辑器应有一个活动缓冲区",
-        "language selector": "语言选择器"
+        "language selector": "语言选择器",
+        "fn main() {}\n": "",
+        "const value = 1;\n": ""
     },
     "zed/crates/language_tools/src/key_context_view.rs": {
         " ": "",
@@ -14456,7 +14461,7 @@
         "test name with $nested.param.name": "",
         "test name with $#": "",
         "test name with $##": "",
-        "test name with (.+?)\\#": "test name with (.+?)\\#",
+        "test name with (.+?)\\#": "",
         "test name with %p": "",
         "test name with %s": "",
         "test name with %d": "",
@@ -14469,9 +14474,9 @@
         "test name with %%": "",
         "test name with %q": "",
         "test name with regex chars .*+?^${}()|[]\\": "test name with 正则表达式 chars .*+?^${}()|[]\\",
-        "test name with regex chars \\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\": "test name with 正则表达式 chars \\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\",
+        "test name with regex chars \\.\\*\\+\\?\\^\\$\\{\\}\\(\\)\\|\\[\\]\\\\": "",
         "test name with multiple $params and %pretty and %b and (.+?)": "",
-        "test name with multiple (.+?) and (.+?)retty and %b and \\(\\.\\+\\?\\)": "test name with multiple (.+?) and (.+?)retty and %b and \\(\\.\\+\\?\\)",
+        "test name with multiple (.+?) and (.+?)retty and %b and \\(\\.\\+\\?\\)": "",
         "@types/bun": "",
         "@types/node": "",
         "^20.0.0": "",
@@ -16143,7 +16148,7 @@
         "Disconnected": "未连接",
         "close-window": "",
         "Close Window": "关闭窗口",
-        "reconnect": "",
+        "reconnect": "重新连接",
         "Reconnect": "重新连接"
     },
     "zed/crates/recent_projects/src/recent_projects.rs": {
@@ -17684,7 +17689,8 @@
         "notebook should be valid UTF-8": "笔记本应为有效的 UTF-8",
         "the edited cell should be written to the notebook, got: {saved}": "编辑后的单元格应写入笔记本,实际为:{saved}",
         "the project's buffer should hold the saved notebook": "项目的缓冲区应包含保存的笔记本",
-        "saving should leave the buffer clean": "保存后缓冲区应保持干净"
+        "saving should leave the buffer clean": "保存后缓冲区应保持干净",
+        "\n": ""
     },
     "zed/crates/repl/src/outputs.rs": {
         "stdout": "",
@@ -17993,7 +17999,7 @@
         "Include: crates/**/*.toml": "包含: crates/**/*.toml",
         "Exclude: vendor/*, *.lock": "排除: vendor/*, *.lock",
         "regex": "",
-        "loading regex language": "",
+        "loading regex language": "正在加载正则表达式语言",
         "Save": "保存",
         "Don't Save": "不保存",
         "Cancel": "取消",
@@ -22151,7 +22157,8 @@
         "first-plugin": "",
         "scalar": "",
         "second": "",
-        "second-plugin": ""
+        "second-plugin": "",
+        "NAME=\"Ubuntu\"\\nID=ubuntu\\nVERSION_ID=\"24.04\"\\nPRETTY_NAME=\"Ubuntu 24.04 LTS\"\\n": ""
     },
     "zed/crates/vim/src/command.rs": {
         "collab_panel::ToggleFocus": "",
@@ -26379,9 +26386,9 @@
         "---\nname: my-skill\ndescription: Edited in buffer\n---\n\nbody": "",
         "/fix-review\nline 1\nline 2": "",
         "line 1\nline 2": "",
-        "session released before summary": "",
-        "Session was released": "",
-        "Subagent session {session_id} was released": "",
+        "session released before summary": "会话在生成摘要前已释放",
+        "Session was released": "会话已释放",
+        "Subagent session {session_id} was released": "子代理会话 {session_id} 已释放",
         "1024-character limit": "",
         "releasing the session must save the thread; draft prompt was lost": "",
         "dropping the active session after thread_summary should unload it": "",
@@ -26665,7 +26672,15 @@
         "https://typescript-eslint.io/rules/no-unused-vars": "",
         "^https?://typescript-eslint\\\\.io": "",
         "/my-project/sub-dir/file.rs": "",
-        "^/my-project/sub-dir/": ""
+        "^/my-project/sub-dir/": "",
+        "\\-": "",
+        "^git-lfs\\s+pull(\\s|$)": "",
+        "^PAGER='less -R'\\s+git\\s+log(\\s|$)": "",
+        "^https?://typescript-eslint\\.io": "",
+        "/Users/alice/project/src/old.rs\n/Users/alice/project/src/new.rs": "",
+        "/Users/alice/project/src/old.rs\n/Users/alice/project/dst/new.rs": "",
+        "/home/file.txt\n/tmp/file.txt": "",
+        "src/old.rs\nsrc/new.rs": ""
     },
     "zed/crates/agent/src/templates.rs": {
         "src/templates": "",
@@ -29238,7 +29253,8 @@
         "ssh": "",
         "Linux": "",
         "ubuntu 24.04": "",
-        "aarch64": ""
+        "aarch64": "",
+        "\n": ""
     },
     "zed/crates/client/src/test.rs": {
         "/client/users/me": "",
@@ -30582,7 +30598,9 @@
         "expected the guest token result to honor the applicable providers": "",
         "the-fake-language-server": "",
         "expected semantic tokens from one server": "",
-        "expected the guest to decode tokens only when the applicable provider's legend is known": ""
+        "expected the guest to decode tokens only when the applicable provider's legend is known": "",
+        "<div class=\\\"wrap\\\">hello</div>": "",
+        "<p><div class=\\\"wrap\\\">hello</div></p>": ""
     },
     "zed/crates/collab/tests/integration/following_tests.rs": {
         "user_a": "",
@@ -39167,7 +39185,11 @@
         "const s = \"hello worldˇ\";": "",
         "console.log(\"deˇbug\");": "",
         "console.log(\"«debugˇ»\");": "",
-        "console.log(«\"debug\"ˇ»);": ""
+        "console.log(«\"debug\"ˇ»);": "",
+        "let value = \\\"text": "",
+        "*text\\\";": "",
+        "let value = r#\\\"text": "",
+        "*text\\\"#;": ""
     },
     "zed/crates/editor/src/git/blame.rs": {
         "Updated buffers. Regenerating blame data...": "已更新缓冲区。正在重新生成追溯数据...",
@@ -45926,7 +45948,8 @@
         "/wiki/Cyclone_(programming_language)": "",
         "Cyclone (programming language)": "",
         "cite_ref-influences_8-13": "",
-        "#cite_note-influences-8": ""
+        "#cite_note-influences-8": "",
+        "\n```\n": ""
     },
     "zed/crates/http_client/src/github.rs": {
         "https://api.github.com": "",
@@ -46712,7 +46735,10 @@
         "if (true) {\\n}": "",
         "if (true) {\\n    x()\\n}": "",
         "if (true)\\n    x()\\nelse": "",
-        "if (true)\\n    x()\\nelse\\n    y()": ""
+        "if (true)\\n    x()\\nelse\\n    y()": "",
+        "fn drop(&mut self) { println!(\"bye\"); }": "",
+        "println!(\"bye\");": "",
+        "[\\n\\s]+": ""
     },
     "zed/crates/language/src/language.rs": {
         "Markdown": "",
@@ -47596,7 +47622,7 @@
         "prettier (default)": "",
         "replacement language server should be available": "",
         "replacement-language-server": "",
-        "supplementary": ""
+        "supplementary": "补充"
     },
     "zed/crates/languages/src/c.rs": {
         "clangd": "",
@@ -47819,7 +47845,7 @@
         "composer.json": "",
         "npm": "",
         "run {key}": "运行 {key}",
-        "run": "",
+        "run": "run",
         "package script $ZED_CUSTOM_script": "包脚本 $ZED_CUSTOM_script",
         "script": "",
         "package-script": "",
@@ -48186,12 +48212,12 @@
         "Could not get current dir": "无法获取当前目录",
         "test_recording_{name}.wav": "",
         "Test recording written to: {}": "测试录音已写入: {}",
-        "Only locked after stream ends": "",
-        "error capturing audio track: {:?}": "",
+        "Only locked after stream ends": "仅在流结束后才会被锁定",
+        "error capturing audio track: {:?}": "捕获音频轨道时出错: {:?}",
         "failed to build input stream": "构建输入流失败",
-        "Stream has ended, callback cant hold the lock": "",
-        "config channel is never zero": "",
-        "config sample_rate is never zero": "",
+        "Stream has ended, callback cant hold the lock": "流已结束,回调无法持有锁",
+        "config channel is never zero": "配置声道数永远不会为零",
+        "config sample_rate is never zero": "配置采样率永远不会为零",
         "Failed to write wav file: {}": "写入 wav 文件失败: {}"
     },
     "zed/crates/livekit_client/src/remote_video_track_view.rs": {
@@ -55044,56 +55070,56 @@
         "textDocument/rename": "",
         "prepareProvider": "",
         "untitled-rename": "",
-        "expected prepare rename request, got {response:?}": "",
+        "expected prepare rename request, got {response:?}": "预期收到准备重命名请求,实际收到 {response:?}",
         "unprepared-rename-server": "",
         "prepared-rename-server": "",
-        "expected the prepare-capable server to serve the request, got {response:?}": "",
-        "expected rename not to switch back to the first rename-capable server": "",
-        "expected rename to use the server that prepared it": "",
-        "expected the rename to fall back to the live rename-capable server": "",
-        "expected a transaction for the renamed buffer": "",
+        "expected the prepare-capable server to serve the request, got {response:?}": "预期由支持准备的服务器处理该请求,实际收到 {response:?}",
+        "expected rename not to switch back to the first rename-capable server": "预期重命名不会切回第一个支持重命名的服务器",
+        "expected rename to use the server that prepared it": "预期重命名使用执行准备的服务器",
+        "expected the rename to fall back to the live rename-capable server": "预期重命名回退到可用的支持重命名的服务器",
+        "expected a transaction for the renamed buffer": "预期重命名的缓冲区有一个事务",
         "const TWO: usize = 1;": "",
         "dynamic-rename-server": "",
         "static-rename-server": "",
-        "expected no rename request for the server that unregistered its rename capability": "",
-        "expected the rename to fall back to the rename-capable server": "",
+        "expected no rename request for the server that unregistered its rename capability": "预期已注销重命名能力的服务器不会收到重命名请求",
+        "expected the rename to fall back to the rename-capable server": "预期重命名回退到支持重命名的服务器",
         "let  value = 1;": "",
         "untitled-formatting": "",
         "textDocument/formatting": "",
-        "expected no formatting request for a buffer outside the registration's selector": "",
+        "expected no formatting request for a buffer outside the registration's selector": "预期注册选择器之外的缓冲区不会收到格式化请求",
         "file-formatting": "",
-        "expected a formatting request once a matching registration exists": "",
+        "expected a formatting request once a matching registration exists": "预期存在匹配的注册后收到格式化请求",
         "pattern-only-formatting": "",
         "pattern": "",
         "**/*.nomatch": "",
-        "expected a pattern-only filter to fail open and route the formatting request": "",
+        "expected a pattern-only filter to fail open and route the formatting request": "预期仅模式过滤器在未匹配时放行并路由格式化请求",
         "empty-selector-formatting": "",
-        "expected an empty document selector to match no buffers": "",
+        "expected an empty document selector to match no buffers": "预期空文档选择器不匹配任何缓冲区",
         "plaintext-formatting": "",
         "plaintext": "",
-        "expected no formatting request for a registration with a different language filter": "",
+        "expected no formatting request for a registration with a different language filter": "预期具有不同语言过滤器的注册不会收到格式化请求",
         "rust-formatting": "",
-        "expected a formatting request once a registration with the buffer's language id exists": "",
+        "expected a formatting request once a registration with the buffer's language id exists": "预期存在与缓冲区语言 ID 匹配的注册后收到格式化请求",
         "untitled-range-formatting": "",
         "textDocument/rangeFormatting": "",
-        "expected no range formatting request for a buffer outside the registration's selector": "",
+        "expected no range formatting request for a buffer outside the registration's selector": "预期不会对注册选择器之外的缓冲区发出范围格式化请求",
         "file-range-formatting": "",
-        "expected a range formatting request once a matching registration exists": "",
+        "expected a range formatting request once a matching registration exists": "预期在存在匹配的注册后发出范围格式化请求",
         "file-on-type-formatting": "",
         "textDocument/onTypeFormatting": "",
         "firstTriggerCharacter": "",
         "untitled-on-type-formatting": "",
-        "matching dynamic registration should support on-type formatting": "",
+        "matching dynamic registration should support on-type formatting": "匹配的动态注册应支持输入时格式化",
         "file-code-actions": "",
         "textDocument/codeAction": "",
         "typescript": "",
         "codeActionKinds": "",
         "untitled-code-actions": "",
-        "The matching code action registration should receive the request": "",
+        "The matching code action registration should receive the request": "匹配的代码操作注册应收到该请求",
         "resolveProvider": "",
         "marker": "",
         "organized ": "",
-        "expected no resolve request when the resolve capability comes from a non-matching registration": "",
+        "expected no resolve request when the resolve capability comes from a non-matching registration": "当解析能力来自不匹配的注册时,预期不会发出解析请求",
         "organized a": "",
         "unused constant": "未使用的常量",
         "const B: i32 = 2;": "",
@@ -55171,7 +55197,8 @@
         "full-format-server": "",
         "range-format-server": "",
         "expected the range-capable server to handle the range formatting request": "期望支持范围的服务器处理范围格式化请求",
-        "expected manual range formatting not to use the full-format-only server": "期望手动范围格式化不使用仅支持完整格式化的服务器"
+        "expected manual range formatting not to use the full-format-only server": "期望手动范围格式化不使用仅支持完整格式化的服务器",
+        "}": ""
     },
     "zed/crates/project/tests/integration/search.rs": {
         "file": "",
@@ -57644,18 +57671,18 @@
         "HTTP/1.1 200 OK\r\ncontent-length: 1\r\n\r\n": ""
     },
     "zed/crates/rope/benches/rope_benchmark.rs": {
-        "push": "",
-        "append": "",
-        "slice": "",
-        "bytes_in_range": "",
-        "chars": "",
-        "clip_point": "",
-        "point_to_offset": "",
-        "cursor": "",
-        "append many": "",
-        "small to large": "",
+        "push": "推送",
+        "append": "追加",
+        "slice": "切片",
+        "bytes_in_range": "范围内字节数",
+        "chars": "字符数",
+        "clip_point": "裁剪点",
+        "point_to_offset": "点转偏移",
+        "cursor": "cursor",
+        "append many": "追加多个",
+        "small to large": "从小到大",
         "A": "",
-        "large to small": ""
+        "large to small": "从大到小"
     },
     "zed/crates/rope/src/chunk.rs": {
         "": "",
@@ -58063,11 +58090,11 @@
         "action_name: {}, context: {}, action_arguments: {}, keystrokes: {}": "",
         "global": "",
         "none": "",
-        "User": "",
-        "Default": "",
-        "Base": "",
-        "Vim": "",
-        "Unknown": "",
+        "User": "用户",
+        "Default": "默认",
+        "Base": "基础",
+        "Vim": "Vim",
+        "Unknown": "未知",
         "error at sequence index {index}: {err}": "序列索引 {index} 处出错:{err}",
         "expected array of actions": "期望操作数组",
         "action::Sequence": "",
@@ -60741,7 +60768,8 @@
     "zed/crates/terminal/src/terminal_settings.rs": {
         "terminal": "",
         "\\n": "",
-        "snake_case": ""
+        "snake_case": "",
+        "\n": ""
     },
     "zed/crates/terminal_view/src/persistence.rs": {
         "no window present": "",
@@ -61070,7 +61098,8 @@
         "fgh": "",
         "abfgh": "",
         "cannot summarize past end of rope": "",
-        "afgh": ""
+        "afgh": "",
+        "aéøbcdef\nsecond": ""
     },
     "zed/crates/text/src/text.rs": {
         "test-support": "",
@@ -67966,7 +67995,7 @@
         "reload() must be implemented if can_save() returns true": "若 can_save() 返回 true 则必须实现 reload()",
         "test-support": "",
         "TestItem": "",
-        "{error}": ""
+        "{error}": "{error}"
     },
     "zed/crates/workspace/src/persistence/model.rs": {
         "ssh": "",
@@ -86243,8 +86272,8 @@
         "Skill description is {actual_len} characters, exceeding the {max_len}-character limit. The skill was loaded, but long descriptions may consume more model-context tokens.": "技能描述为 {actual_len} 个字符, 超过了 {max_len} 个字符的限制. 技能已加载, 但过长的描述可能会消耗更多模型上下文令牌.",
         "Skill description must be at most {MAX_SKILL_DESCRIPTION_LEN} characters": "技能描述最多只能有 {MAX_SKILL_DESCRIPTION_LEN} 个字符",
         "中": "",
-        "descriptions at the character limit should load without a warning": "",
-        "at most {MAX_SKILL_DESCRIPTION_LEN} characters": ""
+        "descriptions at the character limit should load without a warning": "字符限制内的描述应能正常加载,无需警告",
+        "at most {MAX_SKILL_DESCRIPTION_LEN} characters": "最多 {MAX_SKILL_DESCRIPTION_LEN} 个字符"
     },
     "zed/crates/agent_ui/src/conversation_view/elicitation.rs": {
         "{} is required": "{}是必填项",
@@ -90405,7 +90434,9 @@
         "{}…": "",
         "1": "",
         "rm": "",
-        "-rf": ""
+        "-rf": "",
+        "GRANT: write into a writable C:\\\\ dir succeeds (native path translated into WSL)": "",
+        "GRANT: write into a writable C:\\\\ dir lands on the Windows host": ""
     },
     "zed/crates/search/src/text_finder/delegate.rs": {
         "guarded with matches! above": "",
@@ -90655,7 +90686,7 @@
         "mcp-env-add": "",
         "mcp-header-add": "",
         " ": "",
-        "my-mcp-server": "",
+        "my-mcp-server": "我的 MCP 服务器",
         "/path/to/server": "",
         "--flag value": "",
         "https://example.com/mcp": "",
@@ -92671,7 +92702,7 @@
         "*.github.com": ""
     },
     "zed/crates/docs_preprocessor/src/ai_discovery.rs": {
-        "Docs": "",
+        "Docs": "文档",
         "SUMMARY.md": "",
         "failed to create markdown destination {}": "无法创建 Markdown 目标目录 {}",
         "failed to write markdown page {} to {}": "无法将 Markdown 页面 {} 写入 {}",
@@ -92772,9 +92803,9 @@
         "ZED_META": "",
         "# Getting Started": "",
         "([^\\\\n]*)": "",
-        "# Zed Docs\\n\\n": "",
-        "> Official Zed documentation index with links to Markdown versions of each docs page.\\n\\n": "",
-        "Use these links for concise Markdown copies of Zed documentation pages. Each linked page mirrors the corresponding `/docs/*.html` page without site navigation or styling.\\n\\n": "",
+        "# Zed Docs\\n\\n": "# Zed 文档\\n\\n",
+        "> Official Zed documentation index with links to Markdown versions of each docs page.\\n\\n": "> 官方 Zed 文档索引,包含每个文档页面的 Markdown 版本链接。\\n\\n",
+        "Use these links for concise Markdown copies of Zed documentation pages. Each linked page mirrors the corresponding `/docs/*.html` page without site navigation or styling.\\n\\n": "使用这些链接获取 Zed 文档页面的简洁 Markdown 副本。每个链接页面都对应相应的 `/docs/*.html` 页面,不包含站点导航或样式。\\n\\n",
         "\\n\\n": "",
         "\\\\\\\\": "",
         "\\\\[": "",
@@ -92783,10 +92814,10 @@
         "<urlset xmlns=\\\"http://www.sitemaps.org/schemas/sitemap/0.9\\\">\\n": "",
         "</url>\\n": "",
         "</urlset>\\n": "",
-        "# Moved\\n\\n> For the complete documentation index and Markdown links, see [llms.txt]({}).\\n\\nThis page moved to [the current docs page]({}).\\n": "",
+        "# Moved\\n\\n> For the complete documentation index and Markdown links, see [llms.txt]({}).\\n\\nThis page moved to [the current docs page]({}).\\n": "# 已移动\\n\\n> 有关完整的文档索引和 Markdown 链接,请参阅 [llms.txt]({}).\\n\\n此页面已移至[当前文档页面]({}).\\n",
         " 301\\n": "",
         "        <link rel=\\\"alternate\\\" type=\\\"text/markdown\\\" href=\\\"{}\\\">\\n": "",
-        "> For the complete documentation index and Markdown links, see [llms.txt]({}).\\n\\n": "",
+        "> For the complete documentation index and Markdown links, see [llms.txt]({}).\\n\\n": "> 有关完整的文档索引和 Markdown 链接,请参阅 [llms.txt]({}).\\n\\n",
         "---\\n": "",
         "\\n---\\n": "",
         "---\\ntitle: Example\\n---\\n# Example\\n": "",
@@ -96269,7 +96300,15 @@
         "\\n": "",
         "emmet wrap input should be pending": "",
         "/file.html": "",
-        "HTML": ""
+        "HTML": "",
+        "<div class=\\\"wrap\\\">${1:hello}</div>$0": "",
+        "<p><div class=\\\"wrap\\\">hello</div></p>": "",
+        "No Emmet expansion for \\\"@invalid@\\\"": "没有 \\\"@invalid@\\\" 的 Emmet 展开",
+        "<div class=\\\"x\\\"><p>hello</p></div>": "",
+        "<div>\\n  <div class=\\\"x\\\"><p>hello</p></div>\\n</div>": "",
+        "<div class=\\\"wrap\\\">hello</div>": "",
+        "<div id=\\\"page\\\">hello</div>\\n<!-- /#page -->": "",
+        "<p><div id=\\\"page\\\">hello</div>\\n<!-- /#page --></p>": ""
     },
     "zed/crates/editor/src/inline_input.rs": {
         "line": "行",
@@ -96277,11 +96316,11 @@
         "\\n": "",
         "{shown}\\n… +{hidden_lines} more {noun}": "{shown}\\n… +{hidden_lines} {noun}",
         "line{ix}": "",
-        "{}\\n… +4 more lines": "",
-        "… +1 more line": ""
+        "{}\\n… +4 more lines": "{}\\n… 还有 4 行",
+        "… +1 more line": "… 还有 1 行"
     },
     "zed/crates/fs/src/git_clone_progress.rs": {
-        "unknown error": "",
+        "unknown error": "未知错误",
         "remote: Enumerating objects: 100, done.\\rremote: Count": "",
         "ing objects: 42% (42/100)\\rReceiving objects: 100% (100/100)\\rReceiving objects: 100% (100/100)\\n": "",
         "Updating files: 75% (3/4)": "",
