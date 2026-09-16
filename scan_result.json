@@ -1,5 +1,5 @@
 {
-  "version": "v1.20.1-pre",
+  "version": "v1.20.1",
   "files": [
     "crates/acp_thread/src/acp_thread.rs",
     "crates/acp_thread/src/connection.rs",
@@ -323,6 +323,7 @@
     "crates/collections/src/vecmap.rs",
     "crates/collections/src/vecmap_tests.rs",
     "crates/command_palette/src/command_palette.rs",
+    "crates/command_palette/src/command_palette_settings.rs",
     "crates/command_palette/src/persistence.rs",
     "crates/command_palette_hooks/src/command_palette_hooks.rs",
     "crates/component/src/component.rs",
