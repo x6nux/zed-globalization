@@ -1,20 +1,25 @@
 {
-    "version": "0.225.10",
+    "version": "1.21.0-pre",
     "description": "Zed Editor (Localized / 汉化版) - Preview",
     "homepage": "https://github.com/x6nux/zed-globalization",
     "license": "GPL-3.0-only",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/x6nux/zed-globalization/releases/download/v0.225.10/zedg-zh-cn-windows-x86_64-v0.225.10.zip",
-            "hash": "6f96315761f9e60deec3d15cdde0e776eff4f80953f80ce5078d4529ed2ade90"
-        }    ,
+            "url": "https://github.com/x6nux/zed-globalization/releases/download/v1.21.0-pre/zedg-zh-cn-windows-x86_64-v1.21.0-pre.zip",
+            "hash": "7bb608c9b6e0265aea9f1fc1b1dfd62ccdb892e4e5d9cb18fa3a6a576d68caa1"
+        },
         "arm64": {
-            "url": "https://github.com/x6nux/zed-globalization/releases/download/v0.225.10/zedg-zh-cn-windows-aarch64-v0.225.10.zip",
-            "hash": "bb0f1d8cd9eb5aba56a0cf3661a1ded00e5e8b278bd88ab1a897ac8260c979a0"
+            "url": "https://github.com/x6nux/zed-globalization/releases/download/v1.21.0-pre/zedg-zh-cn-windows-aarch64-v1.21.0-pre.zip",
+            "hash": "7250226f2f7e03f82c45890e48812e7b0bc28457d41b077b41a031d3e83c57ed"
         }
     },
     "bin": "ZedG.exe",
-    "shortcuts": [["ZedG.exe", "ZedG"]],
+    "shortcuts": [
+        [
+            "ZedG.exe",
+            "ZedG"
+        ]
+    ],
     "checkver": {
         "github": "https://github.com/x6nux/zed-globalization"
     },
@@ -24,14 +29,14 @@
                 "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/zedg-zh-cn-windows-x86_64-v$version.zip",
                 "hash": {
                     "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/sha256sums.txt",
-                    "regex": "([a-f0-9]{64})\s+zedg-zh-cn-windows-x86_64-v$version\.zip"
+                    "regex": "([a-f0-9]{64})\\s+zedg-zh-cn-windows-x86_64-v$version\\.zip"
                 }
-            }    ,
+            },
             "arm64": {
                 "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/zedg-zh-cn-windows-aarch64-v$version.zip",
                 "hash": {
                     "url": "https://github.com/x6nux/zed-globalization/releases/download/v$version/sha256sums.txt",
-                    "regex": "([a-f0-9]{64})\s+zedg-zh-cn-windows-aarch64-v$version\.zip"
+                    "regex": "([a-f0-9]{64})\\s+zedg-zh-cn-windows-aarch64-v$version\\.zip"
                 }
             }
         }
