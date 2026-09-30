@@ -1,5 +1,5 @@
 {
-  "version": "v1.22.0-pre",
+  "version": "v1.22.0",
   "files": [
     "crates/acp_thread/src/acp_thread.rs",
     "crates/acp_thread/src/connection.rs",
@@ -1768,7 +1768,7 @@
     "crates/ui/src/components/ai/agent_setup_button.rs",
     "crates/ui/src/components/ai/ai_setting_item.rs",
     "crates/ui/src/components/ai/configured_api_card.rs",
-    "crates/ui/src/components/ai/skills_illustration.rs",
+    "crates/ui/src/components/ai/delta_illustration.rs",
     "crates/ui/src/components/ai/thread_item.rs",
     "crates/ui/src/components/avatar.rs",
     "crates/ui/src/components/banner.rs",
