@@ -1,5 +1,5 @@
 {
-  "version": "v1.24.2-pre",
+  "version": "v1.24.2",
   "files": [
     "crates/acp_thread/src/acp_thread.rs",
     "crates/acp_thread/src/auth_methods.rs",
