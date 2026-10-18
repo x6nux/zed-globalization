@@ -5346,6 +5346,11 @@
         },
         {
             "file": "zed/crates/acp_thread/src/config_options.rs",
+            "original": "category",
+            "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/config_options.rs",
             "original": "configId",
             "reason": "ai:api_identifier"
         },
@@ -5353,6 +5358,11 @@
             "file": "zed/crates/acp_thread/src/config_options.rs",
             "original": "currentValue",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/config_options.rs",
+            "original": "description",
+            "reason": "ai:serialization"
         },
         {
             "file": "zed/crates/acp_thread/src/config_options.rs",
@@ -5446,6 +5456,11 @@
         },
         {
             "file": "zed/crates/acp_thread/src/connection.rs",
+            "original": "2026-03-04T05:06:07+02:30",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/connection.rs",
             "original": "A stub model for visual testing",
             "reason": "pattern:acp_thread/"
         },
@@ -5506,8 +5521,28 @@
         },
         {
             "file": "zed/crates/acp_thread/src/connection.rs",
+            "original": "nested",
+            "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/connection.rs",
             "original": "opaque/session",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/connection.rs",
+            "original": "original",
+            "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/connection.rs",
+            "original": "replacement",
+            "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/connection.rs",
+            "original": "retained",
+            "reason": "ai:serialization"
         },
         {
             "file": "zed/crates/acp_thread/src/connection.rs",
@@ -5518,6 +5553,21 @@
             "file": "zed/crates/acp_thread/src/connection.rs",
             "original": "test-support",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/connection.rs",
+            "original": "title",
+            "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/connection.rs",
+            "original": "updatedAt",
+            "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/connection.rs",
+            "original": "value",
+            "reason": "ai:serialization"
         },
         {
             "file": "zed/crates/acp_thread/src/connection.rs",
@@ -6521,8 +6571,18 @@
         },
         {
             "file": "zed/crates/acp_thread/src/elicitation.rs",
+            "original": "Ada",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/elicitation.rs",
             "original": "B",
             "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/elicitation.rs",
+            "original": "Grace",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/acp_thread/src/elicitation.rs",
@@ -6842,6 +6902,11 @@
         {
             "file": "zed/crates/acp_thread/src/elicitation.rs",
             "original": "opaque",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/acp_thread/src/elicitation.rs",
+            "original": "option",
             "reason": "ai:api_identifier"
         },
         {
@@ -36296,6 +36361,11 @@
         },
         {
             "file": "zed/crates/agent_ui/src/agent_configuration.rs",
+            "original": "API-compatible-type",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/agent_ui/src/agent_configuration.rs",
             "original": "Add Custom Agent",
             "reason": "api_identifier"
         },
@@ -40226,6 +40296,11 @@
         },
         {
             "file": "zed/crates/agent_ui/src/config_options.rs",
+            "original": "config watcher",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/agent_ui/src/config_options.rs",
             "original": "config-option-picker-item",
             "reason": "rule:identifier"
         },
@@ -40242,6 +40317,11 @@
         {
             "file": "zed/crates/agent_ui/src/config_options.rs",
             "original": "config-option-{}-switch",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/agent_ui/src/config_options.rs",
+            "original": "currentValue",
             "reason": "ai:api_identifier"
         },
         {
@@ -40266,8 +40346,18 @@
         },
         {
             "file": "zed/crates/agent_ui/src/config_options.rs",
+            "original": "opaque",
+            "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/agent_ui/src/config_options.rs",
             "original": "small",
             "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/agent_ui/src/config_options.rs",
+            "original": "test agent server cannot connect",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/agent_ui/src/config_options.rs",
@@ -50431,6 +50521,11 @@
         },
         {
             "file": "zed/crates/agent_ui/src/threads_archive_view.rs",
+            "original": "Archived Thread Opened",
+            "reason": "ai:telemetry"
+        },
+        {
+            "file": "zed/crates/agent_ui/src/threads_archive_view.rs",
             "original": "HE",
             "reason": "ai:test_assertion"
         },
@@ -60181,6 +60276,11 @@
         },
         {
             "file": "zed/crates/cli/src/main.rs",
+            "original": "DIR",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
             "original": "Executable {executable:?} path has no parent",
             "reason": "api_identifier"
         },
@@ -60256,6 +60356,11 @@
         },
         {
             "file": "zed/crates/cli/src/main.rs",
+            "original": "USER@DISTRO",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
             "original": "Unable to create instance sync event",
             "reason": "test_assertion"
         },
@@ -60326,7 +60431,32 @@
         },
         {
             "file": "zed/crates/cli/src/main.rs",
+            "original": "`$XDG_DATA_HOME/zed`.",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
+            "original": "`%LOCALAPPDATA%\\Zed`.",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
+            "original": "`%LOCALAPPDATA%\\\\Zed`.",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
+            "original": "`~/Library/Application Support/Zed`.",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
             "original": "add",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
+            "original": "app",
             "reason": "ai:api_identifier"
         },
         {
@@ -60341,13 +60471,33 @@
         },
         {
             "file": "zed/crates/cli/src/main.rs",
+            "original": "classic",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
             "original": "dev.zed.Zed",
             "reason": "rule:identifier"
         },
         {
             "file": "zed/crates/cli/src/main.rs",
+            "original": "dir",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
+            "original": "ec",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
             "original": "ec/tory/file.txt",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
+            "original": "existing",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/cli/src/main.rs",
@@ -60383,6 +60533,11 @@
             "file": "zed/crates/cli/src/main.rs",
             "original": "file://{}",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
+            "original": "files",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/cli/src/main.rs",
@@ -60481,6 +60636,11 @@
         },
         {
             "file": "zed/crates/cli/src/main.rs",
+            "original": "project",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
             "original": "realpath",
             "reason": "ai:code_snippet"
         },
@@ -60501,6 +60661,11 @@
         },
         {
             "file": "zed/crates/cli/src/main.rs",
+            "original": "some",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
             "original": "some/dir",
             "reason": "rule:identifier"
         },
@@ -60516,6 +60681,11 @@
         },
         {
             "file": "zed/crates/cli/src/main.rs",
+            "original": "symlink",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
             "original": "symlink.txt",
             "reason": "rule:path"
         },
@@ -60528,6 +60698,11 @@
             "file": "zed/crates/cli/src/main.rs",
             "original": "target.txt",
             "reason": "rule:path"
+        },
+        {
+            "file": "zed/crates/cli/src/main.rs",
+            "original": "tory",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/cli/src/main.rs",
@@ -61171,6 +61346,11 @@
         },
         {
             "file": "zed/crates/client/src/telemetry.rs",
+            "original": "FreeBSD {}",
+            "reason": "ai:telemetry"
+        },
+        {
+            "file": "zed/crates/client/src/telemetry.rs",
             "original": "ID",
             "reason": "ai:serialization"
         },
@@ -61178,6 +61358,11 @@
             "file": "zed/crates/client/src/telemetry.rs",
             "original": "Linux",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/client/src/telemetry.rs",
+            "original": "Linux {}",
+            "reason": "ai:telemetry"
         },
         {
             "file": "zed/crates/client/src/telemetry.rs",
@@ -72536,6 +72721,11 @@
         },
         {
             "file": "zed/crates/context_server/src/oauth.rs",
+            "original": "c",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/context_server/src/oauth.rs",
             "original": "challenge",
             "reason": "ai:api_identifier"
         },
@@ -73151,6 +73341,11 @@
         },
         {
             "file": "zed/crates/context_server/src/oauth.rs",
+            "original": "rt",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/context_server/src/oauth.rs",
             "original": "rt_456",
             "reason": "rule:identifier"
         },
@@ -73253,6 +73448,11 @@
             "file": "zed/crates/context_server/src/oauth.rs",
             "original": "user:profile",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/context_server/src/oauth.rs",
+            "original": "v",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/context_server/src/oauth.rs",
@@ -80431,6 +80631,11 @@
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "&str",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "-value",
             "reason": "ai:api_identifier"
         },
@@ -80491,8 +80696,43 @@
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "FALSE",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "False",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "If there's a variable entry there has to be a state that goes with it",
             "reason": "test_assertion"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "NULL",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "None",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "NoneType",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "TRUE",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "True",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
@@ -80516,6 +80756,21 @@
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "bool",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "boolean",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "byte",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "café->...>voilà",
             "reason": "ai:test_assertion"
         },
@@ -80523,6 +80778,21 @@
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "café->résumé->naïve->voilà",
             "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "char",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "comment",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "double",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
@@ -80538,6 +80808,16 @@
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "f64",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "float",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "int",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
@@ -80561,8 +80841,43 @@
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "integer",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "isize",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "local",
             "reason": "ai:match_arm"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "long",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "nil",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "nonetype",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "nullptr",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "number",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
@@ -80591,6 +80906,21 @@
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "std::string",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "str",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "string",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "string_view",
             "reason": "rule:identifier"
         },
@@ -80613,6 +80943,16 @@
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "uint8",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "undefined",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "usize",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
@@ -80653,6 +80993,11 @@
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
             "original": "variable_list_entry",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
+            "original": "void",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/debugger_ui/src/session/running/variable_list.rs",
@@ -95386,6 +95731,11 @@
         },
         {
             "file": "zed/crates/diagnostics/src/diagnostics_tests.rs",
+            "original": "([back](file://#diagnostic-{buffer_id}-{group_id}-{primary_index}))",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/diagnostics/src/diagnostics_tests.rs",
             "original": "/root",
             "reason": "rule:path"
         },
@@ -95596,6 +95946,11 @@
         },
         {
             "file": "zed/crates/diagnostics/src/diagnostics_tests.rs",
+            "original": "required by a bound in `Test::TestAssoc`",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/diagnostics/src/diagnostics_tests.rs",
             "original": "rustc",
             "reason": "ai:api_identifier"
         },
@@ -95603,6 +95958,11 @@
             "file": "zed/crates/diagnostics/src/diagnostics_tests.rs",
             "original": "some new docs",
             "reason": "pattern:test"
+        },
+        {
+            "file": "zed/crates/diagnostics/src/diagnostics_tests.rs",
+            "original": "the trait bound `(): HasTest` is not satisfied",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/diagnostics/src/diagnostics_tests.rs",
@@ -97791,12 +98151,22 @@
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "/",
+            "reason": "rule:punctuation"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "/client/llm_tokens",
             "reason": "rule:path"
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "/closed_source_worktree",
+            "reason": "rule:path"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "/external.md",
             "reason": "rule:path"
         },
         {
@@ -97897,6 +98267,11 @@
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "/root/free_file.txt",
+            "reason": "rule:path"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "/root/other.md",
             "reason": "rule:path"
         },
         {
@@ -98296,6 +98671,11 @@
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "external.md",
+            "reason": "rule:path"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "failed to open active buffer",
             "reason": "ai:test_assertion"
         },
@@ -98486,6 +98866,16 @@
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "one\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "one\\n\\nthree\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "one\\ntwo\\nthree\\nfour\\nfive\\n",
             "reason": "rule:test_fixture"
         },
@@ -98501,8 +98891,18 @@
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "other.md",
+            "reason": "rule:path"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "other.rs",
             "reason": "rule:path"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "other\\n",
+            "reason": "rule:test_fixture"
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
@@ -98512,6 +98912,11 @@
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "prediction-a",
+            "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "prediction-after-close",
             "reason": "rule:identifier"
         },
         {
@@ -98548,6 +98953,11 @@
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "retry-2",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "root",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
@@ -98686,8 +99096,18 @@
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "two\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
             "original": "underline",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
+            "original": "updated ",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/edit_prediction/src/edit_prediction_tests.rs",
@@ -127101,6 +127521,11 @@
         },
         {
             "file": "zed/crates/editor/src/editor_tests.rs",
+            "original": "fn a() { ˇ }\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/editor/src/editor_tests.rs",
             "original": "fn a() { ˇ }\\n",
             "reason": "ai:test_assertion"
         },
@@ -129362,6 +129787,11 @@
         {
             "file": "zed/crates/editor/src/editor_tests.rs",
             "original": "onˇe two t«hreˇ»e four",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/editor/src/editor_tests.rs",
+            "original": "oops\n\nwow\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -149626,6 +150056,11 @@
         },
         {
             "file": "zed/crates/extensions_ui/src/extension_suggestions.rs",
+            "original": "id = \\\"{extension_id}\\\"\\nname = \\\"{extension_id}\\\"\\nversion = \\\"0.0.1\\\"\\nschema_version = 1\\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/extensions_ui/src/extension_suggestions.rs",
             "original": "index.html",
             "reason": "rule:path"
         },
@@ -153931,6 +154366,11 @@
         },
         {
             "file": "zed/crates/fs/src/fake_git_repo.rs",
+            "original": "content",
+            "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/fs/src/fake_git_repo.rs",
             "original": "deleted file\n",
             "reason": "ai:code_snippet"
         },
@@ -154953,6 +155393,11 @@
             "file": "zed/crates/fs/src/fs_watcher.rs",
             "original": "remove watched path: {path:?}",
             "reason": "api_identifier"
+        },
+        {
+            "file": "zed/crates/fs/src/fs_watcher.rs",
+            "original": "rewatch",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/fs/src/fs_watcher.rs",
@@ -162407,6 +162852,11 @@
         {
             "file": "zed/crates/git_hosting_providers/src/providers/gitee.rs",
             "original": "Content-Type",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/git_hosting_providers/src/providers/gitee.rs",
+            "original": "Gitee",
             "reason": "ai:api_identifier"
         },
         {
@@ -171866,8 +172316,18 @@
         },
         {
             "file": "zed/crates/google_ai/src/completion.rs",
+            "original": "(Encrypted thought)",
+            "reason": "ai:match_arm"
+        },
+        {
+            "file": "zed/crates/google_ai/src/completion.rs",
             "original": "-pro",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/google_ai/src/completion.rs",
+            "original": "Answer",
+            "reason": "ai:match_arm"
         },
         {
             "file": "zed/crates/google_ai/src/completion.rs",
@@ -171946,6 +172406,11 @@
         },
         {
             "file": "zed/crates/google_ai/src/completion.rs",
+            "original": "Partial answer",
+            "reason": "ai:match_arm"
+        },
+        {
+            "file": "zed/crates/google_ai/src/completion.rs",
             "original": "RECITATION",
             "reason": "ai:serialization"
         },
@@ -172008,6 +172473,11 @@
             "file": "zed/crates/google_ai/src/completion.rs",
             "original": "candidates",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/google_ai/src/completion.rs",
+            "original": "checking the constraints",
+            "reason": "ai:match_arm"
         },
         {
             "file": "zed/crates/google_ai/src/completion.rs",
@@ -172267,6 +172737,11 @@
         {
             "file": "zed/crates/google_ai/src/completion.rs",
             "original": "value",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/google_ai/src/completion.rs",
+            "original": "visible text",
             "reason": "ai:api_identifier"
         },
         {
@@ -184436,6 +184911,11 @@
         },
         {
             "file": "zed/crates/gpui_linux/src/linux/platform.rs",
+            "original": "scenario failed\\nstdout:\\n{stdout}\\nstderr:\\n{}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/gpui_linux/src/linux/platform.rs",
             "original": "screen-capture",
             "reason": "rule:identifier"
         },
@@ -195871,6 +196351,11 @@
         },
         {
             "file": "zed/crates/inspector_ui/src/div_inspector.rs",
+            "original": "C:\\zed-inspector-style.json",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/inspector_ui/src/div_inspector.rs",
             "original": "Failed to convert style to JSON: {err}",
             "reason": "api_identifier"
         },
@@ -195913,6 +196398,11 @@
             "file": "zed/crates/inspector_ui/src/div_inspector.rs",
             "original": "reset-style",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/inspector_ui/src/div_inspector.rs",
+            "original": "windows",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/inspector_ui/src/inspector.rs",
@@ -196916,6 +197406,16 @@
         },
         {
             "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
+            "original": "a->a",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
+            "original": "a->å",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
             "original": "alt-cmd-shift-c",
             "reason": "rule:identifier"
         },
@@ -196978,6 +197478,11 @@
             "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
             "original": "b || a || c",
             "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
+            "original": "binding has keystrokes",
+            "reason": "ai:string_comparison"
         },
         {
             "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
@@ -197186,6 +197691,11 @@
         },
         {
             "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
+            "original": "query: {query:?}, binding: {binding:?}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
             "original": "save-btn",
             "reason": "rule:identifier"
         },
@@ -197208,6 +197718,21 @@
             "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
             "original": "tab",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
+            "original": "valid binding",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
+            "original": "valid query",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
+            "original": "workspace exists",
+            "reason": "ai:string_comparison"
         },
         {
             "file": "zed/crates/keymap_editor/src/keymap_editor.rs",
@@ -210481,6 +211006,11 @@
         },
         {
             "file": "zed/crates/language_models/src/provider/google.rs",
+            "original": "query",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/language_models/src/provider/google.rs",
             "original": "round_trip_sig",
             "reason": "rule:identifier"
         },
@@ -217127,6 +217657,11 @@
         {
             "file": "zed/crates/languages/src/lib.rs",
             "original": "PHP",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/languages/src/lib.rs",
+            "original": "Shell Script",
             "reason": "ai:api_identifier"
         },
         {
@@ -225401,8 +225936,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "        foo\\n    bar\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    # foo\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    # foo\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225411,8 +225956,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    ***\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    1.  A paragraph\n        with two lines.\n\n            indented code\n\n        > A block quote.\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    1.  A paragraph\\n        with two lines.\\n\\n            indented code\\n\\n        > A block quote.\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225421,8 +225976,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    <a/>\\n    *hi*\\n\\n    - one\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    > # Foo\n    > bar\n    > baz\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    > # Foo\\n    > bar\\n    > baz\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225431,8 +225996,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    Foo\\n    ---\\n\\n    Foo\\n---\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    [foo]: /url \"title\"\n\n[foo]\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    [foo]: /url \\\"title\\\"\\n\\n[foo]\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225441,8 +226016,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    \\\\[\\\\]\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    ```\n    aaa\n    ```\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    ```\\n    aaa\\n    ```\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225456,8 +226041,23 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    a simple\\n      indented code block\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    a\\ta\\n    ὐ\\ta\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    aaa\nbbb\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    aaa\\nbbb\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225471,8 +226071,23 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    chunk1\\n      \\n      chunk2\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    chunk1\\n\\n    chunk2\\n  \\n \\n \\n    chunk3\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    f&ouml;f&ouml;\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    f&ouml;f&ouml;\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225496,6 +226111,26 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    foo  \\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    foo\\n---\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    foo\\n\\tbar\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    foo\\nbar\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    hello",
             "reason": "ai:test_assertion"
         },
@@ -225503,6 +226138,11 @@
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "    indented code\n\nparagraph\n\n    more code\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "    indented code\\n\\nparagraph\\n\\n    more code\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225521,12 +226161,37 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "   1.  A paragraph\\n       with two lines.\\n\\n           indented code\\n\\n       > A block quote.\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "   ```\n   aaa\n    aaa\n  aaa\n   ```\n",
             "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "   ```\naaa\n  ```\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "   ```\\n   aaa\\n    aaa\\n  aaa\\n   ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "   ```\\naaa\\n  ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "   ```rust\\r\\n\\tfn 界() {}\\r\\n   ```\\r\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "   fn main() {}",
             "reason": "ai:code_snippet"
         },
         {
@@ -225541,8 +226206,23 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  1.  A paragraph\\n      with two lines.\\n\\n          indented code\\n\\n      > A block quote.\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  1.  A paragraph\\nwith two lines.\\n\\n          indented code\\n\\n      > A block quote.\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "  10.  foo\n\n           bar\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  10.  foo\\n\\n           bar\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225551,8 +226231,23 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  <!-- foo -->\\n\\n    <!-- foo -->\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "  <div>\n\n    <div>\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  <div>\\n\\n    <div>\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  \\tfoo\\tbaz\\t\\tbim\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225561,7 +226256,22 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  ```\\naaa\\n  aaa\\naaa\\n  ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  ```rust\\n\\tfn café() {}\\n  ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "  bar\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  bar\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -225571,7 +226281,22 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  fn café() {}",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  fn main() {}",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "  foo\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "  foo\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -225581,8 +226306,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": " -    one\\n\\n     two\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": " 1.  A paragraph\n     with two lines.\n\n         indented code\n\n     > A block quote.\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": " 1.  A paragraph\\n     with two lines.\\n\\n         indented code\\n\\n     > A block quote.\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225596,8 +226331,28 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": " ```\\n aaa\\naaa\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": " ```rust\\n\\tfn main() {}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": " ```rust\\n\\tfn main() {}\\n ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": " after",
             "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": " fn 界() {}",
+            "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225611,12 +226366,22 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": " indented code\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": " that keeps streaming in\\n\\n```rust\\nlet x = 1;\\n```",
             "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": " two\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": " two\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -225666,8 +226431,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "# Heading\\n    foo\\nHeading\\n------\\n    foo\\n----\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "# foo\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "# foo\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225691,8 +226466,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "* Here is a list item:\\n  ```bash\\n  echo \\\"Zed is awesome!\\\"\\n  ```",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "***\n",
             "reason": "rule:punctuation"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "***\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225716,6 +226501,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "-   foo\\n\\n    notcode\\n\\n-   foo\\n\\n<!-- -->\\n\\n    code\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "- ![alt](https://example.com/a.png)\\n- first<br>second",
             "reason": "ai:test_assertion"
         },
@@ -225723,6 +226513,11 @@
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "- Foo\n\n      bar\n\n\n      baz\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "- Foo\\n\\n      bar\\n\\n\\n      baz\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225741,6 +226536,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "- ```rust\\n\\tfn main() {}\\n  ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "- a\n  > b\n  ```\n  c\n  ```\n- d\n",
             "reason": "ai:code_snippet"
         },
@@ -225751,6 +226551,16 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "- a\\n  > b\\n  ```\\n  c\\n  ```\\n- d\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "- a\\n- ```\\n  b\\n\\n\\n  ```\\n- c\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "- foo\n\n\t\tbar\n",
             "reason": "ai:test_assertion"
         },
@@ -225758,6 +226568,16 @@
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "- foo\n\n      bar\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "- foo\\n\\n      bar\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "- foo\\n\\n\\t\\tbar\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225791,8 +226611,23 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "-\\n  foo\\n-\\n  ```\\n  bar\\n  ```\\n-\\n      baz\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "-\\t\\tfoo\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "1.      indented code\n\n   paragraph\n\n       more code\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "1.      indented code\\n\\n   paragraph\\n\\n       more code\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225801,8 +226636,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "1.     indented code\\n\\n   paragraph\\n\\n       more code\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "1.  A paragraph\n    with two lines.\n\n        indented code\n\n    > A block quote.\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "1.  A paragraph\\n    with two lines.\\n\\n        indented code\\n\\n    > A block quote.\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225811,8 +226656,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "1.  foo\\n\\n    ```\\n    bar\\n    ```\\n\\n    baz\\n\\n    > bam\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "1. ```\n   foo\n   ```\n\n   bar\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "1. ```\\n   foo\\n   ```\\n\\n   bar\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225821,7 +226676,17 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "1. a\\n\\n  2. b\\n\\n    3. c\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "3. c\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "3. c\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -225846,6 +226711,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "<!-- foo -->\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "<!--\\nrdoc-file=string.c\\n- str.intern   -> symbol\\n- str.to_sym   -> symbol\\n-->\\nReturns",
             "reason": "ai:test_assertion"
         },
@@ -225856,7 +226726,17 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "<\\n >\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "<a/>\n*hi*\n\n- one\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "<a/>\\n*hi*\\n\\n- one\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -225891,6 +226771,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "<div>\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "<svg xmlns=",
             "reason": "ai:test_assertion"
         },
@@ -225901,7 +226786,17 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "<table>\\n\\n  <tr>\\n\\n    <td>\\n      Hi\\n    </td>\\n\\n  </tr>\\n\\n</table>\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "<td>\n  Hi\n</td>\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "<td>\\n  Hi\\n</td>\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -225916,12 +226811,27 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": ">     code\\n\\n>    not code\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": ">     foo\n    bar\n",
             "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": ">     foo\\n    bar\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "> # Foo\n> bar\n> baz\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> # Foo\\n> bar\\n> baz\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -225931,13 +226841,28 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> * Indentation plus quote:\\n>   ```bash\\n>   echo \\\"Zed is awesome!\\\"\\n>   ```",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "> Level 1\n> > Level 2\n> > ```bash\n> > echo \"Zed is awesome!\"\n> > ```",
             "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> Level 1\\n> > Level 2\\n> > ```bash\\n> > echo \\\"Zed is awesome!\\\"\\n> > ```",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "> [!NOTE]\n> This is a note containing code:\n> ```bash\n> echo \"Zed is awesome!\"\n> ```",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> [!NOTE]\\n> This is a note containing code:\\n> ```bash\\n> echo \\\"Zed is awesome!\\\"\\n> ```",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225951,6 +226876,16 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> ```\\n> aaa\\n\\nbbb\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> ```\\nfoo\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "> ```bash\n> echo \"Zed is awesome!\"\n",
             "reason": "ai:code_snippet"
         },
@@ -225961,8 +226896,23 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> ```bash\\n> echo \\\"Zed is awesome!\\\"\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> ```bash\\n> echo \\\"Zed is awesome!\\\"\\n> ```",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "> ```text\n>\n> value\n>\n> ```",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> ```text\\n>\\n> value\\n>\\n> ```",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225971,8 +226921,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> comparison\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "> ~~~text\n> > comparison\n> ~~~",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "> ~~~text\\n> > comparison\\n> ~~~",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -225981,8 +226941,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": ">\\t\\tfoo\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "A paragraph\nwith two lines.\n\n    indented code\n\n> A block quote.\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "A paragraph\\nwith two lines.\\n\\n    indented code\\n\\n> A block quote.\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -226012,6 +226982,11 @@
         {
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "Foo\n---\n\nFoo\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "Foo\\n---\\n\\nFoo\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -226181,6 +227156,16 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "[foo]: /url \\\"title\\\"\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "[foo]: /url\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "[link](https://example.com)",
             "reason": "ai:test_assertion"
         },
@@ -226211,7 +227196,22 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "\\\\[\\\\]\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "\\n",
+            "reason": "rule:escape_sequence"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "\\n    \\n    foo\\n    \\n\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "\\n  \\n",
             "reason": "rule:escape_sequence"
         },
         {
@@ -226226,7 +227226,22 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "\\n```\\naaa\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "\\nhello",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "\\nvalue\\n\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "\\tfoo\\tbaz\\t\\tbim\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -226311,13 +227326,28 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "``` aaa\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "``` f&ouml;&ouml;\nfoo\n```\n",
             "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "``` f&ouml;&ouml;\\nfoo\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "``` foo\\+bar\nfoo\n```\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "``` foo\\\\+bar\\nfoo\\n```\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -226331,6 +227361,56 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\n<\\n >\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\n[foo]: /url\\n```\\n\\n[foo]\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\n\\n  \\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\n``` aaa\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\naaa\\n    ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\naaa\\n  ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\naaa\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```\\naaa\\n~~~\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "````\naaa\n```\n``````\n",
             "reason": "ai:code_snippet"
         },
@@ -226341,8 +227421,23 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "````;\\n````\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "````\\naaa\\n```\\n``````\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "`````\n\n```\naaa\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "`````\\n\\n```\\naaa\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -226358,6 +227453,11 @@
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "```ruby\ndef foo(x)\n  return 3\nend\n```\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "```ruby\\ndef foo(x)\\n  return 3\\nend\\n```\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -226411,6 +227511,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "a simple\\n  indented code block\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "a theme change must make parse-time highlights stale so rendering re-resolves them",
             "reason": "ai:test_assertion"
         },
@@ -226433,6 +227538,11 @@
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "a\\nb",
             "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "a\\ta\\nὐ\\ta\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -226481,6 +227591,46 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "aaa\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "aaa\\n    ```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "aaa\\n aaa\\naaa\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "aaa\\n```\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "aaa\\naaa\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "aaa\\naaa\\naaa\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "aaa\\n~~~ ~~\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "aaa\\n~~~\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "afi b",
             "reason": "ai:test_assertion"
         },
@@ -226506,6 +227656,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "b\\n\\n\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "bar",
             "reason": "ai:test_assertion"
         },
@@ -226521,6 +227676,16 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "bar\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "bar\\n\\n\\nbaz\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "base64",
             "reason": "rule:identifier"
         },
@@ -226532,6 +227697,11 @@
         {
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "baz\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "baz\\n",
             "reason": "rule:test_fixture"
         },
         {
@@ -226561,6 +227731,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "c\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "café ☕ naïve",
             "reason": "ai:test_assertion"
         },
@@ -226582,6 +227757,16 @@
         {
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "chunk1\n  \n  chunk2\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "chunk1\\n  \\n  chunk2\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "chunk1\\n\\nchunk2\\n\\n\\n\\nchunk3\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -226611,8 +227796,18 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "code block text event must exist",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "code-block",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "code\\n",
+            "reason": "rule:test_fixture"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -226641,7 +227836,17 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "def foo(x)\\n  return 3\\nend\\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "echo \"Zed is awesome!\"\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "echo \\\"Zed is awesome!\\\"\\n",
             "reason": "ai:code_snippet"
         },
         {
@@ -226656,7 +227861,17 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "example {example}, code block {block_number}: https://spec.commonmark.org/0.31.2/#example-{example}\\n  markdown: {source:?}\\n  expected: {expected:?}\\n  copied:   {copied:?}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "example {example}, code block {block_number}: no copy button rendered\n  markdown: {source:?}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "example {example}, code block {block_number}: no copy button rendered\\n  markdown: {source:?}",
             "reason": "ai:test_assertion"
         },
         {
@@ -226666,7 +227881,17 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "example {example}: rendered {} code blocks, expected {}\\n  markdown: {source:?}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "f&ouml;f&ouml;\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "f&ouml;f&ouml;\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -226756,6 +227981,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "foo  \\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "foo.bar() baz",
             "reason": "ai:test_assertion"
         },
@@ -226763,6 +227993,31 @@
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "foo.rs",
             "reason": "rule:path"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "foo\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "foo\\n---\\n~~~\\nbar\\n~~~\\n# baz\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "foo\\n```\\nbar\\n```\\nbaz\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "foo\\nbar\\n",
+            "reason": "rule:test_fixture"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "foo\\tbaz\\t\\tbim\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -226877,6 +228132,11 @@
         {
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "indented code\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "indented code\\n",
             "reason": "ai:test_assertion"
         },
         {
@@ -227026,6 +228286,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "more code\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "one `two` three `four`",
             "reason": "ai:test_assertion"
         },
@@ -227092,6 +228357,11 @@
         {
             "file": "zed/crates/markdown/src/markdown.rs",
             "original": "some text",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "source: {source:?}, stale: {stale}",
             "reason": "ai:test_assertion"
         },
         {
@@ -227246,6 +228516,11 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "{} code blocks copied the wrong text across {} CommonMark examples:\\n\\n{}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "{}.",
             "reason": "rule:punctuation"
         },
@@ -227326,6 +228601,26 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "~~~ aa ``` ~~~\\nfoo\\n~~~\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "~~~\\n<\\n >\\n~~~\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "~~~\\n\\\\[\\\\]\\n~~~\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "~~~\\naaa\\n```\\n~~~\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "~~~~\naaa\n~~~\n~~~~\n",
             "reason": "ai:code_snippet"
         },
@@ -227336,8 +228631,23 @@
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "~~~~    ruby startline=3 $%@#$\\ndef foo(x)\\n  return 3\\nend\\n~~~~~~~\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "~~~~\\naaa\\n~~~\\n~~~~\\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
             "original": "~~~~~~\naaa\n~~~ ~~\n",
             "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/markdown/src/markdown.rs",
+            "original": "~~~~~~\\naaa\\n~~~ ~~\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/markdown/src/markdown.rs",
@@ -233650,6 +234960,11 @@
             "reason": "rule:identifier"
         },
         {
+            "file": "zed/crates/migrator/src/migrations/m_2025_10_21/settings.rs",
+            "original": "wrapped",
+            "reason": "ai:serialization"
+        },
+        {
             "file": "zed/crates/migrator/src/migrations/m_2025_11_12/settings.rs",
             "original": "auto_open",
             "reason": "rule:identifier"
@@ -234416,6 +235731,16 @@
         },
         {
             "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "copilot",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "direct",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
             "original": "edit_predictions",
             "reason": "rule:identifier"
         },
@@ -234426,13 +235751,53 @@
         },
         {
             "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "existing",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
             "original": "https://legacy.example",
             "reason": "rule:uri"
         },
         {
             "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "macos",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
             "original": "migration should succeed",
             "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "other",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "preview",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "profiles",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "provider",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "settings",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrations/m_2026_09_29/settings.rs",
+            "original": "wrapped",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/migrator/src/migrator.rs",
@@ -235753,6 +237118,11 @@
             "file": "zed/crates/migrator/src/migrator.rs",
             "original": "right",
             "reason": "ai:match_arm"
+        },
+        {
+            "file": "zed/crates/migrator/src/migrator.rs",
+            "original": "rm\\\\s+-rf",
+            "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/migrator/src/migrator.rs",
@@ -238971,6 +240341,11 @@
         },
         {
             "file": "zed/crates/node_runtime/src/node_runtime.rs",
+            "original": "v24.21.0",
+            "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/node_runtime/src/node_runtime.rs",
             "original": "versions",
             "reason": "ai:serialization"
         },
@@ -239023,6 +240398,26 @@
             "file": "zed/crates/node_runtime/tests/system_node.rs",
             "original": "",
             "reason": "rule:empty_string"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "#!/bin/sh\n{body}\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "#!/bin/sh\\n{body}\\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "#!/nonexistent-node-interpreter\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "#!/nonexistent-node-interpreter\\n",
+            "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/node_runtime/tests/system_node.rs",
@@ -239131,12 +240526,32 @@
         },
         {
             "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "printf 'v20.0.0\\\\n'",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
             "original": "printf 'v20.0.0\\n'",
             "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "printf 'v21.7.3\\\\n'",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
             "original": "printf 'v21.7.3\\n'",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "printf 'v22.0.0\\\\n'",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "printf 'v22.0.0\\\\n'; printf 'broken installation' >&2; exit 7",
             "reason": "ai:code_snippet"
         },
         {
@@ -239151,7 +240566,17 @@
         },
         {
             "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "printf 'v24.0.0\\\\n'",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
             "original": "printf 'v24.0.0\\n'",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/node_runtime/tests/system_node.rs",
+            "original": "printf 'v24.1.0\\\\n'",
             "reason": "ai:code_snippet"
         },
         {
@@ -248465,6 +249890,11 @@
             "reason": "rule:punctuation"
         },
         {
+            "file": "zed/crates/path/src/path_component.rs",
+            "original": "logical",
+            "reason": "ai:api_identifier"
+        },
+        {
             "file": "zed/crates/path/src/rel_path.rs",
             "original": "",
             "reason": "rule:empty_string"
@@ -253941,6 +255371,11 @@
         },
         {
             "file": "zed/crates/project/src/git_store.rs",
+            "original": "content",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/project/src/git_store.rs",
             "original": "create_archive_checkpoint",
             "reason": "rule:identifier"
         },
@@ -254228,6 +255663,11 @@
             "file": "zed/crates/project/src/git_store.rs",
             "original": "head_sha",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/project/src/git_store.rs",
+            "original": "hold",
+            "reason": "ai:match_arm"
         },
         {
             "file": "zed/crates/project/src/git_store.rs",
@@ -256243,6 +257683,11 @@
             "file": "zed/crates/project/src/lsp_store/log_store.rs",
             "original": "downstream_log_streams",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/project/src/lsp_store/log_store.rs",
+            "original": "generation",
+            "reason": "ai:serialization"
         },
         {
             "file": "zed/crates/project/src/lsp_store/log_store.rs",
@@ -262446,6 +263891,11 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "\n`A` is invalid\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "\nfn a() { ",
             "reason": "ai:code_snippet"
         },
@@ -266296,6 +267746,11 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "Only one non-ignored file should have query",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "Path",
             "reason": "ai:api_identifier"
         },
@@ -266333,6 +267788,11 @@
             "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "Rust",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "Should receive hover responses from all related servers with hover capabilities",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
@@ -266383,6 +267843,16 @@
             "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "UU",
             "reason": "ai:string_comparison"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "Unexpected event {event:?}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "Unrestricted search with ignored directories should find every file with query",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
@@ -267171,6 +268641,11 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "could not open {relative_path}: {error}",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "crlf",
             "reason": "ai:serialization"
         },
@@ -267188,6 +268663,11 @@
             "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "current",
             "reason": "ai:string_comparison"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "current error",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
@@ -267971,6 +269451,16 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "fn main() {\\n    println!(\\\"🙂\\\");  \\n}\\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "fn main() {\\n    println!(\\\"🙂\\\");\\n}\\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "fn main() {\\r\\n    let a = 5;\\r\\n    let a2 = 55;\\r\\n    let b = 6;\\r\\n    let c = 7;\\r\\n}\\r\\n",
             "reason": "ai:code_snippet"
         },
@@ -268686,6 +270176,16 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "local worktree tasks from directory \".zed\"",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "local worktree tasks from directory \"b/.zed\"",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "local-tasks-",
             "reason": "ai:api_identifier"
         },
@@ -269266,6 +270766,11 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "retried error",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "rev-parse",
             "reason": "rule:identifier"
         },
@@ -269411,6 +270916,16 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "servers disabled by default must not be started without explicit configuration",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "servers disabled by default must start when listed explicitly",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "settings.json",
             "reason": "rule:path"
         },
@@ -269521,6 +271036,11 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "stale error",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "stash",
             "reason": "ai:api_identifier"
         },
@@ -269533,6 +271053,11 @@
             "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "status",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "streamed error",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
@@ -269576,6 +271101,11 @@
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "syntax error on empty line",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "tab_size",
             "reason": "rule:identifier"
         },
@@ -269583,6 +271113,16 @@
             "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "tab_width",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "tabs are better\n",
+            "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "tabs are better\\n",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
@@ -269823,6 +271363,11 @@
             "file": "zed/crates/project/tests/integration/project_tests.rs",
             "original": "textEditText",
             "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/project/tests/integration/project_tests.rs",
+            "original": "the `...` wildcard must not include servers disabled by default",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/project/tests/integration/project_tests.rs",
@@ -278517,6 +280062,11 @@
         {
             "file": "zed/crates/recent_projects/src/remote_servers.rs",
             "original": "Host alpha berry\\n",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/recent_projects/src/remote_servers.rs",
+            "original": "Host alpha beta berry\\n",
             "reason": "ai:code_snippet"
         },
         {
@@ -287856,6 +289406,11 @@
         },
         {
             "file": "zed/crates/repl/src/notebook/cell.rs",
+            "original": "control",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/repl/src/notebook/cell.rs",
             "original": "markdown-content",
             "reason": "rule:identifier"
         },
@@ -287883,6 +289438,11 @@
             "file": "zed/crates/repl/src/notebook/cell.rs",
             "original": "{}",
             "reason": "rule:punctuation"
+        },
+        {
+            "file": "zed/crates/repl/src/notebook/cell.rs",
+            "original": "{}\\n",
+            "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/repl/src/notebook/notebook_ui.rs",
@@ -291238,6 +292798,11 @@
             "file": "zed/crates/sandbox/src/sandbox.rs",
             "original": "repo",
             "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/sandbox/src/sandbox.rs",
+            "original": "this is the blocking convenience API; interactive callers use `wrap`",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/sandbox/src/sandbox.rs",
@@ -304826,6 +306391,11 @@
         },
         {
             "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
+            "original": "diagnostics",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
             "original": "dismiss-regex-error",
             "reason": "rule:identifier"
         },
@@ -304861,6 +306431,11 @@
         },
         {
             "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
+            "original": "grep",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
             "original": "list_agents_and_models",
             "reason": "rule:identifier"
         },
@@ -304872,6 +306447,11 @@
         {
             "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
             "original": "mode-trigger-{}",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
+            "original": "open",
             "reason": "ai:api_identifier"
         },
         {
@@ -304903,6 +306483,16 @@
             "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
             "original": "streaming_edit_file",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
+            "original": "subagent",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
+            "original": "thinking",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/settings_ui/src/pages/tool_permissions_setup.rs",
@@ -308233,6 +309823,26 @@
             "file": "zed/crates/sidebar/src/sidebar.rs",
             "original": "{}:{}",
             "reason": "rule:punctuation"
+        },
+        {
+            "file": "zed/crates/sidebar/src/sidebar.rs",
+            "original": "{}h",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/sidebar/src/sidebar.rs",
+            "original": "{}m",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/sidebar/src/sidebar.rs",
+            "original": "{}mo",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/sidebar/src/sidebar.rs",
+            "original": "{}w",
+            "reason": "ai:format_spec"
         },
         {
             "file": "zed/crates/sidebar/src/sidebar.rs",
@@ -332526,6 +334136,11 @@
         },
         {
             "file": "zed/crates/theme/src/styles/colors.rs",
+            "original": "panel {panel:#010x}, background {background:#010x}",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/theme/src/styles/colors.rs",
             "original": "snake_case",
             "reason": "rule:identifier"
         },
@@ -333338,6 +334953,11 @@
             "file": "zed/crates/theme_settings/src/settings.rs",
             "original": "#ff00ff",
             "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/theme_settings/src/settings.rs",
+            "original": "Test",
+            "reason": "ai:test_assertion"
         },
         {
             "file": "zed/crates/theme_settings/src/theme_settings.rs",
@@ -339398,6 +341018,11 @@
             "file": "zed/crates/util/src/paths.rs",
             "original": "\\\\wsl.localhost\\Distro\\blue",
             "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/util/src/paths.rs",
+            "original": "\\\\{rest}",
+            "reason": "ai:code_snippet"
         },
         {
             "file": "zed/crates/util/src/paths.rs",
@@ -359216,6 +360841,16 @@
         },
         {
             "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "a",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "a b",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
             "original": "cmd-k",
             "reason": "rule:identifier"
         },
@@ -359226,6 +360861,16 @@
         },
         {
             "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "cmd-k cmd-o",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "cmd-k cmd-o cmd-p",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
             "original": "cmd-k cmd-s",
             "reason": "ai:test_assertion"
         },
@@ -359233,6 +360878,11 @@
             "file": "zed/crates/which_key/src/pending_bindings.rs",
             "original": "cmd-k cmd-s cmd-,",
             "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "cmd-k cmd-s cmd-.",
+            "reason": "ai:format_spec"
         },
         {
             "file": "zed/crates/which_key/src/pending_bindings.rs",
@@ -359266,6 +360916,11 @@
         },
         {
             "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "cmd-k z b",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
             "original": "cmd-k É",
             "reason": "ai:test_assertion"
         },
@@ -359286,8 +360941,18 @@
         },
         {
             "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "cmd-o cmd-p",
+            "reason": "ai:format_spec"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
             "original": "cmd-s",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "cmd-s cmd-,",
+            "reason": "ai:format_spec"
         },
         {
             "file": "zed/crates/which_key/src/pending_bindings.rs",
@@ -359448,6 +361113,16 @@
             "file": "zed/crates/which_key/src/pending_bindings.rs",
             "original": "windows",
             "reason": "ai:test_assertion"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "workspace: open",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/which_key/src/pending_bindings.rs",
+            "original": "workspace: reopen last picker",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/which_key/src/pending_bindings.rs",
@@ -363128,6 +364803,11 @@
             "file": "zed/crates/workspace/src/welcome.rs",
             "original": "WelcomePage",
             "reason": "ai:serialization"
+        },
+        {
+            "file": "zed/crates/workspace/src/welcome.rs",
+            "original": "api, zed",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/workspace/src/welcome.rs",
@@ -370686,6 +372366,11 @@
         },
         {
             "file": "zed/crates/zed/src/main.rs",
+            "original": "DIR",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/zed/src/main.rs",
             "original": "Error opening path: {err}",
             "reason": "api_identifier"
         },
@@ -370766,6 +372451,11 @@
         },
         {
             "file": "zed/crates/zed/src/main.rs",
+            "original": "USER@DISTRO",
+            "reason": "ai:code_snippet"
+        },
+        {
+            "file": "zed/crates/zed/src/main.rs",
             "original": "Using git binary path: {:?}",
             "reason": "api_identifier"
         },
@@ -370798,6 +372488,11 @@
             "file": "zed/crates/zed/src/main.rs",
             "original": "\\n\\n",
             "reason": "rule:escape_sequence"
+        },
+        {
+            "file": "zed/crates/zed/src/main.rs",
+            "original": "actions",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/zed/src/main.rs",
@@ -370856,6 +372551,11 @@
         },
         {
             "file": "zed/crates/zed/src/main.rs",
+            "original": "fonts",
+            "reason": "ai:api_identifier"
+        },
+        {
+            "file": "zed/crates/zed/src/main.rs",
             "original": "freebsd",
             "reason": "ai:api_identifier"
         },
@@ -370903,6 +372603,11 @@
             "file": "zed/crates/zed/src/main.rs",
             "original": "schema_definitions",
             "reason": "rule:identifier"
+        },
+        {
+            "file": "zed/crates/zed/src/main.rs",
+            "original": "scm",
+            "reason": "ai:api_identifier"
         },
         {
             "file": "zed/crates/zed/src/main.rs",
@@ -380098,6 +381803,11 @@
             "file": "zed/crates/zeta_prompt/src/zeta_prompt.rs",
             "original": "{}{}\n",
             "reason": "rule:punctuation"
+        },
+        {
+            "file": "zed/crates/zeta_prompt/src/zeta_prompt.rs",
+            "original": "{}{}\\n",
+            "reason": "ai:format_spec"
         },
         {
             "file": "zed/crates/zeta_prompt/src/zeta_prompt.rs",
