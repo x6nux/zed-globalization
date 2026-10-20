@@ -197567,7 +197567,7 @@
             "context": "            (vec![Max, High, Medium], Some(\"high\")),\n            (vec![Low, Medium, Max], Some(\"medium\")),\n            (vec![Minimal, Low, Max], Some(\"low\")),\n            (vec![Minimal, Max], Some(\"minimal\")),\n            (vec![Low, High, XHigh], Some(\"xhigh\")),\n            (vec![High, Low], Some(\"low\")),\n            (vec![Max], Some(\"max\")),"
         },
         "low": {
-            "line": 1846,
+            "line": 1890,
             "context": "                            \"id\": \"new-model\",\n                            \"name\": \"New Model\",\n                            \"reasoning\": true,\n                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,\n                            \"modalities\": {\"input\":[\"text\",\"image\"],\"output\":[\"text\"]},"
         },
         "medium": {
@@ -197575,7 +197575,7 @@
             "context": "        for (levels, expected) in [\n            (vec![Low, Medium, High, XHigh, Max], Some(\"high\")),\n            (vec![Max, High, Medium], Some(\"high\")),\n            (vec![Low, Medium, Max], Some(\"medium\")),\n            (vec![Minimal, Low, Max], Some(\"low\")),\n            (vec![Minimal, Max], Some(\"minimal\")),\n            (vec![Low, High, XHigh], Some(\"xhigh\")),"
         },
         "high": {
-            "line": 1846,
+            "line": 1890,
             "context": "                            \"id\": \"new-model\",\n                            \"name\": \"New Model\",\n                            \"reasoning\": true,\n                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,\n                            \"modalities\": {\"input\":[\"text\",\"image\"],\"output\":[\"text\"]},"
         },
         "xhigh": {
@@ -197615,7 +197615,7 @@
             "context": "        ReasoningEffort::Medium => (\"Medium\", \"medium\"),\n        ReasoningEffort::High => (\"High\", \"high\"),\n        ReasoningEffort::XHigh => (\"XHigh\", \"xhigh\"),\n        ReasoningEffort::Max => (\"Max\", \"max\"),\n    }\n}\n"
         },
         "opencode": {
-            "line": 1877,
+            "line": 1921,
             "context": "    fn test_parse_discovered_models_rejects_catalog_without_compatible_models() {\n        let result = parse_discovered_models(\n            r#\"{\n                \"opencode\": {\n                    \"npm\": \"@ai-sdk/anthropic\",\n                    \"models\": {\n                        \"text-only\": {"
         },
         "OpenCode": {
@@ -197647,7 +197647,7 @@
             "context": "            .and_then(|catalog| parse_discovered_models(catalog, subscription));\n        if let Err(error) = &result {\n            log::warn!(\n                \"Failed to fetch OpenCode {} models: {error:#}\",\n                subscription.display_name()\n            );\n        }"
         },
         "opencode-go": {
-            "line": 1839,
+            "line": 1883,
             "context": "    fn test_parse_discovered_models_uses_catalog_entries_directly() {\n        let models = parse_discovered_models(\n            r#\"{\n                \"opencode-go\": {\n                    \"npm\": \"@ai-sdk/openai-compatible\",\n                    \"models\": {\n                        \"new-model\": {"
         },
         "models.json": {
@@ -197683,7 +197683,7 @@
             "context": "            )),\n            PROVIDER_ID,\n            PROVIDER_NAME,\n            format!(\"opencode/{}/{}\", subscription.id_prefix(), model.id()),\n            model.max_token_count(),\n        )\n    }"
         },
         "type": {
-            "line": 1846,
+            "line": 1890,
             "context": "                            \"id\": \"new-model\",\n                            \"name\": \"New Model\",\n                            \"reasoning\": true,\n                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,\n                            \"modalities\": {\"input\":[\"text\",\"image\"],\"output\":[\"text\"]},"
         },
         "OpenCode catalog is missing {provider_key}": {
@@ -197695,15 +197695,15 @@
             "context": "            (Some(\"deprecated\"), None, 0, 1),\n            (None, Some(\"deprecated\"), 1, 0),\n            (Some(\"active\"), Some(\"preview\"), 1, 1),\n            (Some(\"deprecated\"), Some(\"deprecated\"), 0, 0),\n        ] {\n            let mut catalog = serde_json::json!({});\n            for (provider_key, status) in [(\"opencode\", zen_status), (\"opencode-go\", go_status)] {"
         },
         "text": {
-            "line": 1884,
+            "line": 1928,
             "context": "                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}\n                        }\n                    }"
         },
         "effort": {
-            "line": 1846,
+            "line": 1890,
             "context": "                            \"id\": \"new-model\",\n                            \"name\": \"New Model\",\n                            \"reasoning\": true,\n                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,\n                            \"modalities\": {\"input\":[\"text\",\"image\"],\"output\":[\"text\"]},"
         },
         "image": {
-            "line": 1849,
+            "line": 1893,
             "context": "                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,\n                            \"modalities\": {\"input\":[\"text\",\"image\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 12345,\"output\": 678}\n                        }\n                    }"
         },
         "OpenCode model metadata did not contain any compatible models": {
@@ -197711,7 +197711,7 @@
             "context": "        })\n        .collect::<Vec<_>>();\n    if compatible_candidate_count > 0 && models.is_empty() {\n        bail!(\"OpenCode model metadata did not contain any compatible models\");\n    }\n    Ok(models)\n}"
         },
         "@ai-sdk/anthropic": {
-            "line": 1878,
+            "line": 1922,
             "context": "        let result = parse_discovered_models(\n            r#\"{\n                \"opencode\": {\n                    \"npm\": \"@ai-sdk/anthropic\",\n                    \"models\": {\n                        \"text-only\": {\n                            \"id\": \"text-only\","
         },
         "@ai-sdk/openai": {
@@ -197719,7 +197719,7 @@
             "context": "fn protocol_for_transport(transport: &str) -> Option<ApiProtocol> {\n    match transport {\n        \"@ai-sdk/anthropic\" => Some(ApiProtocol::Anthropic),\n        \"@ai-sdk/openai\" => Some(ApiProtocol::OpenAiResponses),\n        \"@ai-sdk/openai-compatible\" => Some(ApiProtocol::OpenAiChat),\n        \"@ai-sdk/google\" => Some(ApiProtocol::Google),\n        _ => None,"
         },
         "@ai-sdk/openai-compatible": {
-            "line": 1840,
+            "line": 1884,
             "context": "        let models = parse_discovered_models(\n            r#\"{\n                \"opencode-go\": {\n                    \"npm\": \"@ai-sdk/openai-compatible\",\n                    \"models\": {\n                        \"new-model\": {\n                            \"id\": \"new-model\","
         },
         "@ai-sdk/google": {
@@ -197747,7 +197747,7 @@
             "context": "impl ConfigurationView {\n    fn new(state: Entity<State>, window: &mut Window, cx: &mut Context<Self>) -> Self {\n        let api_key_editor = cx.new(|cx| {\n            InputField::new(window, cx, \"sk-00000000000000000000000000000000\").label(\"API key\")\n        });\n\n        cx.observe(&state, |_, _, cx| {"
         },
         "": {
-            "line": 1912,
+            "line": 1956,
             "context": "\n    #[test]\n    fn test_opencode_session_header_with_empty_thread_id() {\n        let value = opencode_session_header_value(Some(\"\"));\n\n        assert_generated_session_id(&value);\n    }"
         },
         "API key set in {API_KEY_ENV_VAR_NAME} environment variable": {
@@ -197827,11 +197827,11 @@
             "context": "                        Banner::new()\n                            .severity(Severity::Error)\n                            .child(Label::new(format!(\n                                \"Failed to load OpenCode {} models: {error}\",\n                                subscription.display_name()\n                            )))\n                    });"
         },
         "npm": {
-            "line": 1878,
+            "line": 1922,
             "context": "        let result = parse_discovered_models(\n            r#\"{\n                \"opencode\": {\n                    \"npm\": \"@ai-sdk/anthropic\",\n                    \"models\": {\n                        \"text-only\": {\n                            \"id\": \"text-only\","
         },
         "models": {
-            "line": 1879,
+            "line": 1923,
             "context": "            r#\"{\n                \"opencode\": {\n                    \"npm\": \"@ai-sdk/anthropic\",\n                    \"models\": {\n                        \"text-only\": {\n                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\","
         },
         "zen-model": {
@@ -197839,11 +197839,11 @@
             "context": "                serde_json::from_str::<serde_json::Value>(&fs.load(&cache_path).await.unwrap())\n                    .unwrap(),\n                serde_json::from_str::<serde_json::Value>(\n                    &test_catalog().replace(\"zen-model\", \"updated-model\")\n                )\n                .unwrap(),\n            );"
         },
         "id": {
-            "line": 1881,
+            "line": 1925,
             "context": "                    \"npm\": \"@ai-sdk/anthropic\",\n                    \"models\": {\n                        \"text-only\": {\n                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},"
         },
         "name": {
-            "line": 1882,
+            "line": 1926,
             "context": "                    \"models\": {\n                        \"text-only\": {\n                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}"
         },
         "Zen Model": {
@@ -197851,27 +197851,27 @@
             "context": "                \"models\": {\n                    \"zen-model\": {\n                        \"id\": \"zen-model\",\n                        \"name\": \"Zen Model\",\n                        \"tool_call\": true,\n                        \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                        \"limit\": {\"context\": 12345}"
         },
         "tool_call": {
-            "line": 1883,
+            "line": 1927,
             "context": "                        \"text-only\": {\n                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}\n                        }"
         },
         "modalities": {
-            "line": 1884,
+            "line": 1928,
             "context": "                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}\n                        }\n                    }"
         },
         "input": {
-            "line": 1884,
+            "line": 1928,
             "context": "                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}\n                        }\n                    }"
         },
         "output": {
-            "line": 1884,
+            "line": 1928,
             "context": "                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}\n                        }\n                    }"
         },
         "limit": {
-            "line": 1885,
+            "line": 1929,
             "context": "                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}\n                        }\n                    }\n                }"
         },
         "context": {
-            "line": 1885,
+            "line": 1929,
             "context": "                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}\n                        }\n                    }\n                }"
         },
         "go-model": {
@@ -197903,7 +197903,7 @@
             "context": "            provider\n                .state\n                .update(cx, |state, cx| {\n                    state.set_api_key(Some(\"secret\".to_string()), cx)\n                })\n                .await\n                .unwrap();"
         },
         "/cache/models.json": {
-            "line": 1949,
+            "line": 1993,
             "context": "                http_client,\n                Arc::new(TestCredentialsProvider),\n                FakeFs::new(cx.background_executor().clone()),\n                PathBuf::from(\"/cache/models.json\"),\n                cx,\n            )\n        });"
         },
         "old-key": {
@@ -197935,7 +197935,7 @@
             "context": "            &mut discovered_models,\n            &mut errors,\n            [\n                (OpenCodeSubscription::Zen, Err(anyhow!(\"refresh failed\"))),\n                (OpenCodeSubscription::Go, Ok(vec![new_go_model])),\n            ],\n        );"
         },
         "test-model": {
-            "line": 1960,
+            "line": 2004,
             "context": "        let model = add_discovered_model(\n            &provider,\n            DiscoveredModel {\n                model: test_model(\"test-model\", ApiProtocol::Anthropic),\n                supports_images: true,\n                supports_thinking: false,\n            },"
         },
         "none-only": {
@@ -197943,12 +197943,12 @@
             "context": "    #[test]\n    fn test_none_only_reasoning_does_not_enable_thinking() {\n        let model = opencode::Model::new(\n            \"none-only\".to_string(),\n            None,\n            1000,\n            None,"
         },
         "model": {
-            "line": 1821,
-            "context": "                }\n                catalog[provider_key] = serde_json::json!({\n                    \"npm\": \"@ai-sdk/openai-compatible\",\n                    \"models\": {\"model\": model},\n                });\n            }\n            for (subscription, expected_count) in ["
+            "line": 1852,
+            "context": "                \"npm\": \"@ai-sdk/openai-compatible\",\n                \"models\": {\n                    \"model\": {\n                        \"id\": \"model\",\n                        \"name\": \"Model\",\n                        \"tool_call\": true,\n                        \"modalities\": {\"output\": [\"text\"]},"
         },
         "Model": {
-            "line": 1811,
-            "context": "            for (provider_key, status) in [(\"opencode\", zen_status), (\"opencode-go\", go_status)] {\n                let mut model = serde_json::json!({\n                    \"id\": \"model\",\n                    \"name\": \"Model\",\n                    \"tool_call\": true,\n                    \"modalities\": {\"output\": [\"text\"]},\n                    \"limit\": {\"context\": 1000},"
+            "line": 1853,
+            "context": "                \"models\": {\n                    \"model\": {\n                        \"id\": \"model\",\n                        \"name\": \"Model\",\n                        \"tool_call\": true,\n                        \"modalities\": {\"output\": [\"text\"]},\n                        \"limit\": {\"context\": 1000},"
         },
         "cost": {
             "line": 1779,
@@ -197974,68 +197974,84 @@
             "line": 1829,
             "context": "                (OpenCodeSubscription::Go, go_count),\n            ] {\n                let models = parse_discovered_models(&catalog.to_string(), subscription)?;\n                assert_eq!(models.len(), expected_count, \"{subscription:?}: {catalog}\",);\n            }\n        }\n        Ok(())"
         },
+        "api": {
+            "line": 1840,
+            "context": "        for (model_provider, expected_protocol) in [\n            (serde_json::Value::Null, ApiProtocol::OpenAiChat),\n            (\n                serde_json::json!({\"api\": \"https://opencode.ai/inference/openai/v1\"}),\n                ApiProtocol::OpenAiChat,\n            ),\n            ("
+        },
+        "https://opencode.ai/inference/openai/v1": {
+            "line": 1840,
+            "context": "        for (model_provider, expected_protocol) in [\n            (serde_json::Value::Null, ApiProtocol::OpenAiChat),\n            (\n                serde_json::json!({\"api\": \"https://opencode.ai/inference/openai/v1\"}),\n                ApiProtocol::OpenAiChat,\n            ),\n            ("
+        },
+        "provider": {
+            "line": 1857,
+            "context": "                        \"tool_call\": true,\n                        \"modalities\": {\"output\": [\"text\"]},\n                        \"limit\": {\"context\": 1000},\n                        \"provider\": model_provider,\n                    },\n                },\n            });"
+        },
+        "{subscription:?}: {model_provider}": {
+            "line": 1872,
+            "context": "                assert_eq!(\n                    models[0].model.protocol(),\n                    expected_protocol,\n                    \"{subscription:?}: {model_provider}\",\n                );\n            }\n        }"
+        },
         "new-model": {
-            "line": 1860,
+            "line": 1904,
             "context": "        .unwrap();\n\n        assert_eq!(models.len(), 1);\n        assert_eq!(models[0].model.id(), \"new-model\");\n        assert_eq!(models[0].model.display_name(), \"New Model\");\n        assert!(models[0].supports_images);\n        assert!(models[0].supports_thinking);"
         },
         "New Model": {
-            "line": 1861,
+            "line": 1905,
             "context": "\n        assert_eq!(models.len(), 1);\n        assert_eq!(models[0].model.id(), \"new-model\");\n        assert_eq!(models[0].model.display_name(), \"New Model\");\n        assert!(models[0].supports_images);\n        assert!(models[0].supports_thinking);\n        assert_eq!("
         },
         "reasoning": {
-            "line": 1845,
+            "line": 1889,
             "context": "                        \"new-model\": {\n                            \"id\": \"new-model\",\n                            \"name\": \"New Model\",\n                            \"reasoning\": true,\n                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,"
         },
         "reasoning_options": {
-            "line": 1846,
+            "line": 1890,
             "context": "                            \"id\": \"new-model\",\n                            \"name\": \"New Model\",\n                            \"reasoning\": true,\n                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,\n                            \"modalities\": {\"input\":[\"text\",\"image\"],\"output\":[\"text\"]},"
         },
         "values": {
-            "line": 1846,
+            "line": 1890,
             "context": "                            \"id\": \"new-model\",\n                            \"name\": \"New Model\",\n                            \"reasoning\": true,\n                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,\n                            \"modalities\": {\"input\":[\"text\",\"image\"],\"output\":[\"text\"]},"
         },
         "interleaved": {
-            "line": 1848,
+            "line": 1892,
             "context": "                            \"reasoning\": true,\n                            \"reasoning_options\": [{\"type\":\"effort\",\"values\":[\"low\",\"high\"]}],\n                            \"tool_call\": true,\n                            \"interleaved\": true,\n                            \"modalities\": {\"input\":[\"text\",\"image\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 12345,\"output\": 678}\n                        }"
         },
         "text-only": {
-            "line": 1881,
+            "line": 1925,
             "context": "                    \"npm\": \"@ai-sdk/anthropic\",\n                    \"models\": {\n                        \"text-only\": {\n                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},"
         },
         "Text Only": {
-            "line": 1882,
+            "line": 1926,
             "context": "                    \"models\": {\n                        \"text-only\": {\n                            \"id\": \"text-only\",\n                            \"name\": \"Text Only\",\n                            \"tool_call\": false,\n                            \"modalities\": {\"input\":[\"text\"],\"output\":[\"text\"]},\n                            \"limit\": {\"context\": 1000}"
         },
         "thread-123": {
-            "line": 1900,
+            "line": 1944,
             "context": "    fn test_opencode_session_header_uses_thread_id() {\n        let value = opencode_session_header_value(Some(\"thread-123\"));\n\n        assert_eq!(value, \"thread-123\");\n    }\n\n    #[test]"
         },
         "thread\\n123": {
-            "line": 1919,
+            "line": 1963,
             "context": "\n    #[test]\n    fn test_opencode_session_header_with_invalid_thread_id() {\n        let value = opencode_session_header_value(Some(\"thread\\n123\"));\n\n        assert_generated_session_id(&value);\n    }"
         },
         "event: message_stop\\ndata: {\\\"type\\\":\\\"message_stop\\\"}\\n\\n": {
-            "line": 1937,
+            "line": 1981,
             "context": "                    *captured_header.lock() =\n                        Some(request.headers().get(OPENCODE_SESSION_HEADER_NAME).cloned());\n                    Ok(Response::builder().status(200).body(AsyncBody::from(\n                        \"event: message_stop\\ndata: {\\\"type\\\":\\\"message_stop\\\"}\\n\\n\",\n                    ))?)\n                }\n            }"
         },
         "test-key": {
-            "line": 1954,
+            "line": 1998,
             "context": "            )\n        });\n        let store_key = provider.state.update(cx, |state, cx| {\n            state.set_api_key(Some(\"test-key\".to_string()), cx)\n        });\n        store_key.await.unwrap();\n        let model = add_discovered_model("
         },
         "Hello": {
-            "line": 1971,
+            "line": 2015,
             "context": "            thread_id: None,\n            messages: vec![LanguageModelRequestMessage {\n                role: Role::User,\n                content: vec![MessageContent::Text(\"Hello\".to_string())],\n                cache: false,\n                reasoning_details: None,\n            }],"
         },
         "request should reach the http client": {
-            "line": 1987,
+            "line": 2031,
             "context": "        let captured_header = captured_header\n            .lock()\n            .take()\n            .expect(\"request should reach the http client\")\n            .expect(\"request should carry the session header\");\n        assert_generated_session_id(&captured_header);\n    }"
         },
         "request should carry the session header": {
-            "line": 1988,
+            "line": 2032,
             "context": "            .lock()\n            .take()\n            .expect(\"request should reach the http client\")\n            .expect(\"request should carry the session header\");\n        assert_generated_session_id(&captured_header);\n    }\n"
         },
         "generated session id should be a u64": {
-            "line": 1997,
+            "line": 2041,
             "context": "            .to_str()\n            .unwrap()\n            .parse::<u64>()\n            .expect(\"generated session id should be a u64\");\n    }\n\n    /// Adds a model to the provider's discovered list, as a successful catalog"
         }
     },
