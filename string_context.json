@@ -183833,41 +183833,41 @@
             "context": "    }\n}\n\n#[cfg(all(test, not(target_family = \"wasm\")))]\nmod tests {\n    use super::*;\n    use gpui::block_on;"
         },
         "failed to request adapter: {error}": {
-            "line": 417,
-            "context": "                    force_fallback_adapter: false,\n                })\n                .await\n                .map_err(|error| anyhow::anyhow!(\"failed to request adapter: {error}\"))?;\n            let (device, queue) = adapter\n                .request_device(&wgpu::DeviceDescriptor {\n                    label: Some(\"wgpu_atlas_test_device\"),"
+            "line": 418,
+            "context": "                    apply_limit_buckets: false,\n                })\n                .await\n                .map_err(|error| anyhow::anyhow!(\"failed to request adapter: {error}\"))?;\n            let (device, queue) = adapter\n                .request_device(&wgpu::DeviceDescriptor {\n                    label: Some(\"wgpu_atlas_test_device\"),"
         },
         "wgpu_atlas_test_device": {
-            "line": 420,
+            "line": 421,
             "context": "                .map_err(|error| anyhow::anyhow!(\"failed to request adapter: {error}\"))?;\n            let (device, queue) = adapter\n                .request_device(&wgpu::DeviceDescriptor {\n                    label: Some(\"wgpu_atlas_test_device\"),\n                    required_features: wgpu::Features::empty(),\n                    required_limits: wgpu::Limits::downlevel_defaults()\n                        .using_resolution(adapter.limits())"
         },
         "failed to request device: {error}": {
-            "line": 430,
-            "context": "                    experimental_features: wgpu::ExperimentalFeatures::disabled(),\n                })\n                .await\n                .map_err(|error| anyhow::anyhow!(\"failed to request device: {error}\"))?;\n            Ok((Arc::new(device), Arc::new(queue)))\n        })\n    }"
+            "line": 432,
+            "context": "                    default_queue: wgpu::QueueDescriptor::default(),\n                })\n                .await\n                .map_err(|error| anyhow::anyhow!(\"failed to request device: {error}\"))?;\n            Ok((Arc::new(device), Arc::new(queue)))\n        })\n    }"
         },
         "tile should be created": {
-            "line": 453,
+            "line": 455,
             "context": "        // Regression test: before the fix, this panicked in flush_uploads\n        atlas\n            .get_or_insert_with(key.clone(), &mut build)?\n            .expect(\"tile should be created\");\n        atlas.remove(&key);\n        atlas.before_frame();\n        Ok(())"
         },
         "allocation should succeed": {
-            "line": 525,
+            "line": 527,
             "context": "                        Cow::Owned(vec![0; size.width.0 as usize * size.height.0 as usize * 4]),\n                    )))\n                })\n                .expect(\"allocation should succeed\")\n                .expect(\"callback returns Some\")\n        };\n"
         },
         "callback returns Some": {
-            "line": 526,
+            "line": 528,
             "context": "                    )))\n                })\n                .expect(\"allocation should succeed\")\n                .expect(\"callback returns Some\")\n        };\n\n        let first_key = make_key(1);"
         },
         "first texture should exist": {
-            "line": 533,
+            "line": 535,
             "context": "        let first_tile = insert(first_key.clone());\n        let first_generation = atlas\n            .get_texture_info(first_tile.texture_id)\n            .context(\"first texture should exist\")?\n            .generation;\n        atlas.remove(&first_key);\n        assert!(atlas.get_texture_info(first_tile.texture_id).is_none());"
         },
         "second texture should exist": {
-            "line": 541,
+            "line": 543,
             "context": "        let second_tile = insert(make_key(2));\n        let second_generation = atlas\n            .get_texture_info(second_tile.texture_id)\n            .context(\"second texture should exist\")?\n            .generation;\n\n        assert_eq!(second_tile.texture_id, first_tile.texture_id);"
         }
     },
     "zed/crates/gpui_wgpu/src/wgpu_context.rs": {
         "wasm": {
-            "line": 750,
+            "line": 753,
             "context": "    }\n}\n\n#[cfg(not(target_family = \"wasm\"))]\nfn parse_pci_id(id: &str) -> anyhow::Result<u32> {\n    let mut id = id.trim();\n"
         },
         "wgpu device lost: reason={reason:?}, message={message}": {
@@ -183915,153 +183915,153 @@
             "context": "        let surface = instance\n            .create_surface(wgpu::SurfaceTarget::Canvas(canvas.clone()))\n            .map_err(|error| {\n                anyhow::anyhow!(\"Failed to create browser graphics surface: {error}\")\n            })?;\n\n        let adapter = instance"
         },
         "Failed to request a {preference:?} adapter compatible with the canvas: {error}": {
-            "line": 381,
+            "line": 382,
             "context": "            .await\n            .map_err(|error| {\n                anyhow::anyhow!(\n                    \"Failed to request a {preference:?} adapter compatible with the canvas: {error}\"\n                )\n            })?;\n        let adapter_info = adapter.get_info();"
         },
         "Browser graphics initialization selected unexpected backend {backend:?}": {
-            "line": 390,
+            "line": 391,
             "context": "            wgpu::Backend::Gl => WgpuBackend::Gl,\n            backend => {\n                anyhow::bail!(\n                    \"Browser graphics initialization selected unexpected backend {backend:?}\"\n                )\n            }\n        };"
         },
         "gpui_device": {
-            "line": 453,
+            "line": 454,
             "context": "\n        let (device, queue) = adapter\n            .request_device(&wgpu::DeviceDescriptor {\n                label: Some(\"gpui_device\"),\n                required_features,\n                required_limits,\n                memory_hints: wgpu::MemoryHints::MemoryUsage,"
         },
         "Failed to create wgpu device: {e}": {
-            "line": 461,
-            "context": "                experimental_features: wgpu::ExperimentalFeatures::disabled(),\n            })\n            .await\n            .map_err(|e| anyhow::anyhow!(\"Failed to create wgpu device: {e}\"))?;\n\n        Ok((\n            device,"
+            "line": 463,
+            "context": "                default_queue: wgpu::QueueDescriptor::default(),\n            })\n            .await\n            .map_err(|e| anyhow::anyhow!(\"Failed to create wgpu device: {e}\"))?;\n\n        Ok((\n            device,"
         },
         "No GPU adapters found": {
-            "line": 519,
+            "line": 521,
             "context": "        let mut adapters: Vec<_> = instance.enumerate_adapters(wgpu::Backends::all()).await;\n\n        if adapters.is_empty() {\n            anyhow::bail!(\"No GPU adapters found\");\n        }\n\n        if let Some(device_id) = device_id_filter {"
         },
         "ZED_DEVICE_ID filter: {:#06x}": {
-            "line": 523,
+            "line": 525,
             "context": "        }\n\n        if let Some(device_id) = device_id_filter {\n            log::info!(\"ZED_DEVICE_ID filter: {:#06x}\", device_id);\n        }\n\n        Self::sort_adapters(&mut adapters, device_id_filter, compositor_gpu);"
         },
         "Found {} GPU adapter(s):": {
-            "line": 529,
+            "line": 531,
             "context": "        Self::sort_adapters(&mut adapters, device_id_filter, compositor_gpu);\n\n        // Log all available adapters (in sorted order)\n        log::info!(\"Found {} GPU adapter(s):\", adapters.len());\n        for adapter in &adapters {\n            let info = adapter.get_info();\n            log::info!("
         },
         "  - {} (vendor={:#06x}, device={:#06x}, backend={:?}, type={:?})": {
-            "line": 533,
+            "line": 535,
             "context": "        for adapter in &adapters {\n            let info = adapter.get_info();\n            log::info!(\n                \"  - {} (vendor={:#06x}, device={:#06x}, backend={:?}, type={:?})\",\n                info.name,\n                info.vendor,\n                info.device,"
         },
         "Skipping software renderer: {} ({:?})": {
-            "line": 548,
+            "line": 550,
             "context": "\n            if reject_software && info.device_type == wgpu::DeviceType::Cpu {\n                log::info!(\n                    \"Skipping software renderer: {} ({:?})\",\n                    info.name,\n                    info.backend\n                );"
         },
         "Testing adapter: {} ({:?})...": {
-            "line": 555,
+            "line": 557,
             "context": "                continue;\n            }\n\n            log::info!(\"Testing adapter: {} ({:?})...\", info.name, info.backend);\n\n            match Self::try_adapter_with_surface(&adapter, surface).await {\n                Ok((device, queue, dual_source_blending, color_atlas_texture_format)) => {"
         },
         "Selected GPU (passed configuration test): {} ({:?})": {
-            "line": 560,
+            "line": 562,
             "context": "            match Self::try_adapter_with_surface(&adapter, surface).await {\n                Ok((device, queue, dual_source_blending, color_atlas_texture_format)) => {\n                    log::info!(\n                        \"Selected GPU (passed configuration test): {} ({:?})\",\n                        info.name,\n                        info.backend\n                    );"
         },
         "  Adapter {} ({:?}) failed: {}, trying next...": {
-            "line": 574,
+            "line": 576,
             "context": "                }\n                Err(e) => {\n                    log::info!(\n                        \"  Adapter {} ({:?}) failed: {}, trying next...\",\n                        info.name,\n                        info.backend,\n                        e"
         },
         "No GPU adapter found that can configure the display surface": {
-            "line": 583,
+            "line": 585,
             "context": "            }\n        }\n\n        anyhow::bail!(\"No GPU adapter found that can configure the display surface\")\n    }\n\n    /// Sort adapters into a single priority order. Tiers (from highest to lowest):"
         },
         "Other": {
-            "line": 591,
+            "line": 593,
             "context": "    /// 1. ZED_DEVICE_ID match — explicit user override\n    /// 2. Compositor GPU match — the GPU the display server is rendering on\n    /// 3. Device type (Discrete > Integrated > Other > Virtual > Cpu).\n    ///    \"Other\" ranks above \"Virtual\" because OpenGL seems to count as \"Other\".\n    /// 4. Backend — prefer Vulkan/Metal/Dx12 over GL/etc.\n    #[cfg(not(target_family = \"wasm\"))]\n    fn sort_adapters("
         },
         "Virtual": {
-            "line": 591,
+            "line": 593,
             "context": "    /// 1. ZED_DEVICE_ID match — explicit user override\n    /// 2. Compositor GPU match — the GPU the display server is rendering on\n    /// 3. Device type (Discrete > Integrated > Other > Virtual > Cpu).\n    ///    \"Other\" ranks above \"Virtual\" because OpenGL seems to count as \"Other\".\n    /// 4. Backend — prefer Vulkan/Metal/Dx12 over GL/etc.\n    #[cfg(not(target_family = \"wasm\"))]\n    fn sort_adapters("
         },
         "no compatible surface formats": {
-            "line": 648,
+            "line": 650,
             "context": "    ) -> anyhow::Result<(wgpu::Device, wgpu::Queue, bool, TextureFormat)> {\n        let caps = surface.get_capabilities(adapter);\n        if caps.formats.is_empty() {\n            anyhow::bail!(\"no compatible surface formats\");\n        }\n        if caps.alpha_modes.is_empty() {\n            anyhow::bail!(\"no compatible alpha modes\");"
         },
         "no compatible alpha modes": {
-            "line": 651,
+            "line": 653,
             "context": "            anyhow::bail!(\"no compatible surface formats\");\n        }\n        if caps.alpha_modes.is_empty() {\n            anyhow::bail!(\"no compatible alpha modes\");\n        }\n\n        let (device, queue, dual_source_blending, color_atlas_texture_format) ="
         },
         "surface configuration failed: {e}": {
-            "line": 673,
+            "line": 676,
             "context": "\n        let error = error_scope.pop().await;\n        if let Some(e) = error {\n            anyhow::bail!(\"surface configuration failed: {e}\");\n        }\n\n        Ok(("
         },
         "0x": {
-            "line": 754,
+            "line": 757,
             "context": "fn parse_pci_id(id: &str) -> anyhow::Result<u32> {\n    let mut id = id.trim();\n\n    if id.starts_with(\"0x\") || id.starts_with(\"0X\") {\n        id = &id[2..];\n    }\n    let is_hex_string = id.chars().all(|c| c.is_ascii_hexdigit());"
         },
         "0X": {
-            "line": 754,
+            "line": 757,
             "context": "fn parse_pci_id(id: &str) -> anyhow::Result<u32> {\n    let mut id = id.trim();\n\n    if id.starts_with(\"0x\") || id.starts_with(\"0X\") {\n        id = &id[2..];\n    }\n    let is_hex_string = id.chars().all(|c| c.is_ascii_hexdigit());"
         },
         "Expected a 4 digit PCI ID in hexadecimal format": {
-            "line": 761,
+            "line": 764,
             "context": "    let is_4_chars = id.len() == 4;\n    anyhow::ensure!(\n        is_4_chars && is_hex_string,\n        \"Expected a 4 digit PCI ID in hexadecimal format\"\n    );\n\n    u32::from_str_radix(id, 16).context(\"parsing PCI ID as hex\")"
         },
         "parsing PCI ID as hex": {
-            "line": 764,
+            "line": 767,
             "context": "        \"Expected a 4 digit PCI ID in hexadecimal format\"\n    );\n\n    u32::from_str_radix(id, 16).context(\"parsing PCI ID as hex\")\n}\n\n#[cfg(test)]"
         },
         "first": {
-            "line": 780,
+            "line": 783,
             "context": "        errors.record(\"first\".into());\n        assert_eq!(errors.observe_error(&mut first).as_deref(), Some(\"first\"));\n        assert_eq!(errors.observe_error(&mut first), None);\n        assert_eq!(errors.observe_error(&mut second).as_deref(), Some(\"first\"));\n        assert_eq!(errors.observe_error(&mut second), None);\n\n        errors.record(\"second\".into());"
         },
         "second": {
-            "line": 785,
+            "line": 788,
             "context": "\n        errors.record(\"second\".into());\n        assert_eq!(errors.observe_error(&mut second).as_deref(), Some(\"second\"));\n        assert_eq!(errors.observe_error(&mut first).as_deref(), Some(\"second\"));\n        assert_eq!(errors.observe_error(&mut first), None);\n        assert_eq!(errors.observe_error(&mut second), None);\n    }"
         },
         "older": {
-            "line": 793,
+            "line": 796,
             "context": "    #[test]\n    fn device_errors_coalesce_and_new_observers_see_latest() {\n        let errors = DeviceErrorState::default();\n        errors.record(\"older\".into());\n        errors.record(\"latest\".into());\n        let mut generation = 0;\n        assert_eq!("
         },
         "latest": {
-            "line": 798,
+            "line": 801,
             "context": "        let mut generation = 0;\n        assert_eq!(\n            errors.observe_error(&mut generation).as_deref(),\n            Some(\"latest\")\n        );\n        assert_eq!(errors.observe_error(&mut generation), None);\n"
         },
         "replacement": {
-            "line": 807,
+            "line": 810,
             "context": "        generation = 0;\n        assert_eq!(\n            replacement.observe_error(&mut generation).as_deref(),\n            Some(\"replacement\")\n        );\n        assert_eq!(replacement.observe_error(&mut generation), None);\n    }"
         },
         "0xABCD": {
-            "line": 814,
+            "line": 817,
             "context": "\n    #[test]\n    fn test_parse_device_id() {\n        assert!(parse_pci_id(\"0xABCD\").is_ok());\n        assert!(parse_pci_id(\"ABCD\").is_ok());\n        assert!(parse_pci_id(\"abcd\").is_ok());\n        assert!(parse_pci_id(\"1234\").is_ok());"
         },
         "ABCD": {
-            "line": 815,
+            "line": 818,
             "context": "    #[test]\n    fn test_parse_device_id() {\n        assert!(parse_pci_id(\"0xABCD\").is_ok());\n        assert!(parse_pci_id(\"ABCD\").is_ok());\n        assert!(parse_pci_id(\"abcd\").is_ok());\n        assert!(parse_pci_id(\"1234\").is_ok());\n        assert!(parse_pci_id(\"123\").is_err());"
         },
         "abcd": {
-            "line": 816,
+            "line": 819,
             "context": "    fn test_parse_device_id() {\n        assert!(parse_pci_id(\"0xABCD\").is_ok());\n        assert!(parse_pci_id(\"ABCD\").is_ok());\n        assert!(parse_pci_id(\"abcd\").is_ok());\n        assert!(parse_pci_id(\"1234\").is_ok());\n        assert!(parse_pci_id(\"123\").is_err());\n        assert_eq!("
         },
         "1234": {
-            "line": 817,
+            "line": 820,
             "context": "        assert!(parse_pci_id(\"0xABCD\").is_ok());\n        assert!(parse_pci_id(\"ABCD\").is_ok());\n        assert!(parse_pci_id(\"abcd\").is_ok());\n        assert!(parse_pci_id(\"1234\").is_ok());\n        assert!(parse_pci_id(\"123\").is_err());\n        assert_eq!(\n            parse_pci_id(&format!(\"{:x}\", 0x1234)).unwrap(),"
         },
         "123": {
-            "line": 818,
+            "line": 821,
             "context": "        assert!(parse_pci_id(\"ABCD\").is_ok());\n        assert!(parse_pci_id(\"abcd\").is_ok());\n        assert!(parse_pci_id(\"1234\").is_ok());\n        assert!(parse_pci_id(\"123\").is_err());\n        assert_eq!(\n            parse_pci_id(&format!(\"{:x}\", 0x1234)).unwrap(),\n            parse_pci_id(&format!(\"{:X}\", 0x1234)).unwrap(),"
         },
         "{:x}": {
-            "line": 820,
+            "line": 823,
             "context": "        assert!(parse_pci_id(\"1234\").is_ok());\n        assert!(parse_pci_id(\"123\").is_err());\n        assert_eq!(\n            parse_pci_id(&format!(\"{:x}\", 0x1234)).unwrap(),\n            parse_pci_id(&format!(\"{:X}\", 0x1234)).unwrap(),\n        );\n"
         },
         "{:X}": {
-            "line": 821,
+            "line": 824,
             "context": "        assert!(parse_pci_id(\"123\").is_err());\n        assert_eq!(\n            parse_pci_id(&format!(\"{:x}\", 0x1234)).unwrap(),\n            parse_pci_id(&format!(\"{:X}\", 0x1234)).unwrap(),\n        );\n\n        assert_eq!("
         },
         "{:#x}": {
-            "line": 825,
+            "line": 828,
             "context": "        );\n\n        assert_eq!(\n            parse_pci_id(&format!(\"{:#x}\", 0x1234)).unwrap(),\n            parse_pci_id(&format!(\"{:#X}\", 0x1234)).unwrap(),\n        );\n    }"
         },
         "{:#X}": {
-            "line": 826,
+            "line": 829,
             "context": "\n        assert_eq!(\n            parse_pci_id(&format!(\"{:#x}\", 0x1234)).unwrap(),\n            parse_pci_id(&format!(\"{:#X}\", 0x1234)).unwrap(),\n        );\n    }\n}"
         }
     },
     "zed/crates/gpui_wgpu/src/wgpu_renderer.rs": {
         "wasm": {
-            "line": 2539,
+            "line": 2546,
             "context": "    range.start as u32..range.end as u32\n}\n\n#[cfg(not(target_family = \"wasm\"))]\nfn create_surface(\n    instance: &wgpu::Instance,\n    raw_window_handle: raw_window_handle::RawWindowHandle,"
         },
         "shaders.wgsl": {
@@ -184085,7 +184085,7 @@
             "context": "    \"enable dual_source_blending;\\n\",\n    include_str!(\"shaders.wgsl\"),\n    include_str!(\"shaders_storage.wgsl\"),\n    include_str!(\"shaders_subpixel.wgsl\"),\n);\n\nfn least_common_multiple(left: u64, right: u64) -> u64 {"
         },
         "Failed to get window handle: {e}": {
-            "line": 2212,
+            "line": 2219,
             "context": "\n        let window_handle = window\n            .window_handle()\n            .map_err(|e| anyhow::anyhow!(\"Failed to get window handle: {e}\"))?;\n\n        let surface = if needs_new_context {\n            log::warn!(\"GPU device lost, recreating context...\");"
         },
         "Failed to create surface: {e}": {
@@ -184093,439 +184093,439 @@
             "context": "        let surface = context\n            .instance\n            .create_surface(wgpu::SurfaceTarget::Canvas(canvas.clone()))\n            .map_err(|e| anyhow::anyhow!(\"Failed to create surface: {e}\"))?;\n        Self::new_from_surface(context, surface, config)\n    }\n"
         },
         "Surface reports no supported texture formats for adapter {:?}": {
-            "line": 395,
+            "line": 401,
             "context": "            .or_else(|| surface_caps.formats.first().copied())\n            .ok_or_else(|| {\n                anyhow::anyhow!(\n                    \"Surface reports no supported texture formats for adapter {:?}\",\n                    context.adapter.get_info().name\n                )\n            })?;"
         },
         "Surface reports no supported alpha modes for adapter {:?}": {
-            "line": 409,
+            "line": 415,
             "context": "                    .or_else(|| surface_caps.alpha_modes.first().copied())\n                    .ok_or_else(|| {\n                        anyhow::anyhow!(\n                            \"Surface reports no supported alpha modes for adapter {:?}\",\n                            context.adapter.get_info().name\n                        )\n                    })"
         },
         "globals_layout": {
-            "line": 492,
+            "line": 499,
             "context": "    ) -> WgpuBindGroupLayouts {\n        let globals =\n            device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {\n                label: Some(\"globals_layout\"),\n                entries: &[\n                    wgpu::BindGroupLayoutEntry {\n                        binding: 0,"
         },
         "instances_layout": {
-            "line": 541,
+            "line": 548,
             "context": "        };\n\n        let instances = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {\n            label: Some(\"instances_layout\"),\n            entries: &[instance_data_entry],\n        });\n"
         },
         "texture_layout": {
-            "line": 546,
+            "line": 553,
             "context": "        });\n\n        let texture = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {\n            label: Some(\"texture_layout\"),\n            entries: &[\n                wgpu::BindGroupLayoutEntry {\n                    binding: 0,"
         },
         "surfaces_layout": {
-            "line": 568,
+            "line": 575,
             "context": "        });\n\n        let surfaces = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {\n            label: Some(\"surfaces_layout\"),\n            entries: &[\n                wgpu::BindGroupLayoutEntry {\n                    binding: 0,"
         },
         "instance_texture": {
-            "line": 631,
+            "line": 638,
             "context": "            .min(u64::from(max_texture_dimension))\n            .max(1) as u32;\n        let texture = device.create_texture(&wgpu::TextureDescriptor {\n            label: Some(\"instance_texture\"),\n            size: wgpu::Extent3d {\n                width,\n                height,"
         },
         "gpui_shaders": {
-            "line": 695,
+            "line": 702,
             "context": "            STORAGE_BUFFER_SHADERS\n        };\n        let shader_module = device.create_shader_module(wgpu::ShaderModuleDescriptor {\n            label: Some(\"gpui_shaders\"),\n            source: wgpu::ShaderSource::Wgsl(shader_source.into()),\n        });\n"
         },
         "gpui_subpixel_shaders": {
-            "line": 701,
+            "line": 708,
             "context": "\n        let subpixel_shader_module = if dual_source_blending {\n            Some(device.create_shader_module(wgpu::ShaderModuleDescriptor {\n                label: Some(\"gpui_subpixel_shaders\"),\n                source: wgpu::ShaderSource::Wgsl(SUBPIXEL_SHADERS.into()),\n            }))\n        } else {"
         },
         "{name}_layout": {
-            "line": 734,
+            "line": 741,
             "context": "            let mut bind_group_layouts = vec![Some(globals_layout), Some(data_layout)];\n            bind_group_layouts.extend(texture_layout.map(Some));\n            let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {\n                label: Some(&format!(\"{name}_layout\")),\n                bind_group_layouts: &bind_group_layouts,\n                immediate_size: 0,\n            });"
         },
         "quads": {
-            "line": 775,
+            "line": 782,
             "context": "        };\n\n        let quads = create_pipeline(\n            \"quads\",\n            \"vs_quad\",\n            \"fs_quad\",\n            &layouts.globals,"
         },
         "vs_quad": {
-            "line": 776,
+            "line": 783,
             "context": "\n        let quads = create_pipeline(\n            \"quads\",\n            \"vs_quad\",\n            \"fs_quad\",\n            &layouts.globals,\n            &layouts.instances,"
         },
         "fs_quad": {
-            "line": 777,
+            "line": 784,
             "context": "        let quads = create_pipeline(\n            \"quads\",\n            \"vs_quad\",\n            \"fs_quad\",\n            &layouts.globals,\n            &layouts.instances,\n            None,"
         },
         "shadows": {
-            "line": 788,
+            "line": 795,
             "context": "        );\n\n        let shadows = create_pipeline(\n            \"shadows\",\n            \"vs_shadow\",\n            \"fs_shadow\",\n            &layouts.globals,"
         },
         "vs_shadow": {
-            "line": 789,
+            "line": 796,
             "context": "\n        let shadows = create_pipeline(\n            \"shadows\",\n            \"vs_shadow\",\n            \"fs_shadow\",\n            &layouts.globals,\n            &layouts.instances,"
         },
         "fs_shadow": {
-            "line": 790,
+            "line": 797,
             "context": "        let shadows = create_pipeline(\n            \"shadows\",\n            \"vs_shadow\",\n            \"fs_shadow\",\n            &layouts.globals,\n            &layouts.instances,\n            None,"
         },
         "path_rasterization": {
-            "line": 801,
+            "line": 808,
             "context": "        );\n\n        let path_rasterization = create_pipeline(\n            \"path_rasterization\",\n            \"vs_path_rasterization\",\n            \"fs_path_rasterization\",\n            &layouts.globals,"
         },
         "vs_path_rasterization": {
-            "line": 802,
+            "line": 809,
             "context": "\n        let path_rasterization = create_pipeline(\n            \"path_rasterization\",\n            \"vs_path_rasterization\",\n            \"fs_path_rasterization\",\n            &layouts.globals,\n            &layouts.instances,"
         },
         "fs_path_rasterization": {
-            "line": 803,
+            "line": 810,
             "context": "        let path_rasterization = create_pipeline(\n            \"path_rasterization\",\n            \"vs_path_rasterization\",\n            \"fs_path_rasterization\",\n            &layouts.globals,\n            &layouts.instances,\n            None,"
         },
         "paths": {
-            "line": 818,
+            "line": 825,
             "context": "        );\n\n        let paths = create_pipeline(\n            \"paths\",\n            \"vs_path\",\n            \"fs_path\",\n            &layouts.globals,"
         },
         "vs_path": {
-            "line": 819,
+            "line": 826,
             "context": "\n        let paths = create_pipeline(\n            \"paths\",\n            \"vs_path\",\n            \"fs_path\",\n            &layouts.globals,\n            &layouts.instances,"
         },
         "fs_path": {
-            "line": 820,
+            "line": 827,
             "context": "        let paths = create_pipeline(\n            \"paths\",\n            \"vs_path\",\n            \"fs_path\",\n            &layouts.globals,\n            &layouts.instances,\n            Some(&layouts.texture),"
         },
         "underlines": {
-            "line": 835,
+            "line": 842,
             "context": "        );\n\n        let underlines = create_pipeline(\n            \"underlines\",\n            \"vs_underline\",\n            \"fs_underline\",\n            &layouts.globals,"
         },
         "vs_underline": {
-            "line": 836,
+            "line": 843,
             "context": "\n        let underlines = create_pipeline(\n            \"underlines\",\n            \"vs_underline\",\n            \"fs_underline\",\n            &layouts.globals,\n            &layouts.instances,"
         },
         "fs_underline": {
-            "line": 837,
+            "line": 844,
             "context": "        let underlines = create_pipeline(\n            \"underlines\",\n            \"vs_underline\",\n            \"fs_underline\",\n            &layouts.globals,\n            &layouts.instances,\n            None,"
         },
         "mono_sprites": {
-            "line": 848,
+            "line": 855,
             "context": "        );\n\n        let mono_sprites = create_pipeline(\n            \"mono_sprites\",\n            \"vs_mono_sprite\",\n            \"fs_mono_sprite\",\n            &layouts.globals,"
         },
         "vs_mono_sprite": {
-            "line": 849,
+            "line": 856,
             "context": "\n        let mono_sprites = create_pipeline(\n            \"mono_sprites\",\n            \"vs_mono_sprite\",\n            \"fs_mono_sprite\",\n            &layouts.globals,\n            &layouts.instances,"
         },
         "fs_mono_sprite": {
-            "line": 850,
+            "line": 857,
             "context": "        let mono_sprites = create_pipeline(\n            \"mono_sprites\",\n            \"vs_mono_sprite\",\n            \"fs_mono_sprite\",\n            &layouts.globals,\n            &layouts.instances,\n            Some(&layouts.texture),"
         },
         "subpixel_sprites": {
-            "line": 875,
+            "line": 882,
             "context": "            };\n\n            Some(create_pipeline(\n                \"subpixel_sprites\",\n                \"vs_subpixel_sprite\",\n                \"fs_subpixel_sprite\",\n                &layouts.globals,"
         },
         "vs_subpixel_sprite": {
-            "line": 876,
+            "line": 883,
             "context": "\n            Some(create_pipeline(\n                \"subpixel_sprites\",\n                \"vs_subpixel_sprite\",\n                \"fs_subpixel_sprite\",\n                &layouts.globals,\n                &layouts.instances,"
         },
         "fs_subpixel_sprite": {
-            "line": 877,
+            "line": 884,
             "context": "            Some(create_pipeline(\n                \"subpixel_sprites\",\n                \"vs_subpixel_sprite\",\n                \"fs_subpixel_sprite\",\n                &layouts.globals,\n                &layouts.instances,\n                Some(&layouts.texture),"
         },
         "poly_sprites": {
-            "line": 895,
+            "line": 902,
             "context": "        };\n\n        let poly_sprites = create_pipeline(\n            \"poly_sprites\",\n            \"vs_poly_sprite\",\n            \"fs_poly_sprite\",\n            &layouts.globals,"
         },
         "vs_poly_sprite": {
-            "line": 896,
+            "line": 903,
             "context": "\n        let poly_sprites = create_pipeline(\n            \"poly_sprites\",\n            \"vs_poly_sprite\",\n            \"fs_poly_sprite\",\n            &layouts.globals,\n            &layouts.instances,"
         },
         "fs_poly_sprite": {
-            "line": 897,
+            "line": 904,
             "context": "        let poly_sprites = create_pipeline(\n            \"poly_sprites\",\n            \"vs_poly_sprite\",\n            \"fs_poly_sprite\",\n            &layouts.globals,\n            &layouts.instances,\n            Some(&layouts.texture),"
         },
         "surfaces": {
-            "line": 908,
+            "line": 915,
             "context": "        );\n\n        let surfaces = create_pipeline(\n            \"surfaces\",\n            \"vs_surface\",\n            \"fs_surface\",\n            &layouts.globals,"
         },
         "vs_surface": {
-            "line": 909,
+            "line": 916,
             "context": "\n        let surfaces = create_pipeline(\n            \"surfaces\",\n            \"vs_surface\",\n            \"fs_surface\",\n            &layouts.globals,\n            &layouts.surfaces,"
         },
         "fs_surface": {
-            "line": 910,
+            "line": 917,
             "context": "        let surfaces = create_pipeline(\n            \"surfaces\",\n            \"vs_surface\",\n            \"fs_surface\",\n            &layouts.globals,\n            &layouts.surfaces,\n            None,"
         },
         "path_intermediate": {
-            "line": 940,
+            "line": 947,
             "context": "        height: u32,\n    ) -> (wgpu::Texture, wgpu::TextureView) {\n        let texture = device.create_texture(&wgpu::TextureDescriptor {\n            label: Some(\"path_intermediate\"),\n            size: wgpu::Extent3d {\n                width: width.max(1),\n                height: height.max(1),"
         },
         "path_msaa": {
-            "line": 968,
+            "line": 975,
             "context": "            return None;\n        }\n        let texture = device.create_texture(&wgpu::TextureDescriptor {\n            label: Some(\"path_msaa\"),\n            size: wgpu::Extent3d {\n                width: width.max(1),\n                height: height.max(1),"
         },
         "Failed to poll device during resize: {e:?}": {
-            "line": 1019,
+            "line": 1026,
             "context": "            submission_index: None,\n            timeout: None,\n        }) {\n            warn!(\"Failed to poll device during resize: {e:?}\");\n        }\n\n        // Destroy old textures before allocating new ones to avoid GPU memory spikes"
         },
         "Browser graphics context was lost; rendering has stopped. Reload the page to recover.": {
-            "line": 1115,
+            "line": 1122,
             "context": "        if self.device_lost() {\n            if matches!(self.state, RendererState::Ready { .. }) {\n                log::error!(\n                    \"Browser graphics context was lost; rendering has stopped. Reload the page to recover.\"\n                );\n                self.unconfigure_surface();\n            }"
         },
         "GPU error during frame (failure {} of 10): {error}": {
-            "line": 1136,
+            "line": 1143,
             "context": "        }) {\n            self.failed_frame_count += 1;\n            log::error!(\n                \"GPU error during frame (failure {} of 10): {error}\",\n                self.failed_frame_count\n            );\n"
         },
         "Too many consecutive GPU errors. Last error: {error}": {
-            "line": 1142,
+            "line": 1149,
             "context": "\n            // TBD. Does retrying more actually help?\n            if self.failed_frame_count > 10 {\n                panic!(\"Too many consecutive GPU errors. Last error: {error}\");\n            } else if self.failed_frame_count > 5 {\n                core.resources.invalidate_intermediate_textures();\n                self.atlas.clear();"
         },
         "Surface texture validation error": {
-            "line": 1170,
+            "line": 1177,
             "context": "                return false;\n            }\n            wgpu::CurrentSurfaceTexture::Validation => {\n                self.last_surface_error = Some(\"Surface texture validation error\".to_string());\n                return false;\n            }\n        };"
         },
         "{error:#}": {
-            "line": 1193,
+            "line": 1200,
             "context": "            premultiplied_alpha,\n            wgpu::Color::TRANSPARENT,\n        ) {\n            log::error!(\"{error:#}\");\n            return false;\n        }\n"
         },
         "atlas_sampler": {
-            "line": 1226,
+            "line": 1233,
             "context": "            uses_webgl_instance_data,\n        );\n        let atlas_sampler = device.create_sampler(&wgpu::SamplerDescriptor {\n            label: Some(\"atlas_sampler\"),\n            mag_filter: wgpu::FilterMode::Linear,\n            min_filter: wgpu::FilterMode::Linear,\n            ..Default::default()"
         },
         "globals_buffer": {
-            "line": 1237,
+            "line": 1244,
             "context": "        let path_globals_offset = globals_size.next_multiple_of(uniform_alignment);\n        let gamma_offset = (path_globals_offset + globals_size).next_multiple_of(uniform_alignment);\n        let globals_buffer = device.create_buffer(&wgpu::BufferDescriptor {\n            label: Some(\"globals_buffer\"),\n            size: gamma_offset + gamma_size,\n            usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,\n            mapped_at_creation: false,"
         },
         "instance_buffer": {
-            "line": 2083,
+            "line": 2090,
             "context": "        } else {\n            resources.instance_data =\n                InstanceData::Storage(resources.device.create_buffer(&wgpu::BufferDescriptor {\n                    label: Some(\"instance_buffer\"),\n                    size: capacity,\n                    usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,\n                    mapped_at_creation: false,"
         },
         "globals_bind_group": {
-            "line": 1282,
+            "line": 1289,
             "context": "            )\n        };\n        let globals_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {\n            label: Some(\"globals_bind_group\"),\n            layout: &bind_group_layouts.globals,\n            entries: &[\n                wgpu::BindGroupEntry {"
         },
         "path_globals_bind_group": {
-            "line": 1304,
+            "line": 1311,
             "context": "            ],\n        });\n        let path_globals_bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {\n            label: Some(\"path_globals_bind_group\"),\n            layout: &bind_group_layouts.globals,\n            entries: &[\n                wgpu::BindGroupEntry {"
         },
         "invalid render target size: {size:?}": {
-            "line": 1414,
+            "line": 1421,
             "context": "    ) -> Result<wgpu::SubmissionIndex> {\n        anyhow::ensure!(\n            size.width.0 > 0 && size.height.0 > 0,\n            \"invalid render target size: {size:?}\"\n        );\n        anyhow::ensure!(\n            size.width.0 as u32 <= self.max_texture_size"
         },
         "render target size {size:?} exceeds maximum texture dimension {}": {
-            "line": 1419,
+            "line": 1426,
             "context": "        anyhow::ensure!(\n            size.width.0 as u32 <= self.max_texture_size\n                && size.height.0 as u32 <= self.max_texture_size,\n            \"render target size {size:?} exceeds maximum texture dimension {}\",\n            self.max_texture_size\n        );\n"
         },
         "scene too large: {} paths, {} shadows, {} quads, {} underlines, {} monochrome sprites, {} subpixel sprites, {} polychrome sprites": {
-            "line": 1476,
+            "line": 1483,
             "context": "            .write_instances(scene, &mut instance_offset)\n            .with_context(|| {\n                format!(\n                    \"scene too large: {} paths, {} shadows, {} quads, {} underlines, {} monochrome sprites, {} subpixel sprites, {} polychrome sprites\",\n                    scene.paths.len(),\n                    scene.shadows.len(),\n                    scene.quads.len(),"
         },
         "main_encoder": {
-            "line": 1492,
+            "line": 1499,
             "context": "            self.resources()\n                .device\n                .create_command_encoder(&wgpu::CommandEncoderDescriptor {\n                    label: Some(\"main_encoder\"),\n                });\n\n        {"
         },
         "main_pass": {
-            "line": 1497,
+            "line": 1504,
             "context": "\n        {\n            let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {\n                label: Some(\"main_pass\"),\n                color_attachments: &[Some(wgpu::RenderPassColorAttachment {\n                    view: frame_view,\n                    resolve_target: None,"
         },
         "main_pass_continued": {
-            "line": 1539,
+            "line": 1546,
             "context": "                        )?;\n\n                        pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {\n                            label: Some(\"main_pass_continued\"),\n                            color_attachments: &[Some(wgpu::RenderPassColorAttachment {\n                                view: frame_view,\n                                resolve_target: None,"
         },
         "quads_bind_group": {
-            "line": 1620,
+            "line": 1627,
             "context": "    ) -> Result<InstanceBindings> {\n        Ok(InstanceBindings {\n            quads: self.write_instance_binding(\n                \"quads_bind_group\",\n                instance_offset,\n                &scene.quads,\n            )?,"
         },
         "shadows_bind_group": {
-            "line": 1625,
+            "line": 1632,
             "context": "                &scene.quads,\n            )?,\n            shadows: self.write_instance_binding(\n                \"shadows_bind_group\",\n                instance_offset,\n                &scene.shadows,\n            )?,"
         },
         "underlines_bind_group": {
-            "line": 1630,
+            "line": 1637,
             "context": "                &scene.shadows,\n            )?,\n            underlines: self.write_instance_binding(\n                \"underlines_bind_group\",\n                instance_offset,\n                &scene.underlines,\n            )?,"
         },
         "monochrome_sprites_bind_group": {
-            "line": 1635,
+            "line": 1642,
             "context": "                &scene.underlines,\n            )?,\n            monochrome_sprites: self.write_instance_binding(\n                \"monochrome_sprites_bind_group\",\n                instance_offset,\n                &scene.monochrome_sprites,\n            )?,"
         },
         "subpixel_sprites_bind_group": {
-            "line": 1640,
+            "line": 1647,
             "context": "                &scene.monochrome_sprites,\n            )?,\n            subpixel_sprites: self.write_instance_binding(\n                \"subpixel_sprites_bind_group\",\n                instance_offset,\n                &scene.subpixel_sprites,\n            )?,"
         },
         "polychrome_sprites_bind_group": {
-            "line": 1645,
+            "line": 1652,
             "context": "                &scene.subpixel_sprites,\n            )?,\n            polychrome_sprites: self.write_instance_binding(\n                \"polychrome_sprites_bind_group\",\n                instance_offset,\n                &scene.polychrome_sprites,\n            )?,"
         },
         "atlas_texture_bind_group": {
-            "line": 1711,
+            "line": 1718,
             "context": "            }\n\n            let bind_group =\n                self.create_texture_bind_group(\"atlas_texture_bind_group\", &texture_info.view);\n            self.resources_mut().atlas_texture_bind_groups.insert(\n                texture_id,\n                CachedTextureBindGroup {"
         },
         "path_sprites_bind_group": {
-            "line": 1806,
+            "line": 1813,
             "context": "            return Ok(());\n        };\n        let instances =\n            self.write_instance_binding(\"path_sprites_bind_group\", instance_offset, &sprites)?;\n        let texture = self.create_texture_bind_group(\n            \"path_intermediate_texture_bind_group\",\n            &path_intermediate_view,"
         },
         "path_intermediate_texture_bind_group": {
-            "line": 1808,
+            "line": 1815,
             "context": "        let instances =\n            self.write_instance_binding(\"path_sprites_bind_group\", instance_offset, &sprites)?;\n        let texture = self.create_texture_bind_group(\n            \"path_intermediate_texture_bind_group\",\n            &path_intermediate_view,\n        );\n        let resources = self.resources();"
         },
         "path_rasterization_bind_group": {
-            "line": 1845,
+            "line": 1852,
             "context": "        }\n\n        let vertex_binding = self.write_instance_binding(\n            \"path_rasterization_bind_group\",\n            instance_offset,\n            &vertices,\n        )?;"
         },
         "path_rasterization_pass": {
-            "line": 1863,
+            "line": 1870,
             "context": "\n        {\n            let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {\n                label: Some(\"path_rasterization_pass\"),\n                color_attachments: &[Some(wgpu::RenderPassColorAttachment {\n                    view: target_view,\n                    resolve_target,"
         },
         "instance index exceeds u32 range": {
-            "line": 1925,
+            "line": 1932,
             "context": "        *instance_offset = offset + allocation_size;\n\n        let first_instance = if self.uses_webgl_instance_data {\n            u32::try_from(offset / stride).context(\"instance index exceeds u32 range\")?\n        } else {\n            0\n        };"
         },
         "instance texture write out of bounds: row {y} >= height {}": {
-            "line": 1987,
+            "line": 1994,
             "context": "                // texture and draw garbage for the remaining instances.\n                debug_assert!(\n                    false,\n                    \"instance texture write out of bounds: row {y} >= height {}\",\n                    *height\n                );\n                log::error!("
         },
         "instance texture write out of bounds; dropping {} bytes of instance data": {
-            "line": 1991,
+            "line": 1998,
             "context": "                    *height\n                );\n                log::error!(\n                    \"instance texture write out of bounds; dropping {} bytes of instance data\",\n                    data.len() - byte_offset\n                );\n                return;"
         },
         "instance data needs {required} bytes, above the maximum of {}": {
-            "line": 2057,
+            "line": 2064,
             "context": "            .min(self.max_instance_data_size);\n        anyhow::ensure!(\n            capacity >= required,\n            \"instance data needs {required} bytes, above the maximum of {}\",\n            self.max_instance_data_size\n        );\n        anyhow::ensure!("
         },
         "frame instance data exceeds the {}-byte maximum": {
-            "line": 2062,
+            "line": 2069,
             "context": "        );\n        anyhow::ensure!(\n            capacity > self.instance_data_capacity,\n            \"frame instance data exceeds the {}-byte maximum\",\n            self.max_instance_data_size\n        );\n        log::debug!("
         },
         "instance data grown from {} to {capacity}": {
-            "line": 2066,
+            "line": 2073,
             "context": "            self.max_instance_data_size\n        );\n        log::debug!(\n            \"instance data grown from {} to {capacity}\",\n            self.instance_data_capacity\n        );\n        // Bind groups created earlier in the frame keep the previous buffer or"
         },
         "Device does not exist": {
-            "line": 2122,
+            "line": 2129,
             "context": "    ///\n    /// The `instance` **must** be the same [`wgpu::Instance`] that was used to\n    /// create the adapter and device (i.e. from the [`WgpuContext`]).  Using a\n    /// different instance will cause a \"Device does not exist\" panic because\n    /// the wgpu device is bound to its originating instance.\n    #[cfg(not(target_family = \"wasm\"))]\n    pub fn replace_surface<W: HasWindowHandle>("
         },
         "Cannot replace the surface: GPU resources have been released": {
-            "line": 2163,
+            "line": 2170,
             "context": "            }\n            RendererState::Unconfigured { core } => core,\n            RendererState::Released => {\n                anyhow::bail!(\"Cannot replace the surface: GPU resources have been released\")\n            }\n        };\n        surface.configure(&core.resources.device, &self.surface_config);"
         },
         "recover requires gpu_context": {
-            "line": 2202,
+            "line": 2209,
             "context": "    where\n        W: HasWindowHandle + HasDisplayHandle + std::fmt::Debug + Send + Sync + Clone + 'static,\n    {\n        let gpu_context = self.context.as_ref().expect(\"recover requires gpu_context\");\n\n        // Check if another window already recovered the context\n        let needs_new_context = gpu_context"
         },
         "GPU device lost, recreating context...": {
-            "line": 2215,
+            "line": 2222,
             "context": "            .map_err(|e| anyhow::anyhow!(\"Failed to get window handle: {e}\"))?;\n\n        let surface = if needs_new_context {\n            log::warn!(\"GPU device lost, recreating context...\");\n\n            // Drop old resources to release Arc<Device>/Arc<Queue> and GPU resources\n            self.state = RendererState::Released;"
         },
         "context should exist": {
-            "line": 2249,
+            "line": 2256,
             "context": "        };\n        let gpu_context = Rc::clone(gpu_context);\n        let ctx_ref = gpu_context.borrow();\n        let context = ctx_ref.as_ref().expect(\"context should exist\");\n\n        self.state = RendererState::Released;\n        self.atlas.handle_device_lost(context);"
         },
         "GPU recovery complete": {
-            "line": 2265,
+            "line": 2272,
             "context": "        )?;\n        self.set_subpixel_layout(is_bgr);\n\n        log::info!(\"GPU recovery complete\");\n        Ok(())\n    }\n}"
         },
         "bench-support": {
-            "line": 2514,
+            "line": 2521,
             "context": "\n#[cfg(all(\n    not(target_family = \"wasm\"),\n    any(test, feature = \"bench-support\", feature = \"test-support\")\n))]\nimpl gpui::PlatformHeadlessRenderer for WgpuHeadlessRenderer {\n    fn render_scene_to_image("
         },
         "test-support": {
-            "line": 2514,
+            "line": 2521,
             "context": "\n#[cfg(all(\n    not(target_family = \"wasm\"),\n    any(test, feature = \"bench-support\", feature = \"test-support\")\n))]\nimpl gpui::PlatformHeadlessRenderer for WgpuHeadlessRenderer {\n    fn render_scene_to_image("
         },
         "invalid headless render target size: {size:?}": {
-            "line": 2332,
+            "line": 2339,
             "context": "    fn ensure_render_target(&mut self, size: Size<DevicePixels>) -> anyhow::Result<()> {\n        anyhow::ensure!(\n            size.width.0 > 0 && size.height.0 > 0,\n            \"invalid headless render target size: {size:?}\"\n        );\n        anyhow::ensure!(\n            size.width.0 as u32 <= self.core.max_texture_size"
         },
         "headless render target size {size:?} exceeds maximum texture dimension {}": {
-            "line": 2337,
+            "line": 2344,
             "context": "        anyhow::ensure!(\n            size.width.0 as u32 <= self.core.max_texture_size\n                && size.height.0 as u32 <= self.core.max_texture_size,\n            \"headless render target size {size:?} exceeds maximum texture dimension {}\",\n            self.core.max_texture_size\n        );\n        if self"
         },
         "headless_render_target": {
-            "line": 2353,
+            "line": 2360,
             "context": "            .resources\n            .device\n            .create_texture(&wgpu::TextureDescriptor {\n                label: Some(\"headless_render_target\"),\n                size: wgpu::Extent3d {\n                    width: size.width.0 as u32,\n                    height: size.height.0 as u32,"
         },
         "GPU device was lost during headless rendering": {
-            "line": 2374,
+            "line": 2381,
             "context": "    fn check_gpu_errors(&mut self) -> anyhow::Result<()> {\n        anyhow::ensure!(\n            !self.context.device_lost(),\n            \"GPU device was lost during headless rendering\"\n        );\n        if let Some(error) = self\n            .context"
         },
         "GPU error during headless rendering: {error}": {
-            "line": 2381,
+            "line": 2388,
             "context": "            .errors()\n            .observe_error(&mut self.observed_error_generation)\n        {\n            anyhow::bail!(\"GPU error during headless rendering: {error}\");\n        }\n        Ok(())\n    }"
         },
         "Headless render target was not created": {
-            "line": 2406,
+            "line": 2413,
             "context": "        let target = self\n            .render_target\n            .as_ref()\n            .ok_or_else(|| anyhow::anyhow!(\"Headless render target was not created\"))?;\n        let width = target.texture.width();\n        let height = target.texture.height();\n        let bytes_per_row = width"
         },
         "Headless render target row size overflowed": {
-            "line": 2411,
+            "line": 2418,
             "context": "        let height = target.texture.height();\n        let bytes_per_row = width\n            .checked_mul(4)\n            .ok_or_else(|| anyhow::anyhow!(\"Headless render target row size overflowed\"))?;\n        let padded_bytes_per_row = bytes_per_row\n            .checked_next_multiple_of(wgpu::COPY_BYTES_PER_ROW_ALIGNMENT)\n            .ok_or_else(|| anyhow::anyhow!(\"Headless padded row size overflowed\"))?;"
         },
         "Headless padded row size overflowed": {
-            "line": 2414,
+            "line": 2421,
             "context": "            .ok_or_else(|| anyhow::anyhow!(\"Headless render target row size overflowed\"))?;\n        let padded_bytes_per_row = bytes_per_row\n            .checked_next_multiple_of(wgpu::COPY_BYTES_PER_ROW_ALIGNMENT)\n            .ok_or_else(|| anyhow::anyhow!(\"Headless padded row size overflowed\"))?;\n        let buffer_size = u64::from(padded_bytes_per_row)\n            .checked_mul(u64::from(height))\n            .ok_or_else(|| anyhow::anyhow!(\"Headless readback buffer size overflowed\"))?;"
         },
         "Headless readback buffer size overflowed": {
-            "line": 2417,
+            "line": 2424,
             "context": "            .ok_or_else(|| anyhow::anyhow!(\"Headless padded row size overflowed\"))?;\n        let buffer_size = u64::from(padded_bytes_per_row)\n            .checked_mul(u64::from(height))\n            .ok_or_else(|| anyhow::anyhow!(\"Headless readback buffer size overflowed\"))?;\n        anyhow::ensure!(\n            buffer_size <= self.core.resources.device.limits().max_buffer_size,\n            \"Headless readback buffer size {buffer_size} exceeds maximum buffer size {}\","
         },
         "Headless readback buffer size {buffer_size} exceeds maximum buffer size {}": {
-            "line": 2420,
+            "line": 2427,
             "context": "            .ok_or_else(|| anyhow::anyhow!(\"Headless readback buffer size overflowed\"))?;\n        anyhow::ensure!(\n            buffer_size <= self.core.resources.device.limits().max_buffer_size,\n            \"Headless readback buffer size {buffer_size} exceeds maximum buffer size {}\",\n            self.core.resources.device.limits().max_buffer_size\n        );\n        let readback_buffer = self"
         },
         "headless_readback_buffer": {
-            "line": 2428,
+            "line": 2435,
             "context": "            .resources\n            .device\n            .create_buffer(&wgpu::BufferDescriptor {\n                label: Some(\"headless_readback_buffer\"),\n                size: buffer_size,\n                usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ,\n                mapped_at_creation: false,"
         },
         "headless_readback_encoder": {
-            "line": 2438,
+            "line": 2445,
             "context": "                .resources\n                .device\n                .create_command_encoder(&wgpu::CommandEncoderDescriptor {\n                    label: Some(\"headless_readback_encoder\"),\n                });\n        encoder.copy_texture_to_buffer(\n            wgpu::TexelCopyTextureInfo {"
         },
         "Headless readback receiver was dropped before mapping completed": {
-            "line": 2471,
+            "line": 2478,
             "context": "            .slice(..)\n            .map_async(wgpu::MapMode::Read, move |result| {\n                if sender.send(result).is_err() {\n                    log::error!(\"Headless readback receiver was dropped before mapping completed\");\n                }\n            });\n        self.core"
         },
         "Failed to wait for headless rendering: {error}": {
-            "line": 2481,
+            "line": 2488,
             "context": "                submission_index: Some(submission),\n                timeout: Some(std::time::Duration::from_secs(30)),\n            })\n            .map_err(|error| anyhow::anyhow!(\"Failed to wait for headless rendering: {error}\"))?;\n        receiver\n            .recv_timeout(std::time::Duration::from_secs(30))\n            .map_err(|error| anyhow::anyhow!(\"Failed to receive headless mapping result: {error}\"))?"
         },
         "Failed to receive headless mapping result: {error}": {
-            "line": 2484,
+            "line": 2491,
             "context": "            .map_err(|error| anyhow::anyhow!(\"Failed to wait for headless rendering: {error}\"))?;\n        receiver\n            .recv_timeout(std::time::Duration::from_secs(30))\n            .map_err(|error| anyhow::anyhow!(\"Failed to receive headless mapping result: {error}\"))?\n            .map_err(|error| anyhow::anyhow!(\"Failed to map headless readback buffer: {error}\"))?;\n        self.check_gpu_errors()?;\n"
         },
         "Failed to map headless readback buffer: {error}": {
-            "line": 2485,
-            "context": "        receiver\n            .recv_timeout(std::time::Duration::from_secs(30))\n            .map_err(|error| anyhow::anyhow!(\"Failed to receive headless mapping result: {error}\"))?\n            .map_err(|error| anyhow::anyhow!(\"Failed to map headless readback buffer: {error}\"))?;\n        self.check_gpu_errors()?;\n\n        let mapped_data = readback_buffer.slice(..).get_mapped_range();"
+            "line": 2492,
+            "context": "        receiver\n            .recv_timeout(std::time::Duration::from_secs(30))\n            .map_err(|error| anyhow::anyhow!(\"Failed to receive headless mapping result: {error}\"))?\n            .map_err(|error| anyhow::anyhow!(\"Failed to map headless readback buffer: {error}\"))?;\n        self.check_gpu_errors()?;\n\n        let mapped_data = readback_buffer.slice(..).get_mapped_range()?;"
         },
         "Headless image size exceeds addressable memory": {
-            "line": 2490,
-            "context": "\n        let mapped_data = readback_buffer.slice(..).get_mapped_range();\n        let pixel_capacity = usize::try_from(u64::from(bytes_per_row) * u64::from(height))\n            .map_err(|_| anyhow::anyhow!(\"Headless image size exceeds addressable memory\"))?;\n        let mut pixels = Vec::with_capacity(pixel_capacity);\n        for row in mapped_data\n            .chunks_exact(padded_bytes_per_row as usize)"
+            "line": 2497,
+            "context": "\n        let mapped_data = readback_buffer.slice(..).get_mapped_range()?;\n        let pixel_capacity = usize::try_from(u64::from(bytes_per_row) * u64::from(height))\n            .map_err(|_| anyhow::anyhow!(\"Headless image size exceeds addressable memory\"))?;\n        let mut pixels = Vec::with_capacity(pixel_capacity);\n        for row in mapped_data\n            .chunks_exact(padded_bytes_per_row as usize)"
         },
         "Failed to create image from headless pixel data": {
-            "line": 2508,
+            "line": 2515,
             "context": "        }\n\n        image::RgbaImage::from_raw(width, height, pixels)\n            .ok_or_else(|| anyhow::anyhow!(\"Failed to create image from headless pixel data\"))\n    }\n}\n"
         },
         "{e}": {
-            "line": 2551,
+            "line": 2558,
             "context": "                raw_display_handle: None,\n                raw_window_handle,\n            })\n            .map_err(|e| anyhow::anyhow!(\"{e}\"))\n    }\n}\n"
         },
         "ZED_FONTS_GAMMA": {
-            "line": 2572,
+            "line": 2579,
             "context": "            .find(|&n| format_features.flags.sample_count_supported(n))\n            .unwrap_or(1);\n\n        let gamma = env::var(\"ZED_FONTS_GAMMA\")\n            .ok()\n            .and_then(|v| v.parse().ok())\n            .unwrap_or(1.8_f32)"
         },
         "ZED_FONTS_GRAYSCALE_ENHANCED_CONTRAST": {
-            "line": 2579,
+            "line": 2586,
             "context": "            .clamp(1.0, 2.2);\n        let gamma_ratios = get_gamma_correction_ratios(gamma);\n\n        let grayscale_enhanced_contrast = env::var(\"ZED_FONTS_GRAYSCALE_ENHANCED_CONTRAST\")\n            .ok()\n            .and_then(|v| v.parse().ok())\n            .unwrap_or(1.0_f32)"
         },
         "ZED_FONTS_SUBPIXEL_ENHANCED_CONTRAST": {
-            "line": 2585,
+            "line": 2592,
             "context": "            .unwrap_or(1.0_f32)\n            .max(0.0);\n\n        let subpixel_enhanced_contrast = env::var(\"ZED_FONTS_SUBPIXEL_ENHANCED_CONTRAST\")\n            .ok()\n            .and_then(|v| v.parse().ok())\n            .unwrap_or(0.5_f32)"
         },
         "linux": {
-            "line": 2731,
+            "line": 2738,
             "context": "        Ok(())\n    }\n\n    #[cfg(target_os = \"linux\")]\n    #[test]\n    fn headless_renderer_rejects_invalid_sizes() -> anyhow::Result<()> {\n        let mut renderer = WgpuHeadlessRenderer::new()?;"
         },
         "pixel ({x}, {y}) was {actual:?}, expected {expected:?}": {
-            "line": 2653,
+            "line": 2660,
             "context": "                .iter()\n                .zip(expected)\n                .all(|(actual, expected)| actual.abs_diff(expected) <= 3),\n            \"pixel ({x}, {y}) was {actual:?}, expected {expected:?}\"\n        );\n    }\n"
         },
         "{size:?} should be rejected": {
-            "line": 2751,
+            "line": 2758,
             "context": "                renderer\n                    .render_scene_to_image(&Scene::default(), size)\n                    .is_err(),\n                \"{size:?} should be rejected\"\n            );\n        }\n"
         },
         "var<storage": {
-            "line": 2763,
+            "line": 2770,
             "context": "\n    #[test]\n    fn webgl_shader_is_valid_wgsl_without_storage_buffers() {\n        assert!(!WEBGL_SHADERS.contains(\"var<storage\"));\n        validate_wgsl(WEBGL_SHADERS, naga::valid::Capabilities::empty());\n    }\n"
         },
         "shader should parse": {
-            "line": 2781,
+            "line": 2788,
             "context": "    }\n\n    fn validate_wgsl(source: &str, capabilities: naga::valid::Capabilities) {\n        let module = naga::front::wgsl::parse_str(source).expect(\"shader should parse\");\n        naga::valid::Validator::new(naga::valid::ValidationFlags::all(), capabilities)\n            .validate(&module)\n            .expect(\"shader should validate\");"
         },
         "shader should validate": {
-            "line": 2784,
+            "line": 2791,
             "context": "        let module = naga::front::wgsl::parse_str(source).expect(\"shader should parse\");\n        naga::valid::Validator::new(naga::valid::ValidationFlags::all(), capabilities)\n            .validate(&module)\n            .expect(\"shader should validate\");\n    }\n\n    #[test]"
         }
     },
