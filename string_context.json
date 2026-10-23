@@ -227460,13 +227460,13 @@
             "line": 568,
             "context": "        return Ok(false);\n    };\n    let published_at = DateTime::parse_from_rfc3339(published_at)\n        .with_context(|| format!(\"parsing npm release timestamp for version {version}\"))?\n        .with_timezone(&Utc);\n    Ok(&published_at <= before)\n}"
         },
-        "v24.21.0": {
+        "v24.22.1": {
             "line": 607,
-            "context": "}\n\nimpl ManagedNodeRuntime {\n    const VERSION: &str = \"v24.21.0\";\n\n    #[cfg(not(windows))]\n    const NODE_PATH: &str = \"bin/node\";"
+            "context": "}\n\nimpl ManagedNodeRuntime {\n    const VERSION: &str = \"v24.22.1\";\n\n    #[cfg(not(windows))]\n    const NODE_PATH: &str = \"bin/node\";"
         },
         "bin/node": {
             "line": 610,
-            "context": "    const VERSION: &str = \"v24.21.0\";\n\n    #[cfg(not(windows))]\n    const NODE_PATH: &str = \"bin/node\";\n    #[cfg(windows)]\n    const NODE_PATH: &str = \"node.exe\";\n"
+            "context": "    const VERSION: &str = \"v24.22.1\";\n\n    #[cfg(not(windows))]\n    const NODE_PATH: &str = \"bin/node\";\n    #[cfg(windows)]\n    const NODE_PATH: &str = \"node.exe\";\n"
         },
         "node.exe": {
             "line": 612,
